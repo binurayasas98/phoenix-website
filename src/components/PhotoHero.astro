@@ -131,7 +131,7 @@ const showAnnouncement = announcement && isAnnouncementActive();
         {subline}
       </p>
 
-      <div class="hero-fade hero-actions mt-8 flex flex-col gap-3 sm:flex-row md:mt-10" data-hero-fade data-track-area="hero">
+      <div class="hero-fade hero-actions mt-8 flex flex-col md:mt-10 md:flex-row md:gap-3" data-hero-fade data-track-area="hero">
         <a href={quoteHref} class="btn btn-lg btn-light">{labels.quote}</a>
         <a
           href={whatsappUrl(whatsappMessage)}
@@ -317,6 +317,19 @@ const showAnnouncement = announcement && isAnnouncementActive();
 
     .is-home .hero-content {
       padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Mobile buttons: full width, 46px tall, 16px text. Desktop keeps the 52px hero buttons. */
+  @media (max-width: 767px) {
+    .hero-actions {
+      gap: 10px;
+    }
+
+    .hero-actions .btn {
+      width: 100%;
+      height: 46px;
+      font-size: 16px;
     }
   }
 
