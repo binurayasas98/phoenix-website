@@ -15,7 +15,8 @@ You are building the new website for Phoenix Decorators (Pvt) Ltd, a Sri Lankan 
 - Font: Inter Variable, self-hosted with @fontsource-variable/inter. Font stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter Variable", system-ui, sans-serif.
 - Icons: Lucide at 1.5px stroke (an Astro-compatible package or inline SVG).
 - Interactivity: Astro components with small vanilla TypeScript. The "motion" package is allowed for the hero and scroll effects. No other UI or animation libraries, no smooth-scroll libraries, no scroll-jacking.
-- Quote form: Netlify Forms (form name "quote"), no backend.
+- Map: d3-geo, topojson-client and world-atlas are allowed only to draw the Sri Lanka projects map as a static SVG at build time (Sri Lanka is ISO numeric 144 in world-atlas countries-10m). No map JavaScript is sent to the browser.
+- Forms: Netlify Forms only, no backend. Two forms: "quote" and "contact". Each has a honeypot field ("bot-field"), a hidden "form-name" input, and a static HTML version Netlify can detect at build time. Submit with fetch (application/x-www-form-urlencoded) to "/" and show the success state without a page reload.
 
 ## Commands
 - npm install, npm run dev, npm run build, npm run preview.
@@ -24,8 +25,10 @@ You are building the new website for Phoenix Decorators (Pvt) Ltd, a Sri Lankan 
 ## Structure
 - src/data/site.ts: company name, phone, WhatsApp number, email, both offices, hours, social links, warranty, announcement, analytics IDs (empty by default). The single source for these values.
 - src/data/services.ts, src/data/projects.ts, src/data/clients.ts: content from SITE_CONTENT.md.
+- src/data/directors.ts (both directors), src/data/sectors.ts, src/data/locations.ts (map pins), src/data/faqs.ts (home FAQs), src/data/testimonials.ts (empty array; the section renders only when it has items).
 - src/layouts/Base.astro, src/components/*, src/pages/*.
-- Shared components: Header, Footer, PhotoHero, PageHero, TwoToneHeading, OverlayCard, ProjectCard, CtaBand, ActionBar, WhatsAppLink, RopeLine, SectionIntro.
+- Pages: /, /services, /services/[slug], /sectors, /projects, /about, /safety-quality, /contact, /quote, /privacy, 404.
+- Shared components: Header (with the Services mega menu on desktop), Footer, PhotoHero, PageHero, TwoToneHeading, OverlayCard, ProjectCard, CtaBand, ActionBar, WhatsAppLink, RopeLine, SectionIntro, DirectorCard, Faq (accordion using details and summary, plus FAQPage JSON-LD), FactStrip, ProjectsMap, ClientList (collapsible on mobile), SegmentedControl.
 
 ## How to work
 - Do only what the current task asks. Never restyle, rename or rewrite other parts.
@@ -60,6 +63,12 @@ Cards: the image fills the card, a night gradient rises from the bottom (80% to 
 
 Header: frosted white (rgba(255,255,255,0.72), saturate 180%, blur 20px), 64px desktop, 56px mobile, logo 40px tall desktop and 32px mobile. On the home page only, it starts transparent over the hero with the white logo and white links, and turns frosted white after 24px of scroll.
 
+Mega menu (desktop, 1024px and up): "Services" opens a full-width frosted white panel under the header on hover (150ms intent delay) and on click or Enter. Three columns of service links (thumbnail, name, one-liner), plus a narrow right column with the "Not sure what you need?" WhatsApp prompt. It closes on Escape, on outside click and when the pointer leaves. aria-expanded on the trigger, focus moves into the panel from the keyboard. The header turns frosted white while the panel is open, even over the home hero. Mobile keeps the full-screen sheet, with Services as an expandable group.
+
+Director cards: 3:4 portrait with 28px radius (20px mobile), then the pull quote in large type (clamp(24px, 2.4vw, 34px), weight 600, ink), then name (17px semibold) and title (15px graphite). Two cards side by side from 768px, stacked below. Same crop and size for both directors, never one bigger than the other.
+
+FAQ accordion: hairline rows, question 19px semibold, a plus icon that rotates 45 degrees when open, answer in graphite. Built on details and summary so it works without JavaScript.
+
 Logos: logo.png on light, logo-white.png on night and photos. Favicon, apple-touch-icon and manifest icons from app-icon.png (app-icon.svg for the SVG favicon).
 
 Signature element, the "rope line": a 1px vertical line (brand on light, white or brand-light on night and photos) ending in an 8px circle, like a rope dropped down a facade. Use it only where a task asks for it.
@@ -93,5 +102,7 @@ Avoid: gradient backgrounds (overlays on photos are fine), glass cards (a froste
 
 ## Quality floor
 - Mobile-first. Check 375, 390, 768, 1024 and 1440px. No horizontal scrolling.
+- Mobile layout rules: hero buttons stack full width under 420px; fact strips become a 2 x 2 grid; long headings wrap cleanly with text-wrap: balance and never overflow (test the longest service name at 375px); long client lists show 8 items with a "Show all" button; the mobile action bar never covers footer content or form buttons (add bottom padding equal to its height).
+- Canonical URLs: the home page canonical is exactly https://www.phoenixdecorator.com/ and no page canonical may end in /index.
 - Tap targets at least 44px, WCAG AA contrast, visible focus rings, semantic HTML, one h1 per page, alt text on every image, skip link.
 - Lighthouse mobile 90+ in every category. No layout shift from images or fonts.
