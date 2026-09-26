@@ -327,7 +327,7 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     inset-inline: 0;
     top: 100%;
     color: var(--color-ink);
-    background: rgba(255, 255, 255, 0.86);
+    background: rgba(255, 255, 255, 0.94);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     backdrop-filter: saturate(180%) blur(20px);
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
@@ -369,8 +369,13 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     background: rgba(0, 0, 0, 0.04);
   }
 
+  .mega-item :global(picture) {
+    flex: none;
+  }
+
   .mega-item :global(.mega-thumb) {
     flex: none;
+    max-width: none;
     width: 96px;
     height: 72px;
     border-radius: 12px;
