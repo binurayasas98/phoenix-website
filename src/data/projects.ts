@@ -3,6 +3,13 @@ import type { SectorSlug } from './sectors';
 
 import aitkenSpenceImg from '../assets/images/project-aitken-spence.jpg';
 import grandBellImg from '../assets/images/project-grand-bell.jpg';
+// These five show the client's building, not our team at work. Use them only on that client's
+// project card and the matching sector section, never in a hero, as a service image or as a background.
+import biaImg from '../assets/images/project-bia.jpg';
+import shangriLaImg from '../assets/images/project-shangri-la.jpg';
+import oneGalleFaceImg from '../assets/images/project-one-galle-face.jpg';
+import worldTradeCenterImg from '../assets/images/project-world-trade-center.jpg';
+import hemasHospitalsImg from '../assets/images/project-hemas-hospitals.jpg';
 
 export interface Project {
   slug: string;
@@ -23,7 +30,8 @@ export const projects: Project[] = [
     location: 'Katunayake',
     sector: 'public',
     services: ['waterproofing', 'painting'],
-    scope: 'Terminal 1 waterproofing and painting, supervised by director Ranga Gamachchi.',
+    scope: 'Terminal 1 waterproofing and painting, supervised by our director Ranga Gamachchi.',
+    image: { src: biaImg, alt: 'Bandaranaike International Airport terminal building, Katunayake' },
     featured: true,
   },
   {
@@ -44,6 +52,7 @@ export const projects: Project[] = [
     services: ['glass-cleaning'],
     scope: 'Glass washing.',
     contract: 'Monthly',
+    image: { src: shangriLaImg, alt: 'Shangri-La Hotel tower overlooking Galle Face, Colombo', position: '82% center' },
     featured: true,
   },
   {
@@ -73,6 +82,7 @@ export const projects: Project[] = [
     services: ['waterproofing', 'painting', 'glass-cleaning', 'high-rise-maintenance'],
     scope:
       'Car park ramp waterproofing and annual glass washing at the residence, painting and crack repair at the office tower and mall.',
+    image: { src: oneGalleFaceImg, alt: 'One Galle Face mall and towers, Colombo', position: '90% center' },
     featured: true,
   },
   {
@@ -83,6 +93,7 @@ export const projects: Project[] = [
     services: ['glass-cleaning', 'sealant-application'],
     scope: 'Glass washing and sealant application.',
     contract: 'Annual',
+    image: { src: worldTradeCenterImg, alt: 'World Trade Center twin towers, Colombo', position: '58% center' },
   },
   {
     slug: 'civil-aviation',
@@ -140,6 +151,7 @@ export const projects: Project[] = [
     sector: 'healthcare',
     services: ['waterproofing', 'painting', 'sealant-application', 'high-rise-maintenance'],
     scope: 'Waterproofing, painting, sealant application and crack repair.',
+    image: { src: hemasHospitalsImg, alt: 'Hemas Hospitals building entrance' },
   },
   {
     slug: 'marriott-weligama',
@@ -193,6 +205,12 @@ export const projects: Project[] = [
 
 export const featuredProjects = projects.filter((p) => p.featured);
 
+export function getProject(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}
+
+/** Projects that include a service, photo projects first (data order within each group). */
 export function projectsForService(slug: ServiceSlug): Project[] {
-  return projects.filter((p) => p.services.includes(slug));
+  const matches = projects.filter((p) => p.services.includes(slug));
+  return [...matches.filter((p) => p.image), ...matches.filter((p) => !p.image)];
 }

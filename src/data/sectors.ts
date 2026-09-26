@@ -1,4 +1,10 @@
-import type { ServiceSlug } from './services';
+import type { Photo, ServiceSlug } from './services';
+import shangriLaImg from '../assets/images/project-shangri-la.jpg';
+import hemasHospitalsImg from '../assets/images/project-hemas-hospitals.jpg';
+import worldTradeCenterImg from '../assets/images/project-world-trade-center.jpg';
+import oneGalleFaceImg from '../assets/images/project-one-galle-face.jpg';
+import biaImg from '../assets/images/project-bia.jpg';
+import industrialImg from '../assets/images/service-industrial.jpg';
 
 export type SectorSlug =
   | 'hospitality'
@@ -15,6 +21,8 @@ export interface Sector {
   /** The services this sector uses most, in order. */
   services: ServiceSlug[];
   clients: string[];
+  /** One 4:3 photo beside the text on /sectors, with a short caption. */
+  photo: Photo & { caption: string };
 }
 
 export const sectors: Sector[] = [
@@ -33,6 +41,7 @@ export const sectors: Sector[] = [
       'Airport Garden Hotel Seeduwa',
       'Summer Season Hotel Mirissa',
     ],
+    photo: { src: shangriLaImg, alt: 'Shangri-La Hotel tower overlooking Galle Face, Colombo', position: '82% center', caption: 'Shangri-La Hotel, Colombo' },
   },
   {
     slug: 'healthcare',
@@ -46,6 +55,7 @@ export const sectors: Sector[] = [
       'Sethma Hospital Gampaha',
       'Hemas Pharmaceuticals',
     ],
+    photo: { src: hemasHospitalsImg, alt: 'Hemas Hospitals building entrance', caption: 'Hemas Hospitals' },
   },
   {
     slug: 'corporate',
@@ -68,6 +78,7 @@ export const sectors: Sector[] = [
       'Access Towers',
       'VFS Global',
     ],
+    photo: { src: worldTradeCenterImg, alt: 'World Trade Center twin towers, Colombo', position: '58% center', caption: 'World Trade Center, Colombo' },
   },
   {
     slug: 'residential',
@@ -88,6 +99,7 @@ export const sectors: Sector[] = [
       '7 Sense',
       'Havelock City',
     ],
+    photo: { src: oneGalleFaceImg, alt: 'One Galle Face mall and towers, Colombo', caption: 'One Galle Face, Colombo' },
   },
   {
     slug: 'public',
@@ -103,6 +115,7 @@ export const sectors: Sector[] = [
       'Western Province Building Battaramulla',
       'Hakmana Primary School',
     ],
+    photo: { src: biaImg, alt: 'Bandaranaike International Airport terminal building, Katunayake', caption: 'Bandaranaike International Airport' },
   },
   {
     slug: 'retail-industrial',
@@ -117,6 +130,7 @@ export const sectors: Sector[] = [
       'Colombo Sea Port (Rapiscan Building)',
       'Luminex (Pvt) Ltd',
     ],
+    photo: { src: industrialImg, alt: 'Technician preparing an industrial floor', caption: 'Industrial floor preparation by our team' },
   },
 ];
 

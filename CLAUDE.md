@@ -6,6 +6,8 @@ You are building the new website for Phoenix Decorators (Pvt) Ltd, a Sri Lankan 
 - docs/SITE_CONTENT.md: every fact and every word of copy. Use it exactly. Never invent clients, numbers, certifications, awards, testimonials or claims.
 - docs/IMAGES.md: which photo goes where, with alt text.
 - src/assets/images/: all photos, logos and icons. Real Phoenix work only. Never add stock, AI or downloaded images.
+  - One exception: the five client building photos (project-bia.jpg, project-shangri-la.jpg, project-one-galle-face.jpg, project-world-trade-center.jpg, project-hemas-hospitals.jpg). They show the client's building, not our team at work. Use each one only on that client's project card and on the matching sector section on /sectors. Never use them in a hero, as a service image or as a background.
+  - Material brand logos (brand-dulux.png, brand-conmix.png, brand-delta-coatings.png) appear only in the MaterialBrands row. They are material suppliers, never clients.
 - Anything marked [CONFIRM] in SITE_CONTENT.md must come from src/data/site.ts so it can be changed in one place, or stay hidden if the note says so.
 
 ## Stack
@@ -25,10 +27,10 @@ You are building the new website for Phoenix Decorators (Pvt) Ltd, a Sri Lankan 
 ## Structure
 - src/data/site.ts: company name, phone, WhatsApp number, email, both offices, hours, social links, warranty, announcement, analytics IDs (empty by default). The single source for these values.
 - src/data/services.ts, src/data/projects.ts, src/data/clients.ts: content from SITE_CONTENT.md.
-- src/data/directors.ts (both directors), src/data/sectors.ts, src/data/locations.ts (map pins), src/data/faqs.ts (home FAQs), src/data/testimonials.ts (empty array; the section renders only when it has items).
+- src/data/directors.ts (both directors), src/data/sectors.ts, src/data/locations.ts (map pins), src/data/faqs.ts (the "Common questions" on /contact#faq), src/data/testimonials.ts (empty array; the section renders only when it has items).
 - src/layouts/Base.astro, src/components/*, src/pages/*.
 - Pages: /, /services, /services/[slug], /sectors, /projects, /about, /safety-quality, /contact, /quote, /privacy, 404.
-- Shared components: Header (with the Services mega menu on desktop), Footer, PhotoHero, PageHero, TwoToneHeading, OverlayCard, ProjectCard, CtaBand, ActionBar, WhatsAppLink, RopeLine, SectionIntro, DirectorCard, Faq (accordion using details and summary, plus FAQPage JSON-LD), FactStrip, ProjectsMap, ClientList (collapsible on mobile), SegmentedControl.
+- Shared components: Header (with the Services mega menu on desktop), Footer, PhotoHero, PageHero, TwoToneHeading, OverlayCard, ProjectCard, CtaBand, ActionBar, WhatsAppLink, RopeLine, SectionIntro, DirectorCard, Faq (accordion using details and summary, plus FAQPage JSON-LD), FactStrip, ProjectsMap, ClientList (collapsible on mobile), SegmentedControl, Rail (the card carousel, see below), MaterialBrands (the material brand logo row).
 
 ## How to work
 - Do only what the current task asks. Never restyle, rename or rewrite other parts.
@@ -59,9 +61,11 @@ Buttons: 52px tall in heroes, 48px elsewhere. On light: primary ink pill with wh
 
 Links: "Label ›". The underline grows from the left on hover.
 
-Cards: the image fills the card, a night gradient rises from the bottom (80% to transparent at 55%), white title and one-liner sit on it. Never a white text box under an image. Projects without a photo use a typographic card: mist background, large client name, location and scope tags, no fake imagery.
+Cards: the image fills the card, a night gradient rises from the bottom (80% to transparent at 55%), white title and one-liner sit on it. Never a white text box under an image. Projects without a photo use a typographic card: mist background, large client name, location and scope tags, no fake imagery. Project photo cards (client buildings are bright) add a soft night scrim behind the text block only, rising about 80px above the first line, and show the contract pill ("Contract: monthly") on the photo.
 
-Header: frosted white (rgba(255,255,255,0.72), saturate 180%, blur 20px), 64px desktop, 56px mobile, logo 40px tall desktop and 32px mobile. On the home page only, it starts transparent over the hero with the white logo and white links, and turns frosted white after 24px of scroll.
+Rail (src/components/Rail.astro, script in src/scripts/rail.ts): the one card carousel, used for the home services rail, the home access section and the home projects on mobile. Native horizontal scrolling with scroll snap (x mandatory, snap-align start, scroll-padding equal to the page gutter), overscroll-behavior-x contain, touch-action pan-x pan-y, hidden scrollbar. Cards are 4:5 with a clear peek of the next one: services 82vw (max 360px) / 44vw / 400px, access 78vw / 44vw / 360px, projects 82vw (max 360px) on mobile and a 2 then 3 column grid from 768px. Under the rail: a 2px progress bar (ink thumb on light, white on night) and round 48px previous and next buttons (hidden under 768px). Previous and next move one page of fully visible cards with motion's animate() over 650ms and the standard easing, with snap off during the animation. Desktop mouse drag with a short glide that settles on a card; a drag over 6px never opens a link. Left and Right arrow keys move one card. No autoplay, no looping; reduced motion jumps instantly.
+
+Header: frosted white (rgba(255,255,255,0.72), saturate 180%, blur 20px), 72px desktop, 64px mobile (the --header-h variable; sticky offsets, scroll padding, hero spacing and the mega menu all follow it), logo 48px tall desktop and 44px mobile, served as lossless PNG at 1x, 2x and 3x. Under 768px the header shows only the logo and the menu button (at least 44px). On the home page only, it starts transparent over the hero with the white logo and white links, and turns frosted white after 24px of scroll.
 
 Mega menu (desktop, 1024px and up): "Services" opens a full-width frosted white panel under the header on hover (150ms intent delay) and on click or Enter. Three columns of service links (thumbnail, name, one-liner), plus a narrow right column with the "Not sure what you need?" WhatsApp prompt. It closes on Escape, on outside click and when the pointer leaves. aria-expanded on the trigger, focus moves into the panel from the keyboard. The header turns frosted white while the panel is open, even over the home hero. Mobile keeps the full-screen sheet, with Services as an expandable group.
 
@@ -71,7 +75,7 @@ Director cards: two variants, and both directors are always identical in size, c
 
 FAQ accordion: hairline rows, question 19px semibold, a plus icon that rotates 45 degrees when open, answer in graphite. Built on details and summary so it works without JavaScript.
 
-Logos: logo.png on light, logo-white.png on night and photos. Favicon, apple-touch-icon and manifest icons from app-icon.png (app-icon.svg for the SVG favicon).
+Logos: logo.png on light, logo-white.png on night and photos. Material brand logos (Dulux, Conmix, Delta Coatings) only in the MaterialBrands row: 36px tall on mobile and 44px on desktop, greyscale at 70% opacity, full colour on hover on desktop. Favicon, apple-touch-icon and manifest icons from app-icon.png (app-icon.svg for the SVG favicon).
 
 Signature element, the "rope line": a 1px vertical line (brand on light, white or brand-light on night and photos) ending in an 8px circle, like a rope dropped down a facade. Use it only where a task asks for it.
 
@@ -96,7 +100,7 @@ Avoid: gradient backgrounds (overlays on photos are fine), glass cards (a froste
 - Client and project names exactly as written in SITE_CONTENT.md. Names only, never logos.
 
 ## Conversion rules
-- "Get a free quote" in the header on every page.
+- "Get a free quote" in the header on every page from 768px. Under 768px it sits in the hero and the bottom action bar instead.
 - Mobile (under 768px): after the hero scrolls away, a bottom action bar: round call button, WhatsApp button, wide "Get a free quote" button. Blurred white background, iOS safe area respected. Hidden on /quote.
 - Desktop: round floating WhatsApp button bottom right with a "Chat on WhatsApp" tooltip. Hidden on /quote.
 - Every page except /contact and /quote ends with the CtaBand.

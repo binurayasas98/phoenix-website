@@ -15,6 +15,10 @@ interface Props {
   details?: boolean;
   /** Overrides the photo card's aspect ratio classes. */
   aspectClass?: string;
+  /** Overrides the photo's sizes attribute. */
+  sizes?: string;
+  /** Photo cards: the scope takes two lines at most on mobile and tablet, one line from 1024px. */
+  clampScope?: boolean;
 }
 
 const {
@@ -25,6 +29,8 @@ const {
   class: className,
   details = false,
   aspectClass,
+  sizes,
+  clampScope = false,
 } = Astro.props;
 const sectorName = getSector(project.sector)?.name;
 const large = size === 'large';
@@ -32,6 +38,7 @@ const Tag = href ? 'a' : 'article';
 const tags = project.services.map((slug) => getService(slug)?.shortName ?? slug);
 // Keep names like "Shangri-La" on one line.
 const client = project.client.replace(/-/g, '\u2011');
+const contract = project.contract && `Contract: ${project.contract.toLowerCase()}`;
 ---
 
 {
@@ -51,19 +58,29 @@ const client = project.client.replace(/-/g, '\u2011');
         alt={project.image.alt}
         formats={['avif', 'webp']}
         widths={[400, 640, 960, 1280]}
-        sizes={large ? '(min-width: 1024px) 632px, 100vw' : '(min-width: 1024px) 304px, (min-width: 768px) 50vw, 100vw'}
+        sizes={sizes ?? (large ? '(min-width: 1024px) 632px, 100vw' : '(min-width: 1024px) 304px, (min-width: 768px) 50vw, 100vw')}
         loading="lazy"
         decoding="async"
         class="card-img absolute inset-0 h-full w-full object-cover"
+        style={project.image.position ? `object-position: ${project.image.position};` : undefined}
       />
       <div class="overlay-night absolute inset-0" aria-hidden="true" />
-      <div class:list={['relative', large ? 'p-6 md:p-10' : 'p-6']}>
-        <Heading class:list={[large ? 't-h2 !text-[clamp(30px,3.2vw,44px)]' : 't-h3', 'text-balance text-white']}>
+      <div class:list={['photo-text', large ? 'p-6 md:p-10' : 'p-6']}>
+        <Heading class:list={[large ? 't-h2 !text-[clamp(24px,3.2vw,44px)]' : 't-h3', 'text-balance text-white']}>
           {client}
         </Heading>
-        <p class="mt-1 text-[15px] text-white/80">{project.location}</p>
+        <p class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-white/80">
+          <span>{project.location}</span>
+          {contract && <span class="contract-pill">{contract}</span>}
+        </p>
         {details && sectorName && <p class="text-[15px] text-white/80">{sectorName}</p>}
-        <p class:list={['mt-3 text-white/80', large ? 'max-w-[44ch] text-[17px]' : 'text-[15px] leading-snug']}>
+        <p
+          class:list={[
+            'mt-3 text-white/80',
+            large ? (clampScope ? 'max-w-[72ch] text-[15px] md:text-[17px]' : 'max-w-[44ch] text-[17px]') : 'text-[15px] leading-snug',
+            clampScope && 'line-clamp-2 lg:line-clamp-1',
+          ]}
+        >
           {project.scope}
         </p>
       </div>
@@ -95,13 +112,44 @@ const client = project.client.replace(/-/g, '\u2011');
           {tags.map((t) => (
             <li class="rounded-full px-3 py-1 text-[13px] text-graphite ring-1 ring-hairline">{t}</li>
           ))}
-          {project.contract && (
-            <li class="rounded-full px-3 py-1 text-[13px] text-brand-ink ring-1 ring-brand/30">
-              Contract: {project.contract.toLowerCase()}
-            </li>
-          )}
+          {contract && <li class="rounded-full px-3 py-1 text-[13px] text-brand-ink ring-1 ring-brand/30">{contract}</li>}
         </ul>
       </div>
     </Tag>
   )
 }
+
+<style>
+  /*
+   * Client building photos are bright (sky, pale facades), so the text block carries its own soft night
+   * scrim that rises about 80px above the first line. The photo stays clear above it.
+   */
+  .photo-text {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .photo-text::before {
+    content: '';
+    position: absolute;
+    inset: -80px 0 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(6, 23, 43, 0.72) 0%, rgba(6, 23, 43, 0.55) 50%, rgba(6, 23, 43, 0) 100%);
+    pointer-events: none;
+  }
+
+  /* Frosted contract pill on the photo gradient. */
+  .contract-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+</style>

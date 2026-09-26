@@ -2,136 +2,32 @@
 import { services } from '../../data/services';
 import OverlayCard from '../OverlayCard.astro';
 import TwoToneHeading from '../TwoToneHeading.astro';
-import Icon from '../Icon.astro';
 import TextLink from '../TextLink.astro';
+import Rail from '../Rail.astro';
 ---
 
 <section class="section bg-paper" aria-labelledby="services-heading">
-  <div class="container-site flex items-end justify-between gap-8">
+  <div class="container-site">
     <TwoToneHeading id="services-heading" first="Six specialist services." second="One accountable team." />
-    <div class="hidden flex-none gap-3 md:flex" data-rail-controls>
-      <button type="button" class="rail-btn" aria-label="Previous services" aria-controls="services-rail" data-rail-prev disabled>
-        <Icon name="chevron-left" size={22} />
-      </button>
-      <button type="button" class="rail-btn" aria-label="Next services" aria-controls="services-rail" data-rail-next>
-        <Icon name="chevron-right" size={22} />
-      </button>
-    </div>
   </div>
 
-  <ul id="services-rail" class="rail no-scrollbar mt-12 md:mt-16" data-rail>
+  <Rail id="services-rail" label="Services" size="services" class="mt-12 md:mt-16">
     {
       services.map((s) => (
-        <li class="rail-item">
+        <li>
           <OverlayCard
             image={s.image}
             title={s.name}
             text={s.oneLiner}
             href={`/services/${s.slug}`}
-            sizes="(min-width: 768px) 400px, 82vw"
+            sizes="(min-width: 1024px) 400px, (min-width: 768px) 44vw, min(82vw, 360px)"
           />
         </li>
       ))
     }
-  </ul>
+  </Rail>
+
   <div class="container-site mt-8">
     <TextLink href="/services">Explore all services</TextLink>
   </div>
 </section>
-
-<style>
-  .rail {
-    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    padding-inline: var(--gutter);
-    padding-bottom: 4px;
-  }
-
-  @media (min-width: 768px) {
-    .rail {
-      gap: 20px;
-    }
-  }
-
-  .rail-item {
-    flex: none;
-    width: 82vw;
-    max-width: 400px;
-    scroll-snap-align: start;
-  }
-
-  @media (min-width: 768px) {
-    .rail-item {
-      width: 400px;
-    }
-  }
-
-  .rail-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 999px;
-    background: var(--color-mist);
-    color: var(--color-ink);
-    transition:
-      background-color 300ms var(--ease),
-      opacity 300ms var(--ease),
-      transform 150ms var(--ease);
-  }
-
-  .rail-btn:hover:not(:disabled) {
-    background: #e8e8ed;
-  }
-
-  .rail-btn:active:not(:disabled) {
-    transform: scale(0.97);
-  }
-
-  .rail-btn:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rail-btn:active:not(:disabled) {
-      transform: none;
-    }
-  }
-</style>
-
-<script>
-  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
-    const section = rail.closest('section');
-    const prev = section?.querySelector<HTMLButtonElement>('[data-rail-prev]');
-    const next = section?.querySelector<HTMLButtonElement>('[data-rail-next]');
-    if (!prev || !next) return;
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const update = () => {
-      const max = rail.scrollWidth - rail.clientWidth;
-      prev.disabled = rail.scrollLeft <= 2;
-      next.disabled = rail.scrollLeft >= max - 2;
-    };
-
-    const step = (dir: 1 | -1) => {
-      const item = rail.querySelector<HTMLElement>('li');
-      const gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
-      const width = item ? item.offsetWidth + gap : rail.clientWidth * 0.8;
-      rail.scrollBy({ left: dir * width, behavior: reduce.matches ? 'auto' : 'smooth' });
-    };
-
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
-    rail.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    update();
-  });
-</script>
