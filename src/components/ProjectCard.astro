@@ -17,7 +17,7 @@ interface Props {
   aspectClass?: string;
   /** Overrides the photo's sizes attribute. */
   sizes?: string;
-  /** Photo cards: the scope takes two lines at most on mobile and one line from 768px. */
+  /** Photo cards: the scope takes two lines at most on mobile and tablet, one line from 1024px. */
   clampScope?: boolean;
 }
 
@@ -78,7 +78,7 @@ const contract = project.contract && `Contract: ${project.contract.toLowerCase()
           class:list={[
             'mt-3 text-white/80',
             large ? (clampScope ? 'max-w-[72ch] text-[15px] md:text-[17px]' : 'max-w-[44ch] text-[17px]') : 'text-[15px] leading-snug',
-            clampScope && 'line-clamp-2 md:line-clamp-1',
+            clampScope && 'line-clamp-2 lg:line-clamp-1',
           ]}
         >
           {project.scope}
