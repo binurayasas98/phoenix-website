@@ -301,6 +301,122 @@
     display: none;
   }
 
+  /* Forms: labels above inputs, 16px text so iPhones do not zoom, 48px tall inputs */
+  .field-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .field-hint {
+    font-weight: 400;
+    color: var(--color-graphite);
+  }
+
+  .input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: var(--radius-input);
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-hairline);
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--color-ink);
+    transition: box-shadow 150ms var(--ease);
+    appearance: none;
+  }
+
+  .input::placeholder {
+    color: #86868b;
+  }
+
+  .input:hover {
+    box-shadow: inset 0 0 0 1px var(--color-graphite);
+  }
+
+  .input:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 1px var(--color-brand),
+      0 0 0 3px rgba(0, 120, 176, 0.25);
+  }
+
+  .input[aria-invalid='true'] {
+    box-shadow: inset 0 0 0 1px #d70015;
+  }
+
+  textarea.input {
+    min-height: 128px;
+    resize: vertical;
+  }
+
+  .field-error {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #d70015;
+  }
+
+  .field-error:empty {
+    display: none;
+  }
+
+  /* Choice pills: styled checkboxes and radios */
+  .choice {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .choice span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--color-hairline);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color 150ms var(--ease),
+      box-shadow 150ms var(--ease),
+      color 150ms var(--ease),
+      transform 150ms var(--ease);
+  }
+
+  .choice span:hover {
+    box-shadow: inset 0 0 0 1px var(--color-graphite);
+  }
+
+  .choice span:active {
+    transform: scale(0.97);
+  }
+
+  .choice input:checked + span {
+    background: var(--color-ink);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .choice input:focus-visible + span {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+
   .skip-link {
     position: fixed;
     top: 12px;
@@ -345,6 +461,11 @@
 
 /* Leave room for the mobile action bar at the end of the page. */
 @media (max-width: 767px) {
+  /* Fields scrolled into view stop clear of the action bar. */
+  html:has(#action-bar) {
+    scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+
   body:has(#action-bar) > footer {
     padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
