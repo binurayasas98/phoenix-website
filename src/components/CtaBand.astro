@@ -7,7 +7,7 @@ import Icon from './Icon.astro';
 
 <section class="cta-band on-night bg-night text-white" aria-labelledby="cta-heading" data-track-area="cta_band">
   <div class="container-site pb-24 pt-24 text-center md:pb-32 md:pt-40">
-    <h2 id="cta-heading" class="t-h2 mx-auto max-w-[14ch] text-balance">Talk to a specialist today.</h2>
+    <h2 id="cta-heading" class="t-h2 mx-auto max-w-[14ch] text-balance">Have a project in mind?</h2>
     <p class="t-lead mx-auto mt-6 max-w-[40ch] text-white/70">
       Book a free consultation and receive a clear, written quotation, with no obligation.
     </p>
@@ -19,7 +19,9 @@ import Icon from './Icon.astro';
       </a>
     </div>
     <p class="mt-6">
-      <a href={site.phone.href} class="link link-on-night tabular"><span>Or call {site.phone.display}</span></a>
+      <a href={site.phone.href} class="link link-on-night tabular" data-track-location="cta_urgent">
+        <span>Urgent leak? Call {site.phone.display}.</span>
+      </a>
     </p>
   </div>
 </section>

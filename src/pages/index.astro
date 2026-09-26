@@ -1,24 +1,34 @@
 ---
-import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PhotoHero from '../components/PhotoHero.astro';
 import TwoToneHeading from '../components/TwoToneHeading.astro';
 import OverlayCard from '../components/OverlayCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import TextLink from '../components/TextLink.astro';
+import DirectorCard from '../components/DirectorCard.astro';
+import Faq from '../components/Faq.astro';
 import IntroStatement from '../components/home/IntroStatement.astro';
 import ServicesRail from '../components/home/ServicesRail.astro';
-import Commitments from '../components/home/Commitments.astro';
+import WhyPhoenix from '../components/home/WhyPhoenix.astro';
 import Process from '../components/home/Process.astro';
 import heroImg from '../assets/images/hero.jpg';
-import christyImg from '../assets/images/director-christy.jpg';
 import { site, whatsappUrl } from '../data/site';
 import { accessMethods } from '../data/services';
 import { featuredProjects } from '../data/projects';
-import { trustedBy, sectors } from '../data/clients';
+import { trustedBy } from '../data/clients';
+import { directors } from '../data/directors';
+import { sectors, facilityManagementLine } from '../data/sectors';
+import { homeFaqs } from '../data/faqs';
+import { testimonials } from '../data/testimonials';
 
-const facts = ['CIDA SP2 registered', '350+ projects', 'Fully insured', site.warranty.short];
+const facts = [
+  `${site.projectsCompleted}+ projects since ${site.since}`,
+  `CIDA ${site.cidaGrade} registered`,
+  'Fully insured',
+  site.warranty.short,
+];
 const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredProjects.slice(2)];
+const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
 ---
 
 <Base
@@ -30,7 +40,7 @@ const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredPro
     image={{ src: heroImg, alt: 'Phoenix rope access technician applying sealant to a building facade' }}
     position="58% center"
     lines={['Waterproofing and', 'facade specialists.']}
-    subline="Waterproofing, painting, sealants and glass cleaning for commercial and residential buildings, at any height. Since 2011."
+    subline="Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face. We waterproof, paint, seal and clean commercial and residential buildings at any height."
     facts={facts}
     announcement
     rope
@@ -54,6 +64,8 @@ const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredPro
   <IntroStatement />
 
   <ServicesRail />
+
+  <WhyPhoenix />
 
   <!-- Access (night) -->
   <section class="section on-night bg-night text-white" aria-labelledby="access-heading" data-track-area="access">
@@ -92,7 +104,7 @@ const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredPro
       <TwoToneHeading
         id="projects-heading"
         first="Proven on demanding sites."
-        second={'Including Bandaranaike International Airport, Shangri\u2011La and One Galle Face.'}
+        second="From the international airport to Colombo's landmark towers."
         class="max-w-[22ch]"
       />
       <div class="mt-12 grid gap-4 md:mt-16 md:gap-5 lg:grid-cols-2">
@@ -101,66 +113,99 @@ const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredPro
       <div class="mt-4 grid gap-4 md:mt-5 md:grid-cols-2 md:gap-5 lg:grid-cols-4">
         {restProjects.map((p) => <ProjectCard project={p} href={`/projects#${p.slug}`} />)}
       </div>
-      <div class="mt-8">
+      <div class="mt-12 grid gap-4 border-t border-hairline pt-8 md:mt-16 md:grid-cols-12 md:gap-10 md:pt-10">
+        <p class="text-[21px] font-semibold tracking-[-0.015em] text-ink md:col-span-5 md:text-[24px]">
+          Trusted for ongoing contracts.
+        </p>
+        <p class="text-[17px] text-graphite md:col-span-7 md:text-[19px]">
+          Monthly at Shangri&#8209;La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center.
+        </p>
+      </div>
+      <div class="mt-6">
         <TextLink href="/projects">View all projects</TextLink>
       </div>
     </div>
   </section>
 
-  <Commitments />
 
-  <!-- Director quote -->
-  <section class="section bg-paper" aria-label="A word from our founder">
+  <!-- Directors -->
+  <section class="section bg-mist" aria-labelledby="directors-heading">
     <div class="container-site">
-      <figure class="max-w-[960px]">
-        <blockquote>
-          <p class="quote text-balance">
-            “Quality isn't just a promise, it's our identity. Every project deserves craftsmanship that lasts.”
-          </p>
-        </blockquote>
-        <figcaption class="mt-10 flex items-center gap-4">
-          <Picture
-            src={christyImg}
-            alt="Mr. Christy Marcelline, Founder and Managing Director"
-            formats={['avif', 'webp']}
-            widths={[64, 128]}
-            sizes="64px"
-            width={64}
-            height={64}
-            loading="lazy"
-            decoding="async"
-            class="size-16 rounded-full object-cover object-top"
-          />
-          <span>
-            <span class="block font-semibold text-ink">Mr. Christy Marcelline</span>
-            <span class="block text-[15px] text-graphite">Founder and Managing Director</span>
-          </span>
-        </figcaption>
-      </figure>
+      <TwoToneHeading id="directors-heading" first="Led by its directors." second="Hands-on, on every project." />
+      <div class="mt-12 grid gap-16 md:mt-16 md:grid-cols-2 md:gap-10 lg:gap-16">
+        {directors.map((d) => <DirectorCard director={d} />)}
+      </div>
+      <div class="mt-10">
+        <TextLink href="/about#leadership" tone="mist">Read their full statements</TextLink>
+      </div>
     </div>
   </section>
 
   <!-- Sectors -->
-  <section class="section bg-mist" aria-labelledby="sectors-heading">
+  <section class="section bg-paper" aria-labelledby="sectors-heading">
     <div class="container-site">
-      <h2 id="sectors-heading" class="t-h2">Sectors we serve.</h2>
-      <p class="t-lead mt-6 max-w-[40ch] text-graphite">From hotels and hospitals to airports, factories and homes.</p>
-      <ol class="mt-12 grid md:mt-16 md:grid-flow-col md:grid-cols-2 md:grid-rows-4 md:gap-x-12">
+      <TwoToneHeading
+        id="sectors-heading"
+        first="Sectors we serve."
+        second="Hotels, hospitals, offices, residences, public buildings and industry."
+        class="max-w-[18em]"
+      />
+      <ul class="mt-12 border-b border-hairline md:mt-16">
         {
-          sectors.map((s, i) => (
-            <li class="sector-row flex items-baseline gap-6 border-t border-hairline py-5 md:py-6">
-              <span class="tabular w-8 flex-none text-[15px] text-graphite" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span class="text-[21px] font-semibold tracking-[-0.015em] text-ink md:text-[24px]">{s}</span>
+          sectors.map((s) => (
+            <li class="border-t border-hairline">
+              <a href={`/sectors#${s.slug}`} class="sector-row">
+                <span class="sector-name">{s.name}</span>
+                <span class="sector-arrow" aria-hidden="true">›</span>
+              </a>
             </li>
           ))
         }
-      </ol>
+      </ul>
+      <p class="mt-8 max-w-[56ch] text-[17px] text-graphite">{facilityManagementLine}</p>
     </div>
   </section>
 
-  <Process />
+  <Process tone="mist" />
+
+  {
+    shownTestimonials.length > 0 && (
+      <section class="section bg-paper" aria-labelledby="testimonials-heading">
+        <div class="container-site">
+          <h2 id="testimonials-heading" class="t-h2">What our clients say.</h2>
+          <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-10">
+            {shownTestimonials.map((t) => (
+              <figure class="border-t border-hairline pt-8">
+                <blockquote>
+                  <p class="text-[clamp(22px,2vw,28px)] font-semibold leading-snug tracking-[-0.015em] text-ink">
+                    “{t.quote}”
+                  </p>
+                </blockquote>
+                <figcaption class="mt-6">
+                  <span class="block font-semibold text-ink">{t.name}</span>
+                  <span class="block text-[15px] text-graphite">
+                    {t.role}, {t.company}
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Common questions -->
+  <section class="section bg-paper" aria-labelledby="faq-heading">
+    <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-5">
+        <h2 id="faq-heading" class="t-h2">Common questions.</h2>
+      </div>
+      <div class="md:col-span-7">
+        <Faq items={homeFaqs} />
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -215,22 +260,52 @@ const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredPro
     }
   }
 
-  .quote {
-    font-size: clamp(30px, 3.6vw, 52px);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.15;
+  .sector-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 44px;
+    padding-block: 20px;
     color: var(--color-ink);
+    transition: color 300ms var(--ease);
   }
 
-  /* Close each column with a hairline. */
-  .sector-row:last-child {
-    border-bottom: 1px solid var(--color-hairline);
+  .sector-name {
+    font-size: clamp(21px, 2.2vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .sector-arrow {
+    flex: none;
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1;
+    color: var(--color-graphite);
+    transition:
+      transform 300ms var(--ease),
+      color 300ms var(--ease);
+  }
+
+  .sector-row:hover {
+    color: var(--color-brand);
+  }
+
+  .sector-row:hover .sector-arrow {
+    color: var(--color-brand);
+    transform: translateX(4px);
   }
 
   @media (min-width: 768px) {
-    .sector-row:nth-child(4) {
-      border-bottom: 1px solid var(--color-hairline);
+    .sector-row {
+      padding-block: 28px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sector-row:hover .sector-arrow {
+      transform: none;
     }
   }
 </style>

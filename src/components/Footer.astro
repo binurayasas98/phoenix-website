@@ -1,13 +1,15 @@
 ---
 import { Image } from 'astro:assets';
 import logoWhite from '../assets/images/logo-white.png';
-import { site, whatsappUrl } from '../data/site';
+import { labels, site, whatsappUrl, profileEmailUrl } from '../data/site';
 import { services } from '../data/services';
+import Icon from './Icon.astro';
 
 const year = new Date().getFullYear();
 
 const company = [
   { label: 'About', href: '/about' },
+  { label: 'Sectors', href: '/sectors' },
   { label: 'Projects', href: '/projects' },
   { label: 'Contact', href: '/contact' },
   { label: 'Privacy', href: '/privacy' },
@@ -22,15 +24,27 @@ const social = [
 
 <footer class="on-night bg-night text-white" data-track-area="footer">
   <div class="container-site">
-    <div class="border-t border-[var(--hairline-night)] pb-12 pt-16 md:pt-20">
+    <div class="flex flex-col gap-6 border-t border-[var(--hairline-night)] py-12 md:flex-row md:items-center md:justify-between md:py-14">
+      <p class="t-h3 text-white">Have a project in mind?</p>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href="/quote" class="btn btn-light">{labels.quote}</a>
+        <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-frost">
+          <Icon name="whatsapp" size={20} class="text-whatsapp" />
+          {labels.whatsapp}
+        </a>
+      </div>
+    </div>
+
+    <div class="border-t border-[var(--hairline-night)] pb-12 pt-12 md:pt-16">
       <div class="grid gap-12 lg:grid-cols-12">
         <div class="lg:col-span-4">
           <a href="/" class="inline-flex h-11 items-center" aria-label={`${site.legalName}, home`}>
             <Image src={logoWhite} alt="" height={80} class="h-10 w-auto" />
           </a>
-          <p class="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/70">
-            Quality that lasts. Service you can trust. Waterproofing, painting, sealants, glass cleaning
-            and building maintenance specialists since 2011.
+          <p class="mt-6 text-[17px] font-semibold text-white">Quality that lasts. Service you can trust.</p>
+          <p class="mt-3 max-w-[38ch] text-[15px] leading-relaxed text-white/70">
+            Waterproofing, painting, sealants, glass cleaning and building maintenance specialists since 2011.
+            CIDA SP2 registered and fully insured.
           </p>
           {
             social.length > 0 && (
@@ -83,7 +97,25 @@ const social = [
               <span class="block text-white">{site.commercialOffice.label}</span>
               {site.commercialOffice.lines.map((l) => <span class="block">{l}</span>)}
             </address>
-            <p class="text-pretty">{site.hours}</p>
+            <p class="text-pretty">
+              <span class="block">{site.hours}</span>
+              <span class="block">{site.hoursNote}</span>
+            </p>
+          </div>
+          <div class="mt-4">
+            {
+              site.companyProfileUrl ? (
+                <a href={site.companyProfileUrl} class="footer-link">
+                  <span>Download our company profile</span>
+                  <span aria-hidden="true">&nbsp;›</span>
+                </a>
+              ) : (
+                <a href={profileEmailUrl} class="footer-link" data-track-location="footer_profile">
+                  <span>Request our company profile</span>
+                  <span aria-hidden="true">&nbsp;›</span>
+                </a>
+              )
+            }
           </div>
         </div>
       </div>

@@ -1,0 +1,99 @@
+---
+import type { Faq } from '../data/services';
+
+// Accordion built on details and summary, so it works without JavaScript.
+// Also outputs FAQPage structured data from the same items.
+interface Props {
+  items: Faq[];
+  schema?: boolean;
+  class?: string;
+}
+
+const { items, schema = true, class: className } = Astro.props;
+
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<div class:list={['faq border-b border-hairline', className]}>
+  {
+    items.map((item) => (
+      <details class="faq-item border-t border-hairline">
+        <summary class="faq-q">
+          <span>{item.q}</span>
+          <svg
+            class="faq-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
+        </summary>
+        <p class="faq-a">{item.a}</p>
+      </details>
+    ))
+  }
+</div>
+
+{schema && items.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(faqPage)} />}
+
+<style>
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 44px;
+    padding-block: 22px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: var(--color-ink);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    flex: none;
+    color: var(--color-brand);
+    transition: transform 300ms var(--ease);
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-a {
+    max-width: 62ch;
+    padding-bottom: 24px;
+    padding-right: 48px;
+    color: var(--color-graphite);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon {
+      transition: none;
+    }
+  }
+</style>

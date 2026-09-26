@@ -11,16 +11,38 @@ const numbers = [
   { value: site.warranty.years, suffix: '+', label: 'Year workmanship guarantee' },
 ];
 
-const statements = [
-  { icon: 'shield-check', text: 'Fully insured against third-party claims' },
-  { icon: 'flask-conical', text: 'Tested products from brands including Dulux, Conmix and Delta Coatings' },
-  { icon: 'users', text: 'Directors and a dedicated supervisor oversee every project' },
+const reasons = [
+  {
+    icon: 'users',
+    title: 'Directors on every project',
+    text: 'Our directors and a dedicated supervisor oversee each job personally.',
+  },
+  {
+    icon: 'clipboard-check',
+    title: 'The right system, specified',
+    text: 'We assess the site first, then follow manufacturer specifications and industry standards.',
+  },
+  {
+    icon: 'file-check',
+    title: 'Written guarantee',
+    text: `Up to a ${site.warranty.label}, stated in your quotation.`,
+  },
+  {
+    icon: 'shield-check',
+    title: 'Fully insured, CIDA registered',
+    text: 'Covered against third-party claims. SP2 for painting and waterproofing.',
+  },
+  {
+    icon: 'hard-hat',
+    title: 'Safe at any height',
+    text: 'Rope access, gondola, boom truck or scaffolding, with strict safety protocols.',
+  },
 ] as const;
 ---
 
-<section class="section bg-mist" aria-labelledby="commitments-heading">
+<section class="section bg-mist" aria-labelledby="why-heading">
   <div class="container-site">
-    <TwoToneHeading id="commitments-heading" first="Quality that lasts." second="Service you can trust." />
+    <TwoToneHeading id="why-heading" first="Quality that lasts." second="Service you can trust." />
 
     <dl class="mt-14 grid md:mt-20 md:grid-cols-3">
       {
@@ -42,18 +64,19 @@ const statements = [
       }
     </dl>
 
-    <ul class="mt-14 grid gap-8 border-t border-hairline pt-10 md:mt-20 md:grid-cols-3 md:gap-10 md:pt-12">
+    <ul class="reasons mt-14 grid gap-x-8 md:mt-20 md:grid-cols-2 lg:grid-cols-5 lg:gap-x-6">
       {
-        statements.map((s) => (
-          <li class="flex gap-4">
-            <Icon name={s.icon} size={28} class="flex-none text-brand" />
-            <p class="max-w-[30ch] text-[17px] font-medium leading-snug text-ink">{s.text}</p>
+        reasons.map((r) => (
+          <li class="border-t border-hairline py-6 lg:pb-0 lg:pt-8">
+            <Icon name={r.icon} size={28} class="text-brand" />
+            <h3 class="mt-4 text-[19px] font-semibold leading-snug tracking-[-0.01em] text-ink">{r.title}</h3>
+            <p class="mt-2 max-w-[36ch] text-[15px] leading-normal text-graphite">{r.text}</p>
           </li>
         ))
       }
     </ul>
 
-    <figure class="media-reveal relative mt-14 overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:mt-20 md:rounded-[var(--radius-card)]">
+    <figure class="media-reveal relative mt-10 overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:mt-20 md:rounded-[var(--radius-card)]">
       <Picture
         src={teamImg}
         alt="The Phoenix Decorators rope access team in safety harnesses"

@@ -1,8 +1,10 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import logo from '../assets/images/logo.png';
 import logoWhite from '../assets/images/logo-white.png';
 import { nav, labels, site, whatsappUrl } from '../data/site';
+import { services } from '../data/services';
+import TextLink from './TextLink.astro';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -42,17 +44,40 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     <nav aria-label="Main" class="hidden md:block">
       <ul class="flex items-center gap-1">
         {
-          nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="nav-link"
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+          nav.map((item) =>
+            item.href === '/services' ? (
+              <li>
+                <a
+                  href={item.href}
+                  class="nav-link lg:!hidden"
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+                <button
+                  type="button"
+                  class="nav-link mega-trigger !hidden lg:!inline-flex"
+                  aria-expanded="false"
+                  aria-controls="mega-services"
+                  data-mega-trigger
+                  data-current={isActive(item.href) ? 'true' : undefined}
+                >
+                  {item.label}
+                  <Icon name="chevron-down" size={14} class="mega-chevron" />
+                </button>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  class="nav-link"
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ),
+          )
         }
       </ul>
     </nav>
@@ -69,6 +94,55 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
       >
         <Icon name="menu" size={24} />
       </button>
+    </div>
+  </div>
+
+  <div id="mega-services" class="mega hidden lg:block" data-mega-panel>
+    <div class="container-site grid grid-cols-12 gap-10 pb-12 pt-8">
+      <div class="col-span-9">
+        <ul class="grid grid-cols-3 gap-x-6 gap-y-2">
+          {
+            services.map((s) => (
+              <li>
+                <a href={`/services/${s.slug}`} class="mega-item" aria-current={isActive(`/services/${s.slug}`) ? 'page' : undefined}>
+                  <Picture
+                    src={s.image.src}
+                    alt=""
+                    formats={['avif', 'webp']}
+                    widths={[96, 192]}
+                    sizes="96px"
+                    width={96}
+                    height={72}
+                    loading="lazy"
+                    decoding="async"
+                    class="mega-thumb"
+                  />
+                  <span class="min-w-0">
+                    <span class="mega-name">{s.name}</span>
+                    <span class="mega-line">{s.oneLiner}</span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-4">
+          <TextLink href="/services">All services</TextLink>
+        </div>
+      </div>
+      <div class="col-span-3 border-l border-hairline pl-10" data-track-area="mega_menu">
+        <p class="text-[19px] font-semibold tracking-[-0.01em] text-ink">Not sure what you need?</p>
+        <p class="mt-2 text-[15px] text-graphite">Send us a few photos on WhatsApp.</p>
+        <a
+          href={whatsappUrl(site.whatsappMessages.notSure)}
+          target="_blank"
+          rel="noopener"
+          class="btn btn-sm btn-secondary mt-5"
+        >
+          <Icon name="whatsapp" size={18} class="text-whatsapp" />
+          {labels.whatsapp}
+        </a>
+      </div>
     </div>
   </div>
 </header>
@@ -92,17 +166,46 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
       <ul class="menu-list">
         <li><a href="/" class="menu-link" aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
         {
-          nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="menu-link"
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
+          nav.map((item) =>
+            item.href === '/services' ? (
+              <li>
+                <details class="menu-group">
+                  <summary class="menu-link">
+                    <span aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</span>
+                    <Icon name="plus" size={24} class="menu-plus" />
+                  </summary>
+                  <ul class="pb-4 pt-2">
+                    {services.map((s) => (
+                      <li>
+                        <a
+                          href={`/services/${s.slug}`}
+                          class="menu-sublink"
+                          aria-current={isActive(`/services/${s.slug}`) ? 'page' : undefined}
+                        >
+                          {s.name}
+                        </a>
+                      </li>
+                    ))}
+                    <li>
+                      <a href="/services" class="menu-sublink" aria-current={path === '/services' ? 'page' : undefined}>
+                        All services
+                      </a>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  class="menu-link"
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ),
+          )
         }
       </ul>
     </nav>
@@ -119,8 +222,9 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
           <Icon name="whatsapp" size={20} class="text-whatsapp" />
           {labels.whatsapp}
         </a>
-        <a href={site.phone.href} class="link link-on-night justify-center" data-track-location="menu">
-          <span>{labels.call}: {site.phone.display}</span>
+        <a href={site.phone.href} class="btn btn-lg btn-frost w-full" data-track-location="menu">
+          <Icon name="phone" size={20} />
+          {labels.call}
         </a>
       </div>
     </div>
@@ -130,17 +234,31 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 <style>
   .site-header {
     color: var(--color-ink);
+    isolation: isolate;
+    transition: color 300ms var(--ease);
+  }
+
+  /* The frosted surface sits on a pseudo-element so the mega menu panel can blur the page too. */
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: transparent;
     transition:
       background-color 300ms var(--ease),
-      color 300ms var(--ease),
       box-shadow 300ms var(--ease);
   }
 
-  .site-header[data-state='solid'] {
+  .site-header[data-state='solid']::before {
     background: rgba(255, 255, 255, 0.72);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     backdrop-filter: saturate(180%) blur(20px);
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .site-header[data-mega='open']::before {
+    box-shadow: none;
   }
 
   .site-header[data-state='clear'] {
@@ -179,12 +297,112 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
   }
 
   .nav-link:hover,
-  .nav-link[aria-current='page'] {
+  .nav-link[aria-current='page'],
+  .nav-link[data-current],
+  .mega-trigger[aria-expanded='true'] {
     opacity: 1;
   }
 
-  .site-header[data-state='solid'] .nav-link[aria-current='page'] {
+  .site-header[data-state='solid'] .nav-link[aria-current='page'],
+  .site-header[data-state='solid'] .nav-link[data-current] {
     color: var(--color-brand);
+  }
+
+  .mega-trigger {
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .mega-trigger :global(.mega-chevron) {
+    transition: transform 300ms var(--ease);
+  }
+
+  .mega-trigger[aria-expanded='true'] :global(.mega-chevron) {
+    transform: rotate(180deg);
+  }
+
+  /* Services mega menu (desktop, 1024px and up) */
+  .mega {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    color: var(--color-ink);
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+      opacity 300ms var(--ease),
+      transform 300ms var(--ease),
+      visibility 0s linear 300ms;
+  }
+
+  .site-header[data-mega='open'] .mega {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 300ms var(--ease),
+      transform 300ms var(--ease),
+      visibility 0s;
+  }
+
+  .mega :focus-visible {
+    outline-color: var(--color-brand) !important;
+  }
+
+  .mega-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+    margin-inline: -10px;
+    border-radius: 18px;
+    transition: background-color 300ms var(--ease);
+  }
+
+  .mega-item:hover,
+  .mega-item[aria-current='page'] {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .mega-item :global(picture) {
+    flex: none;
+  }
+
+  .mega-item :global(.mega-thumb) {
+    flex: none;
+    max-width: none;
+    width: 96px;
+    height: 72px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .mega-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-ink);
+  }
+
+  .mega-line {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-graphite);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mega,
+    .site-header[data-mega='open'] .mega {
+      transform: none;
+    }
   }
 
   .header-cta {
@@ -271,7 +489,48 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
     border-bottom: 1px solid var(--hairline-night);
   }
 
-  .menu-link[aria-current='page'] {
+  .menu-link[aria-current='page'],
+  .menu-link [aria-current='page'] {
+    color: var(--color-brand-light);
+  }
+
+  .menu-group summary {
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .menu-group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .menu-group :global(.menu-plus) {
+    color: rgba(255, 255, 255, 0.7);
+    transition: transform 300ms var(--ease);
+  }
+
+  .menu-group[open] :global(.menu-plus) {
+    transform: rotate(45deg);
+  }
+
+  .menu-group[open] summary {
+    border-bottom-color: transparent;
+  }
+
+  .menu-group[open] > ul {
+    border-bottom: 1px solid var(--hairline-night);
+  }
+
+  .menu-sublink {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 19px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .menu-sublink[aria-current='page'] {
     color: var(--color-brand-light);
   }
 
@@ -293,12 +552,87 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
   const header = document.getElementById('site-header');
   const sheet = document.getElementById('menu-sheet') as HTMLDialogElement | null;
 
+  const megaTrigger = header?.querySelector<HTMLButtonElement>('[data-mega-trigger]');
+  const megaPanel = header?.querySelector<HTMLElement>('[data-mega-panel]');
+  const isMegaOpen = () => header?.dataset.mega === 'open';
+
+  // The header turns frosted white after 24px of scroll, and whenever the mega menu is open.
+  const updateState = () => {
+    if (!header?.dataset.transparent) return;
+    header.dataset.state = isMegaOpen() || window.scrollY > 24 ? 'solid' : 'clear';
+  };
+
   if (header?.dataset.transparent) {
-    const update = () => {
-      header.dataset.state = window.scrollY > 24 ? 'solid' : 'clear';
+    updateState();
+    window.addEventListener('scroll', updateState, { passive: true });
+  }
+
+  if (header && megaTrigger && megaPanel) {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let timer: number | undefined;
+
+    const open = (focusFirst = false) => {
+      window.clearTimeout(timer);
+      header.dataset.mega = 'open';
+      megaTrigger.setAttribute('aria-expanded', 'true');
+      updateState();
+      if (focusFirst) megaPanel.querySelector<HTMLAnchorElement>('a')?.focus();
     };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
+
+    const close = (returnFocus = false) => {
+      window.clearTimeout(timer);
+      if (!isMegaOpen()) return;
+      delete header.dataset.mega;
+      megaTrigger.setAttribute('aria-expanded', 'false');
+      updateState();
+      if (returnFocus) megaTrigger.focus();
+    };
+
+    // Click, Enter or Space. From the keyboard, focus moves into the panel.
+    megaTrigger.addEventListener('click', (e) => {
+      if (isMegaOpen()) close();
+      else open(e.detail === 0);
+    });
+
+    // Hover with a 150ms intent delay, mouse only.
+    const hoverIn = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || !desktop.matches) return;
+      window.clearTimeout(timer);
+      if (!isMegaOpen()) timer = window.setTimeout(() => open(), 150);
+    };
+    const hoverOut = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      const to = e.relatedTarget as Node | null;
+      if (to && (megaTrigger.contains(to) || megaPanel.contains(to))) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => close(), 150);
+    };
+    [megaTrigger, megaPanel].forEach((el) => {
+      el.addEventListener('pointerenter', hoverIn);
+      el.addEventListener('pointerleave', hoverOut);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isMegaOpen()) {
+        const inside = megaPanel.contains(document.activeElement) || document.activeElement === megaTrigger;
+        close(inside);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as Node;
+      if (isMegaOpen() && !megaTrigger.contains(target) && !megaPanel.contains(target)) close();
+    });
+
+    // Close when keyboard focus leaves the trigger and the panel.
+    header.addEventListener('focusout', (e) => {
+      const to = e.relatedTarget as Node | null;
+      if (to && !megaTrigger.contains(to) && !megaPanel.contains(to)) close();
+    });
+
+    desktop.addEventListener('change', (e) => {
+      if (!e.matches) close();
+    });
   }
 
   if (sheet) {
