@@ -46,7 +46,7 @@ export const site = {
   // Shown only while enabled and before the expiry date (YYYY-MM-DD).
   announcement: {
     enabled: true,
-    text: 'Before the monsoon rains, book a waterproofing inspection',
+    text: 'Book a pre-monsoon waterproofing inspection',
     link: '/quote?service=waterproofing',
     expires: '2026-11-30',
   },

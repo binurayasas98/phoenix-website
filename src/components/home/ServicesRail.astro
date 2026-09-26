@@ -3,6 +3,7 @@ import { services } from '../../data/services';
 import OverlayCard from '../OverlayCard.astro';
 import TwoToneHeading from '../TwoToneHeading.astro';
 import Icon from '../Icon.astro';
+import TextLink from '../TextLink.astro';
 ---
 
 <section class="section bg-paper" aria-labelledby="services-heading">
@@ -33,6 +34,9 @@ import Icon from '../Icon.astro';
       ))
     }
   </ul>
+  <div class="container-site mt-8">
+    <TextLink href="/services">Explore all services</TextLink>
+  </div>
 </section>
 
 <style>

@@ -10,11 +10,10 @@ import Faq from '../components/Faq.astro';
 import IntroStatement from '../components/home/IntroStatement.astro';
 import ServicesRail from '../components/home/ServicesRail.astro';
 import WhyPhoenix from '../components/home/WhyPhoenix.astro';
-import Process from '../components/home/Process.astro';
 import heroImg from '../assets/images/hero.jpg';
 import { site, whatsappUrl } from '../data/site';
 import { accessMethods } from '../data/services';
-import { featuredProjects } from '../data/projects';
+import { projects, type Project } from '../data/projects';
 import { trustedBy } from '../data/clients';
 import { directors } from '../data/directors';
 import { sectors, facilityManagementLine } from '../data/sectors';
@@ -27,8 +26,15 @@ const facts = [
   'Fully insured',
   site.warranty.short,
 ];
-const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredProjects.slice(2)];
+
+const bySlug = (slug: string) => projects.find((p) => p.slug === slug) as Project;
+const photoProjects = ['aitken-spence', 'grand-bell'].map(bySlug);
+const listProjects = ['bia', 'shangri-la', 'cinnamon-garden', 'one-galle-face', 'world-trade-center', 'hemas-hospitals'].map(bySlug);
+
 const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
+
+// Keep hyphenated names like "Shangri-La" on one line.
+const nb = (text: string) => text.replace(/-/g, '‑');
 ---
 
 <Base
@@ -38,23 +44,35 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
 >
   <PhotoHero
     image={{ src: heroImg, alt: 'Phoenix rope access technician applying sealant to a building facade' }}
-    position="58% center"
+    position="58% 70%"
+    positionMobile="54% center"
     lines={['Waterproofing and', 'facade specialists.']}
-    subline="Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face. We waterproof, paint, seal and clean commercial and residential buildings at any height."
+    subline="Waterproofing, painting, sealants and glass cleaning at any height. Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face."
     facts={facts}
     announcement
     rope
     entrance
+    home
   />
 
+  <!-- Facts under the hero (mobile only; on desktop they sit inside the hero) -->
+  <section class="bg-paper md:hidden" aria-label="Key facts">
+    <ul class="container-site facts-sm grid grid-cols-2 py-2">
+      {facts.map((f) => <li>{f}</li>)}
+    </ul>
+  </section>
+
   <!-- Trusted by -->
-  <section class="bg-paper pb-16 pt-20 md:pb-24 md:pt-28" aria-labelledby="trusted-heading">
+  <section class="trusted bg-paper" aria-labelledby="trusted-heading">
     <div class="container-site">
-      <h2 id="trusted-heading" class="text-[17px] font-semibold text-ink">Trusted on landmark sites.</h2>
-      <ul class="mt-6 flex flex-wrap gap-x-8 gap-y-3 md:mt-8 md:gap-x-12 md:gap-y-4">
+      <h2 id="trusted-heading" class="text-[17px] font-semibold text-ink">Trusted on landmark sites across Sri Lanka.</h2>
+      <ul class="mt-6 grid grid-cols-2 gap-x-4 md:mt-8 md:grid-cols-4 md:gap-x-8">
         {
-          trustedBy.map((name) => (
-            <li class="text-[19px] font-medium tracking-[-0.01em] text-graphite md:text-[24px]">{name}</li>
+          trustedBy.map((c) => (
+            <li class="border-t border-hairline pb-4 pt-3 md:pb-6 md:pt-4">
+              <span class="block text-[16px] font-semibold leading-snug tracking-[-0.01em] text-ink md:text-[19px]">{nb(c.name)}</span>
+              <span class="mt-1 block text-[14px] text-graphite">{c.type}</span>
+            </li>
           ))
         }
       </ul>
@@ -104,16 +122,43 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
       <TwoToneHeading
         id="projects-heading"
         first="Proven on demanding sites."
-        second="From the international airport to Colombo's landmark towers."
-        class="max-w-[22ch]"
+        second="Selected work for hotels, banks, hospitals and landmark towers."
+        class="max-w-[20em]"
       />
-      <div class="mt-12 grid gap-4 md:mt-16 md:gap-5 lg:grid-cols-2">
-        {firstProjects.map((p) => <ProjectCard project={p} size="large" href={`/projects#${p.slug}`} />)}
+      <div class="mt-12 grid gap-4 md:mt-16 md:grid-cols-2 md:gap-5">
+        {
+          photoProjects.map((p) => (
+            <ProjectCard
+              project={p}
+              size="large"
+              href={`/projects#${p.slug}`}
+              aspectClass="aspect-[4/3] md:aspect-[4/5] lg:aspect-[16/10]"
+            />
+          ))
+        }
       </div>
-      <div class="mt-4 grid gap-4 md:mt-5 md:grid-cols-2 md:gap-5 lg:grid-cols-4">
-        {restProjects.map((p) => <ProjectCard project={p} href={`/projects#${p.slug}`} />)}
-      </div>
-      <div class="mt-12 grid gap-4 border-t border-hairline pt-8 md:mt-16 md:grid-cols-12 md:gap-10 md:pt-10">
+
+      <ul class="mt-12 border-b border-hairline md:mt-16">
+        {
+          listProjects.map((p) => (
+            <li class="border-t border-hairline">
+              <a href={`/projects#${p.slug}`} class="project-row">
+                <span class="pr-main">
+                  <span class="pr-name">{nb(p.client)}</span>
+                  <span class="pr-meta">
+                    <span>{p.location}</span>
+                    {p.contract && <span class="pr-pill">{p.contract} contract</span>}
+                  </span>
+                </span>
+                <span class="pr-scope">{p.scope}</span>
+                <span class="pr-arrow" aria-hidden="true">›</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-12 grid gap-3 md:mt-16 md:grid-cols-12 md:gap-10">
         <p class="text-[21px] font-semibold tracking-[-0.015em] text-ink md:col-span-5 md:text-[24px]">
           Trusted for ongoing contracts.
         </p>
@@ -127,46 +172,53 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
     </div>
   </section>
 
-
   <!-- Directors -->
   <section class="section bg-mist" aria-labelledby="directors-heading">
-    <div class="container-site">
-      <TwoToneHeading id="directors-heading" first="Led by its directors." second="Hands-on, on every project." />
-      <div class="mt-12 grid gap-16 md:mt-16 md:grid-cols-2 md:gap-10 lg:gap-16">
-        {directors.map((d) => <DirectorCard director={d} />)}
+    <div class="container-site grid gap-8 md:gap-12 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-5">
+        <div class="lg:sticky lg:top-[calc(var(--header-h)+48px)]">
+          <TwoToneHeading id="directors-heading" first={'Led by its\u00a0directors.'} second="Hands-on, on every project." />
+          <p class="mt-4 max-w-[44ch] text-[17px] text-graphite md:mt-6">
+            Christy Marcelline founded Phoenix Decorators in 2011 and runs it today with his co-owner, Ranga Gamachchi. With
+            a dedicated supervisor, they oversee every project personally.
+          </p>
+          <div class="mt-2 md:mt-4">
+            <TextLink href="/about#leadership" tone="mist">Meet our leadership</TextLink>
+          </div>
+        </div>
       </div>
-      <div class="mt-10">
-        <TextLink href="/about#leadership" tone="mist">Read their full statements</TextLink>
-      </div>
+      <ul class="lg:col-span-7">
+        {
+          directors.map((d, i) => (
+            <li class:list={[i > 0 && 'mt-7 border-t border-hairline pt-7 md:mt-10 md:pt-10']}>
+              <DirectorCard director={d} variant="compact" />
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
   <!-- Sectors -->
   <section class="section bg-paper" aria-labelledby="sectors-heading">
     <div class="container-site">
-      <TwoToneHeading
-        id="sectors-heading"
-        first="Sectors we serve."
-        second="Hotels, hospitals, offices, residences, public buildings and industry."
-        class="max-w-[18em]"
-      />
+      <TwoToneHeading id="sectors-heading" first="Sectors we serve." second="The same standard in every building." />
       <ul class="mt-12 border-b border-hairline md:mt-16">
         {
           sectors.map((s) => (
             <li class="border-t border-hairline">
               <a href={`/sectors#${s.slug}`} class="sector-row">
                 <span class="sector-name">{s.name}</span>
+                <span class="sector-clients">{s.clients.slice(0, 3).map(nb).join(', ')}</span>
                 <span class="sector-arrow" aria-hidden="true">›</span>
               </a>
             </li>
           ))
         }
       </ul>
-      <p class="mt-8 max-w-[56ch] text-[17px] text-graphite">{facilityManagementLine}</p>
+      <p class="mt-6 max-w-[56ch] text-[17px] text-graphite">{facilityManagementLine}</p>
     </div>
   </section>
-
-  <Process tone="mist" />
 
   {
     shownTestimonials.length > 0 && (
@@ -196,12 +248,13 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
   }
 
   <!-- Common questions -->
-  <section class="section bg-paper" aria-labelledby="faq-heading">
-    <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
-      <div class="md:col-span-5">
-        <h2 id="faq-heading" class="t-h2">Common questions.</h2>
+  <section class="section bg-mist" aria-labelledby="faq-heading">
+    <div class="container-site">
+      <h2 id="faq-heading" class="t-h2">Common questions.</h2>
+      <div class="mt-3">
+        <TextLink href={whatsappUrl()} tone="mist" external location="home_faq">Still have a question? Chat on WhatsApp</TextLink>
       </div>
-      <div class="md:col-span-7">
+      <div class="mt-8 max-w-[880px] md:mt-10">
         <Faq items={homeFaqs} />
       </div>
     </div>
@@ -260,27 +313,115 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
     }
   }
 
-  .sector-row {
+  /* Home rhythm: 80px sections on mobile, 112px on desktop. Every heading balances its lines. */
+  :global(#main) {
+    --section-y: 80px;
+  }
+
+  @media (min-width: 768px) {
+    :global(#main) {
+      --section-y: 112px;
+    }
+  }
+
+  :global(#main) :global(:is(h1, h2, h3)) {
+    text-wrap: balance;
+  }
+
+  /* Mobile fact strip: 2 x 2 with hairline dividers */
+  .facts-sm li {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 44px;
+    min-height: 56px;
+    padding: 12px 16px 12px 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .facts-sm li:nth-child(even) {
+    padding-left: 16px;
+    border-left: 1px solid var(--color-hairline);
+  }
+
+  .facts-sm li:nth-child(n + 3) {
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  .trusted {
+    padding-block: 56px 40px;
+  }
+
+  @media (min-width: 768px) {
+    .trusted {
+      padding-block: 80px 56px;
+    }
+  }
+
+  /* Editorial project list */
+  .project-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main arrow'
+      'scope arrow';
+    column-gap: 16px;
+    row-gap: 8px;
+    align-items: center;
     padding-block: 20px;
     color: var(--color-ink);
+  }
+
+  .pr-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .pr-name {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
     transition: color 300ms var(--ease);
   }
 
-  .sector-name {
-    font-size: clamp(21px, 2.2vw, 32px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+  .pr-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin-top: 4px;
+    font-size: 15px;
+    color: var(--color-graphite);
   }
 
-  .sector-arrow {
-    flex: none;
-    font-size: clamp(24px, 2.2vw, 32px);
+  .pr-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--color-brand-ink);
+    box-shadow: inset 0 0 0 1px rgba(0, 120, 176, 0.3);
+  }
+
+  .pr-scope {
+    grid-area: scope;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--color-graphite);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pr-arrow {
+    grid-area: arrow;
+    font-size: 28px;
     line-height: 1;
     color: var(--color-graphite);
     transition:
@@ -288,22 +429,113 @@ const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
       color 300ms var(--ease);
   }
 
-  .sector-row:hover {
+  .project-row:hover .pr-name,
+  .project-row:hover .pr-arrow {
     color: var(--color-brand);
   }
 
-  .sector-row:hover .sector-arrow {
-    color: var(--color-brand);
+  .project-row:hover .pr-arrow {
     transform: translateX(4px);
   }
 
   @media (min-width: 768px) {
-    .sector-row {
+    .project-row {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-areas: none;
+      column-gap: 40px;
       padding-block: 28px;
+    }
+
+    .pr-main {
+      grid-area: auto;
+      grid-column: 1 / span 5;
+    }
+
+    .pr-name {
+      font-size: 24px;
+    }
+
+    .pr-scope {
+      grid-area: auto;
+      grid-column: 6 / span 6;
+      font-size: 17px;
+    }
+
+    .pr-arrow {
+      grid-area: auto;
+      grid-column: 12;
+      justify-self: end;
+    }
+  }
+
+  /* Sector rows */
+  .sector-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name arrow'
+      'clients arrow';
+    column-gap: 16px;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 16px;
+    color: var(--color-ink);
+  }
+
+  .sector-name {
+    grid-area: name;
+    font-size: clamp(21px, 2.2vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: color 300ms var(--ease);
+  }
+
+  .sector-clients {
+    grid-area: clients;
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--color-graphite);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sector-arrow {
+    grid-area: arrow;
+    font-size: clamp(24px, 2.2vw, 30px);
+    line-height: 1;
+    color: var(--color-graphite);
+    transition:
+      transform 300ms var(--ease),
+      color 300ms var(--ease);
+  }
+
+  .sector-row:hover .sector-name,
+  .sector-row:hover .sector-arrow {
+    color: var(--color-brand);
+  }
+
+  .sector-row:hover .sector-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (min-width: 1024px) {
+    .sector-row {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto;
+      grid-template-areas: 'name clients arrow';
+      column-gap: 40px;
+      padding-block: 22px;
+    }
+
+    .sector-clients {
+      margin-top: 0;
+      font-size: 15px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .project-row:hover .pr-arrow,
     .sector-row:hover .sector-arrow {
       transform: none;
     }

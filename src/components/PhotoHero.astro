@@ -11,6 +11,14 @@ interface Props {
   image: Photo;
   /** CSS object-position for the photo. */
   position?: string;
+  /** object-position under 768px, when it differs. */
+  positionMobile?: string;
+  /**
+   * Home page layout: soft left scrim on desktop; on mobile the photo sits in the top part of the hero,
+   * the content is anchored to the bottom, the announcement moves to the top and the rope line and
+   * fact strip are hidden (the page shows the facts in a strip under the hero).
+   */
+  home?: boolean;
   /** h1 split into its desktop lines. */
   lines: string[];
   subline: string;
@@ -27,6 +35,8 @@ interface Props {
 const {
   image,
   position = 'center',
+  positionMobile,
+  home = false,
   lines,
   subline,
   quoteHref = '/quote',
@@ -42,7 +52,8 @@ const showAnnouncement = announcement && isAnnouncementActive();
 ---
 
 <section
-  class="hero on-photo relative isolate overflow-hidden bg-night text-white"
+  class:list={['hero on-photo relative isolate overflow-hidden bg-night text-white', home && 'is-home']}
+  style={`--pos: ${position}; --pos-sm: ${positionMobile ?? position};`}
   data-hero
   data-entrance={entrance ? '' : undefined}
   aria-labelledby="hero-title"
@@ -58,37 +69,43 @@ const showAnnouncement = announcement && isAnnouncementActive();
       fetchpriority="high"
       decoding="async"
       class="hero-img h-full w-full object-cover"
-      style={`object-position: ${position};`}
       data-hero-img
     />
   </div>
   <div class="hero-shade-bottom absolute inset-0 -z-10" aria-hidden="true"></div>
-  <div class="hero-shade-left absolute inset-0 -z-10 hidden md:block" aria-hidden="true"></div>
+  <div class:list={['absolute inset-0 -z-10 hidden md:block', home ? 'hero-scrim-home' : 'hero-shade-left']} aria-hidden="true"></div>
   <div class="hero-shade-top absolute inset-x-0 top-0 -z-10 h-40" aria-hidden="true"></div>
   <div class="absolute inset-0 -z-10 bg-night opacity-0" aria-hidden="true" data-hero-dim></div>
 
   <div class="container-site flex h-full flex-col pt-[var(--header-h)]">
     <div class="flex min-h-6 flex-1 pb-6">
-      {rope && <RopeLine tone="white" dot="light" class="hero-rope h-full -ml-[3.5px]" />}
-    </div>
-
-    <div class="pb-10 md:pb-14">
       {
-        showAnnouncement && (
-          <a
-            href={site.announcement.link}
-            class="btn-frost hero-fade mb-6 inline-flex min-h-11 items-center rounded-full px-4 py-2 text-[14px] font-medium leading-snug md:mb-8 md:text-[15px]"
-            data-announcement
-            data-expires={site.announcement.expires}
-            data-hero-fade
-          >
-            <span>
-              {site.announcement.text}<span aria-hidden="true">&nbsp;›</span>
-            </span>
-          </a>
+        rope && (
+          <div class="hidden h-full md:flex">
+            <RopeLine tone="white" dot="light" class="hero-rope h-full -ml-[3.5px]" />
+          </div>
         )
       }
+    </div>
 
+    <div class="hero-content pb-10 md:pb-14">
+      {
+        showAnnouncement && (
+          <div class="hero-pill-wrap">
+            <a
+              href={site.announcement.link}
+              class="btn-frost hero-fade hero-pill inline-flex min-h-11 items-center rounded-full px-4 py-2 font-medium leading-snug"
+              data-announcement
+              data-expires={site.announcement.expires}
+              data-hero-fade
+            >
+              <span>
+                {site.announcement.text}<span aria-hidden="true">&nbsp;›</span>
+              </span>
+            </a>
+          </div>
+        )
+      }
       <h1 id="hero-title" class:list={[display ? 'hero-display' : 't-h1', 'max-w-[14ch] md:max-w-none']}>
         {
           lines.map((line) => (
@@ -107,11 +124,14 @@ const showAnnouncement = announcement && isAnnouncementActive();
         }
       </h1>
 
-      <p class="t-lead hero-fade mt-6 max-w-[34ch] text-white/80 md:mt-8 md:max-w-[42ch]" data-hero-fade>
+      <p
+        class:list={['t-lead hero-fade hero-subline mt-6 text-white/80 md:mt-8', home ? 'md:max-w-[36ch]' : 'max-w-[34ch] md:max-w-[42ch]']}
+        data-hero-fade
+      >
         {subline}
       </p>
 
-      <div class="hero-fade mt-8 flex flex-col gap-3 sm:flex-row md:mt-10" data-hero-fade data-track-area="hero">
+      <div class="hero-fade hero-actions mt-8 flex flex-col gap-3 sm:flex-row md:mt-10" data-hero-fade data-track-area="hero">
         <a href={quoteHref} class="btn btn-lg btn-light">{labels.quote}</a>
         <a
           href={whatsappUrl(whatsappMessage)}
@@ -127,7 +147,7 @@ const showAnnouncement = announcement && isAnnouncementActive();
 
     {
       facts.length > 0 && (
-        <div class="hero-fade mb-6 md:mb-8" data-hero-fade>
+        <div class:list={['hero-fade hero-facts mb-6 md:mb-8', home && 'hidden md:block']} data-hero-fade>
           <FactStrip facts={facts} tone="night" />
         </div>
       )
@@ -169,6 +189,135 @@ const showAnnouncement = announcement && isAnnouncementActive();
 
   .hero-shade-bottom {
     background: linear-gradient(to top, rgba(6, 23, 43, 0.85) 0%, rgba(6, 23, 43, 0) 65%);
+  }
+
+  .hero-img {
+    object-position: var(--pos-sm);
+  }
+
+  @media (min-width: 768px) {
+    .hero-img {
+      object-position: var(--pos);
+    }
+  }
+
+  /* Soft scrim behind the text on the home hero, clear of the technician. */
+  .hero-scrim-home {
+    background: linear-gradient(90deg, rgba(6, 23, 43, 0.55) 0%, rgba(6, 23, 43, 0.2) 45%, transparent 70%);
+  }
+
+  .hero-pill-wrap {
+    margin-bottom: 24px;
+  }
+
+  .hero-pill {
+    font-size: 14px;
+  }
+
+  @media (min-width: 768px) {
+    .hero-pill-wrap {
+      margin-bottom: 32px;
+    }
+
+    .hero-pill {
+      font-size: 15px;
+    }
+  }
+
+  /* Home: no orphan words in the subline. */
+  .is-home .hero-subline {
+    text-wrap: pretty;
+  }
+
+  /* Home: the announcement always fits on one line. */
+  .is-home .hero-pill {
+    white-space: nowrap;
+    padding-inline: 14px;
+    font-size: clamp(12px, 3.5vw, 14px);
+  }
+
+  /*
+   * Home, desktop: the headline always starts below the technician's hands. His hands end at about
+   * 70% of the height minus 20% of the width, so the headline scales with both and the stack stays tight.
+   */
+  @media (min-width: 768px) {
+    .is-home .hero-display {
+      font-size: min(clamp(56px, 8.5vw, 128px), calc(15.5svh + 10.5vw - 180px));
+    }
+
+    .is-home .hero-pill {
+      font-size: 14px;
+    }
+
+    .is-home .hero-pill-wrap {
+      margin-bottom: 20px;
+    }
+
+    .is-home .hero-subline {
+      margin-top: 20px;
+    }
+
+    .is-home .hero-actions {
+      margin-top: 28px;
+    }
+
+    .is-home .hero-content {
+      padding-bottom: 28px;
+    }
+
+    .is-home .hero-facts {
+      margin-bottom: 20px;
+    }
+  }
+
+  /* Narrower than the photo (3:2): the photo fills the height, so his hands end at about 40% of the height. */
+  @media (min-width: 768px) and (max-aspect-ratio: 3/2) {
+    .is-home .hero-display {
+      font-size: min(clamp(56px, 8.5vw, 128px), calc(31.5svh - 180px));
+    }
+  }
+
+  /*
+   * Home, mobile: the photo fills the top of the hero and fades into night, the content is anchored to
+   * the bottom under a strong gradient, and the technician's face and hands stay clear of the text.
+   */
+  @media (max-width: 767px) {
+    .is-home {
+      min-height: 720px;
+    }
+
+    .is-home .hero-media {
+      bottom: 24%;
+      -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+    }
+
+    .is-home .hero-shade-bottom {
+      background: linear-gradient(
+        to top,
+        rgba(6, 23, 43, 0.92) 0%,
+        rgba(6, 23, 43, 0.88) 30%,
+        rgba(6, 23, 43, 0.55) 48%,
+        rgba(6, 23, 43, 0) 64%
+      );
+    }
+
+    .is-home .hero-pill-wrap {
+      margin-bottom: 20px;
+    }
+
+    .is-home .hero-subline {
+      margin-top: 16px;
+      font-size: 18px;
+    }
+
+    .is-home .hero-actions {
+      margin-top: 24px;
+    }
+
+    .is-home .hero-content {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
   }
 
   .hero-shade-left {

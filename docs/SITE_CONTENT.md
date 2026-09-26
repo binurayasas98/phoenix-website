@@ -36,7 +36,7 @@ Structure goal: an international-standard B2B contractor website. Every page ans
 - urgentLine: Urgent leak? Call or WhatsApp +94 77 036 2222.
 - facebookUrl: https://www.facebook.com/people/Phoenix-Decorators-pvt-ltd/61570341385061/
 - linkedinUrl: https://lk.linkedin.com/company/phoenix-decorators-pvt-ltd
-- announcement: { enabled: true, text: "Before the monsoon rains, book a waterproofing inspection", link: "/quote?service=waterproofing", expires: "2026-11-30" }. Show it only while enabled and not expired.
+- announcement: { enabled: true, text: "Book a pre-monsoon waterproofing inspection", link: "/quote?service=waterproofing", expires: "2026-11-30" }. Show it only while enabled and not expired.
 
 ## 3. WhatsApp and email messages (prefilled)
 - General: "Hi Phoenix Decorators, I'd like a quote for work on my building."
@@ -223,7 +223,7 @@ Show as clean lists with hairlines, grouped by service. Names only, no logos. On
 - Sealant application: Monarch Residence, Galle Road. Empire City Residence, Braybrooke Place, Colombo 2. Hemas Hospital, Wattala. Hemas Hospital, Thalawathugoda. Browns Capital, D S Senanayake Mawatha. Hemas Pharmaceuticals, Colombo 3. World Trade Center. Dialog Head Office, Union Place.
 - Crack repair: Empire Residencies, Colombo 2. Aitken Spence, Vauxhall Street. 77th on Fourth Residence, Old Nawala Road. VFS Global, Dematagoda. Hemas Hospital, Thalawathugoda. NTB Head Office, Nawam Mawatha. Marine City Residence, Dehiwala. One Galle Face Office Tower, Colombo 2.
 - Other clients: Havelock City, Colombo. City of Dreams, Colombo.
-- Home "trusted by" names: Bandaranaike International Airport, Shangri-La, World Trade Center, One Galle Face, Cinnamon Life, HSBC, Dialog, NDB Bank, Hemas Hospitals, Aitken Spence, Marriott Weligama, Civil Aviation Authority.
+- Home "trusted by" client wall (name / descriptor, in this order): Bandaranaike International Airport / Airport. Shangri-La / Hotel. World Trade Center / Offices. One Galle Face / Residences and mall. Cinnamon Life / Hotel. HSBC / Bank. Dialog / Head office. NDB Bank / Bank. Hemas Hospitals / Hospitals. Aitken Spence / Head office. Marriott Weligama / Hotel. Civil Aviation Authority / Aviation authority.
 
 ## 10. Where we have worked (src/data/locations.ts, map on /projects)
 Approximate coordinates for a country-scale map. Each pin lists the project names.
@@ -258,7 +258,6 @@ Start as an empty array. The testimonials section renders only when it has items
 ### Footer
 - Brand line: "Quality that lasts. Service you can trust."
 - Description: "Waterproofing, painting, sealants, glass cleaning and building maintenance specialists since 2011. CIDA SP2 registered and fully insured."
-- Prompt above the columns: "Have a project in mind?" with Get a free quote and Chat on WhatsApp.
 - Columns: Services (all six). Company (About, Sectors, Projects, Safety and quality, Contact, Privacy). Contact (phone, WhatsApp, email, both offices with labels, hours, hours note, "Request our company profile ›").
 - Fine print: "© [current year] Phoenix Decorators (Pvt) Ltd. All rights reserved." and "CIDA SP2 registered for painting and waterproofing."
 
@@ -269,42 +268,45 @@ Start as an empty array. The testimonials section renders only when it has items
 - Small line: "Urgent leak? Call +94 77 036 2222." (tel link)
 
 ### Home
+Rhythm: section padding 80px on mobile and 112px on desktop. One idea per section, no sentence repeated across sections, every heading balanced with no orphan words.
+
 1. Hero (full-screen photo: hero.jpg)
-   - Announcement pill (when active).
+   - Announcement pill (when active), always on one line.
    - h1: Waterproofing and facade specialists. (Desktop lines: "Waterproofing and" / "facade specialists.")
-   - Subline: "Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face. We waterproof, paint, seal and clean commercial and residential buildings at any height."
+   - Subline (max 36ch on desktop): "Waterproofing, painting, sealants and glass cleaning at any height. Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face."
    - Buttons: Get a free quote. Chat on WhatsApp.
-   - Fact strip: "350+ projects since 2011". "CIDA SP2 registered". "Fully insured". "[warranty short label]".
-2. Trusted by: heading "Trusted on landmark sites." then the trusted-by names.
-3. Intro statement (scroll highlight): "Since 2011, facility managers, engineers and building owners have trusted Phoenix Decorators to keep water out and facades in top condition. More than 350 projects later, one specialist team still takes responsibility from the first inspection to the final handover."
-4. Services: heading "Six specialist services." second tone "One accountable team." Card rail.
+   - Fact strip: "350+ projects since 2011". "CIDA SP2 registered". "Fully insured". "[warranty short label]". Inside the hero on desktop; on mobile a white 2 x 2 strip directly under the hero (15px, hairline dividers).
+   - Desktop: a soft left scrim over the bottom gradient. Text never covers the technician's face or hands: the headline scales with the screen so it always starts below his hands.
+   - Mobile: content anchored to the bottom under a strong night gradient, buttons full width, technician in the top half, rope line hidden.
+2. Trusted by: heading "Trusted on landmark sites across Sri Lanka." (17px semibold), then a typographic client wall (4 columns desktop, 2 mobile): hairline top, name, descriptor underneath. Names only, no logos.
+3. Intro statement (scroll highlight; words stay in ink with reduced motion): "Since 2011, facility managers, engineers and building owners have trusted us with more than 350 projects. One specialist team takes responsibility for every job, from the first inspection to the final handover."
+4. Services: heading "Six specialist services." second tone "One accountable team." Card rail, then "Explore all services ›" to /services.
 5. Why Phoenix: heading "Quality that lasts." second tone "Service you can trust."
-   - Big numbers: "350+" / "Projects completed since 2011". "SP2" / "CIDA grade for painting and waterproofing". "[warranty number]+" / "Year workmanship guarantee".
-   - Five reasons, each an icon, a short title and one line:
+   - Big numbers (one row of three on every screen): "350+" / "Projects completed since 2011". "SP2" / "CIDA grade for painting and waterproofing". "[warranty number]+" / "Year workmanship guarantee".
+   - Two columns: brand-lotus-tower.jpg (4:5, no taller than 640px) with the caption "Our team at work in Colombo.", and four reasons with icons:
      - "Directors on every project" / "Our directors and a dedicated supervisor oversee each job personally."
      - "The right system, specified" / "We assess the site first, then follow manufacturer specifications and industry standards."
-     - "Written guarantee" / "Up to [warranty label], stated in your quotation." Use the site.ts value.
-     - "Fully insured, CIDA registered" / "Covered against third-party claims. SP2 for painting and waterproofing."
+     - "Fully insured" / "Every project is covered against third-party claims."
      - "Safe at any height" / "Rope access, gondola, boom truck or scaffolding, with strict safety protocols."
-   - Then team.jpg as a wide tile with the caption "Our rope access team."
+   - team.jpg is not used on the home page (it stays on About).
 6. Access (night): heading "Any height." second tone "The right access." Body: "We choose the safest, most efficient way to reach every surface, with strict safety protocols on every job." Four tiles. Link: "Ask about access for your building ›".
-7. Projects: heading "Proven on demanding sites." second tone "From the international airport to Colombo's landmark towers." Six featured projects. Then an ongoing-contracts strip: "Trusted for ongoing contracts." / "Monthly at Shangri-La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center." Link: View all projects ›
-8. Directors: heading "Led by its directors." second tone "Hands-on, on every project." Two director cards side by side (stacked on mobile): 3:4 portrait, pull quote in large type, name, title. Under the cards: "Read their full statements ›" to /about#leadership.
-9. Sectors: heading "Sectors we serve." second tone "Hotels, hospitals, offices, residences, public buildings and industry." Six rows with hairlines, no numbers, each linking to /sectors#[slug] with a "›". Line under: the facility management line from section 8.
-10. Process: heading "How we work." second tone "A clear process, documented at every step."
-    1 Share your requirement: Send us the details and a few photos through the quote form or on WhatsApp.
-    2 Site assessment: A specialist inspects the area, identifies the cause and selects the right system.
-    3 Written quotation: Scope, materials, timeline and guarantee, agreed in writing before work starts.
-    4 Supervised execution: We follow manufacturer specifications and industry standards, check quality at every stage and hand over a clean site.
-11. Testimonials (hidden while empty).
-12. Common questions (accordion, FAQPage schema):
+7. Projects: heading "Proven on demanding sites." second tone "Selected work for hotels, banks, hospitals and landmark towers."
+   - The two photo projects (Aitken Spence Head Office, Grand Bell Hotel) as large photo cards.
+   - An editorial list of six projects, each a link to /projects#slug: Bandaranaike International Airport, Shangri-La Hotel, Cinnamon Garden Residence, One Galle Face, World Trade Center, Hemas Hospitals. Client name, location, a contract pill when there is one (for example "Monthly contract"), scope (two lines at most) and "›".
+   - Ongoing contracts strip: "Trusted for ongoing contracts." / "Monthly at Shangri-La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center." Link: View all projects ›
+8. Directors: heading "Led by its directors." second tone "Hands-on, on every project." Line: "Christy Marcelline founded Phoenix Decorators in 2011 and runs it today with his co-owner, Ranga Gamachchi. With a dedicated supervisor, they oversee every project personally." Link: "Meet our leadership ›" to /about#leadership. Then both directors as compact rows (small portrait, pull quote, name, title).
+9. Sectors: heading "Sectors we serve." second tone "The same standard in every building." Six rows with hairlines, no numbers, each linking to /sectors#[slug] with a "›", showing the first three client names of the sector. Line under: the facility management line from section 8.
+10. Testimonials (hidden while empty).
+11. Common questions (accordion, FAQPage schema, on mist). Under the heading: "Still have a question? Chat on WhatsApp ›" (general message).
     - Is the quotation free? / Yes. Consultations and quotations are free, with no obligation.
     - Which areas do you cover? / We are based in Colombo and work across Sri Lanka, with most projects in the Western Province. Recent work includes Kandy, Galle, Weligama and Mirissa.
     - Are you registered and insured? / Yes. We are registered with CIDA at SP2 level for painting and waterproofing, and every project is covered by third-party insurance.
     - Can you work while the building is in use? / Yes. We plan the work in sections and agree timings with you, so occupants and operations are disturbed as little as possible.
     - Do you offer maintenance contracts? / Yes. Clients use us on monthly, quarterly and annual contracts, and we can propose a plan for your building.
     - What guarantee do you give? / A written workmanship guarantee of [warranty label], depending on the system installed. The exact period is stated in your quotation.
-13. CtaBand.
+12. CtaBand.
+
+The "How we work" process is not on the home page; every service page shows it.
 
 ### Services index (/services)
 - h1: Our services.
