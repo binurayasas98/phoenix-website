@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import teamImg from '../../assets/images/team.jpg';
+import lotusImg from '../../assets/images/brand-lotus-tower.jpg';
 import { site } from '../../data/site';
 import TwoToneHeading from '../TwoToneHeading.astro';
 import Icon from '../Icon.astro';
@@ -23,14 +23,9 @@ const reasons = [
     text: 'We assess the site first, then follow manufacturer specifications and industry standards.',
   },
   {
-    icon: 'file-check',
-    title: 'Written guarantee',
-    text: `Up to a ${site.warranty.label}, stated in your quotation.`,
-  },
-  {
     icon: 'shield-check',
-    title: 'Fully insured, CIDA registered',
-    text: 'Covered against third-party claims. SP2 for painting and waterproofing.',
+    title: 'Fully insured',
+    text: 'Every project is covered against third-party claims.',
   },
   {
     icon: 'hard-hat',
@@ -44,11 +39,11 @@ const reasons = [
   <div class="container-site">
     <TwoToneHeading id="why-heading" first="Quality that lasts." second="Service you can trust." />
 
-    <dl class="mt-14 grid md:mt-20 md:grid-cols-3">
+    <dl class="mt-10 grid grid-cols-3 md:mt-14">
       {
         numbers.map((n) => (
-          <div class="stat flex flex-col-reverse justify-end py-8 md:px-10 md:py-2">
-            <dt class="mt-3 max-w-[24ch] text-[17px] text-graphite">{n.label}</dt>
+          <div class="stat flex flex-col-reverse justify-end">
+            <dt class="stat-label">{n.label}</dt>
             <dd class="stat-number tabular">
               {'value' in n ? (
                 <>
@@ -64,61 +59,84 @@ const reasons = [
       }
     </dl>
 
-    <ul class="reasons mt-14 grid gap-x-8 md:mt-20 md:grid-cols-2 lg:grid-cols-5 lg:gap-x-6">
-      {
-        reasons.map((r) => (
-          <li class="border-t border-hairline py-6 lg:pb-0 lg:pt-8">
-            <Icon name={r.icon} size={28} class="text-brand" />
-            <h3 class="mt-4 text-[19px] font-semibold leading-snug tracking-[-0.01em] text-ink">{r.title}</h3>
-            <p class="mt-2 max-w-[36ch] text-[15px] leading-normal text-graphite">{r.text}</p>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="mt-12 grid items-center gap-8 md:mt-16 md:grid-cols-12 md:gap-10">
+      <figure class="md:col-span-5 lg:col-span-4">
+        <div class="media-reveal overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:rounded-[var(--radius-card)]">
+          <Picture
+            src={lotusImg}
+            alt="Phoenix technician in a branded shirt with the Lotus Tower behind"
+            formats={['avif', 'webp']}
+            widths={[400, 640, 960]}
+            sizes="(min-width: 1376px) 405px, (min-width: 1024px) 30vw, (min-width: 768px) 40vw, calc(100vw - 48px)"
+            loading="lazy"
+            decoding="async"
+            class="lotus aspect-[4/5] h-auto w-full object-cover"
+          />
+        </div>
+        <figcaption class="mt-3 text-[15px] text-graphite">Our team at work in Colombo.</figcaption>
+      </figure>
 
-    <figure class="media-reveal relative mt-10 overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:mt-20 md:rounded-[var(--radius-card)]">
-      <Picture
-        src={teamImg}
-        alt="The Phoenix Decorators rope access team in safety harnesses"
-        formats={['avif', 'webp']}
-        widths={[640, 960, 1280, 1920]}
-        sizes="(min-width: 1376px) 1280px, calc(100vw - 48px)"
-        loading="lazy"
-        decoding="async"
-        class="aspect-[4/3] h-auto w-full object-cover md:aspect-[21/9]"
-      />
-      <div class="overlay-night absolute inset-0" aria-hidden="true"></div>
-      <figcaption class="t-h3 absolute bottom-0 left-0 p-6 text-white md:p-10">Our rope access team.</figcaption>
-    </figure>
+      <ul class="border-b border-hairline md:col-span-7 md:col-start-6 lg:col-span-7 lg:col-start-6">
+        {
+          reasons.map((r) => (
+            <li class="flex gap-5 border-t border-hairline py-5 md:py-6">
+              <Icon name={r.icon} size={28} class="mt-0.5 flex-none text-brand" />
+              <div>
+                <h3 class="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-ink">{r.title}</h3>
+                <p class="mt-1 text-[15px] leading-normal text-graphite md:text-[17px]">{r.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
   .stat-number {
-    font-size: clamp(64px, 8vw, 120px);
+    font-size: clamp(40px, 8vw, 120px);
     font-weight: 600;
     letter-spacing: -0.04em;
     line-height: 1;
     color: var(--color-ink);
   }
 
-  .stat + .stat {
-    border-top: 1px solid var(--color-hairline);
+  .stat-label {
+    margin-top: 10px;
+    max-width: 24ch;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--color-graphite);
+  }
+
+  .stat {
+    padding-inline: 12px;
   }
 
   .stat:first-child {
-    padding-top: 0;
+    padding-left: 0;
+  }
+
+  .stat + .stat {
+    border-left: 1px solid var(--color-hairline);
   }
 
   @media (min-width: 768px) {
-    .stat + .stat {
-      border-top: 0;
-      border-left: 1px solid var(--color-hairline);
+    .stat {
+      padding-inline: 40px;
     }
 
-    .stat:first-child {
-      padding-left: 0;
+    .stat-label {
+      margin-top: 12px;
+      font-size: 17px;
     }
+  }
+
+  /* 4:5, never taller than 640px. */
+  .lotus {
+    max-height: 640px;
+    object-position: center 30%;
   }
 </style>
 

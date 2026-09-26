@@ -4,9 +4,13 @@ import TwoToneHeading from '../TwoToneHeading.astro';
 
 interface Props {
   tone?: 'paper' | 'mist';
+  /** Second tone of the heading. */
+  second?: string;
+  /** "rail": sticky heading beside a vertical rope line that fills on scroll. "row": heading on top, steps in a row (home). */
+  layout?: 'rail' | 'row';
 }
 
-const { tone = 'paper' } = Astro.props;
+const { tone = 'paper', second = 'A clear process, documented at every step.', layout = 'rail' } = Astro.props;
 ---
 
 <section
@@ -14,10 +18,27 @@ const { tone = 'paper' } = Astro.props;
   style={tone === 'mist' ? '--process-bg: var(--color-mist)' : undefined}
   aria-labelledby="process-heading"
 >
+  {
+    layout === 'row' ? (
+      <div class="container-site">
+        <TwoToneHeading id="process-heading" first="How we work." second={second} />
+        <ol class="mt-10 grid gap-x-8 sm:grid-cols-2 md:mt-14 lg:grid-cols-4 lg:gap-x-6">
+          {processSteps.map((step, i) => (
+            <li class="border-t border-hairline pb-6 pt-5 lg:pb-0 lg:pt-6">
+              <span class="tabular block text-[15px] font-medium text-brand" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-2 text-[21px] font-semibold leading-snug tracking-[-0.015em] text-ink">{step.title}</h3>
+              <p class="mt-2 text-[15px] text-graphite md:text-[17px]">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ) : (
   <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
     <div class="md:col-span-5">
       <div class="md:sticky md:top-[calc(var(--header-h)+48px)]">
-        <TwoToneHeading id="process-heading" first="How we work." second="A clear process, documented at every step." />
+        <TwoToneHeading id="process-heading" first="How we work." second={second} />
       </div>
     </div>
 
@@ -40,6 +61,8 @@ const { tone = 'paper' } = Astro.props;
       </ol>
     </div>
   </div>
+    )
+  }
 </section>
 
 <style>

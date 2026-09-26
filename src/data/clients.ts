@@ -114,18 +114,24 @@ export const clientGroups: ClientGroup[] = [
 
 export const otherClients: string[] = ['Havelock City, Colombo', 'City of Dreams, Colombo'];
 
-/** The "trusted by" row on the home page. */
-export const trustedBy: string[] = [
-  'Bandaranaike International Airport',
-  'Shangri-La',
-  'World Trade Center',
-  'One Galle Face',
-  'Cinnamon Life',
-  'HSBC',
-  'Dialog',
-  'NDB Bank',
-  'Hemas Hospitals',
-  'Aitken Spence',
-  'Marriott Weligama',
-  'Civil Aviation Authority',
+export interface TrustedClient {
+  name: string;
+  /** Short descriptor shown under the name. */
+  type: string;
+}
+
+/** The "trusted by" client wall on the home page. Names only, never logos. */
+export const trustedBy: TrustedClient[] = [
+  { name: 'Bandaranaike International Airport', type: 'Airport' },
+  { name: 'Shangri-La', type: 'Hotel' },
+  { name: 'World Trade Center', type: 'Offices' },
+  { name: 'One Galle Face', type: 'Residences and mall' },
+  { name: 'Cinnamon Life', type: 'Hotel' },
+  { name: 'HSBC', type: 'Bank' },
+  { name: 'Dialog', type: 'Head office' },
+  { name: 'NDB Bank', type: 'Bank' },
+  { name: 'Hemas Hospitals', type: 'Hospitals' },
+  { name: 'Aitken Spence', type: 'Head office' },
+  { name: 'Marriott Weligama', type: 'Hotel' },
+  { name: 'Civil Aviation Authority', type: 'Aviation authority' },
 ];

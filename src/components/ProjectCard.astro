@@ -13,9 +13,19 @@ interface Props {
   class?: string;
   /** Also show the sector name and the scope on small cards (projects page). */
   details?: boolean;
+  /** Overrides the photo card's aspect ratio classes. */
+  aspectClass?: string;
 }
 
-const { project, size = 'small', headingLevel: Heading = 'h3', href, class: className, details = false } = Astro.props;
+const {
+  project,
+  size = 'small',
+  headingLevel: Heading = 'h3',
+  href,
+  class: className,
+  details = false,
+  aspectClass,
+} = Astro.props;
 const sectorName = getSector(project.sector)?.name;
 const large = size === 'large';
 const Tag = href ? 'a' : 'article';
@@ -31,7 +41,7 @@ const client = project.client.replace(/-/g, '\u2011');
       class:list={[
         'card media-reveal group relative flex flex-col justify-end overflow-hidden rounded-[var(--radius-card-sm)] bg-night text-white md:rounded-[var(--radius-card)]',
         href && 'card-zoom',
-        large ? 'aspect-[4/5] md:aspect-[5/4]' : 'aspect-[4/5]',
+        aspectClass ?? (large ? 'aspect-[4/5] md:aspect-[5/4]' : 'aspect-[4/5]'),
         className,
       ]}
       data-reveal

@@ -125,23 +125,23 @@ const tiles = [
         {
           directors.map((d, i) => (
             <article class="grid items-center gap-8 md:grid-cols-12 md:gap-10" aria-labelledby={`director-${d.slug}`}>
-              <div class:list={['md:col-span-5', i % 2 === 1 && 'md:order-2 md:col-start-8']}>
-                <div class="media-reveal overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]">
+              <div class:list={['md:col-span-4', i % 2 === 1 && 'md:order-2 md:col-start-9 md:justify-self-end']}>
+                <div class="portrait-frame media-reveal overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]">
                   <Picture
                     src={d.photo}
                     alt={d.alt}
                     formats={['avif', 'webp']}
                     widths={[400, 600, 768]}
-                    sizes="(min-width: 1376px) 520px, (min-width: 768px) 40vw, calc(100vw - 48px)"
+                    sizes="(min-width: 1024px) 400px, (min-width: 768px) 30vw, 300px"
                     width={768}
                     height={1024}
                     loading="lazy"
                     decoding="async"
-                    class="portrait aspect-[3/4] h-auto w-full object-cover object-top"
+                    class="portrait aspect-[4/5] h-auto w-full object-cover object-top md:aspect-[3/4]"
                   />
                 </div>
               </div>
-              <div class:list={['md:col-span-6', i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-7']}>
+              <div class:list={['md:col-span-7', i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-6']}>
                 <blockquote>
                   <p class="director-quote text-balance">“{d.pullQuote}”</p>
                 </blockquote>
@@ -312,10 +312,14 @@ const tiles = [
     color: var(--color-ink);
   }
 
-  /* On mobile the portrait sits on top, no taller than 480px. */
-  @media (max-width: 767px) {
-    .portrait {
-      max-height: 480px;
+  /* Portraits stay modest: 4:5 and at most 300px wide on mobile, at most 400px wide on desktop. */
+  .portrait-frame {
+    max-width: 300px;
+  }
+
+  @media (min-width: 768px) {
+    .portrait-frame {
+      max-width: 400px;
     }
   }
 
