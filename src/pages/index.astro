@@ -6,7 +6,6 @@ import OverlayCard from '../components/OverlayCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import TextLink from '../components/TextLink.astro';
 import DirectorCard from '../components/DirectorCard.astro';
-import Faq from '../components/Faq.astro';
 import Rail from '../components/Rail.astro';
 import IntroStatement from '../components/home/IntroStatement.astro';
 import ServicesRail from '../components/home/ServicesRail.astro';
@@ -18,7 +17,6 @@ import { getProject, type Project } from '../data/projects';
 import { trustedBy } from '../data/clients';
 import { directors } from '../data/directors';
 import { sectors, facilityManagementLine } from '../data/sectors';
-import { homeFaqs } from '../data/faqs';
 import { testimonials } from '../data/testimonials';
 
 const facts = [
@@ -56,16 +54,12 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     home
   />
 
-  <!-- Facts under the hero (mobile only; on desktop they sit inside the hero) -->
-  <section class="bg-paper md:hidden" aria-label="Key facts">
-    <ul class="container-site facts-sm grid grid-cols-2 py-2">
+  <!-- Trusted by, with the facts strip on top on mobile (on desktop the facts sit inside the hero) -->
+  <section class="bg-paper" aria-labelledby="trusted-heading">
+    <ul class="container-site facts-sm grid grid-cols-2 py-2 md:hidden" aria-label="Key facts">
       {facts.map((f) => <li>{f}</li>)}
     </ul>
-  </section>
-
-  <!-- Trusted by -->
-  <section class="trusted bg-paper" aria-labelledby="trusted-heading">
-    <div class="container-site">
+    <div class="trusted container-site">
       <h2 id="trusted-heading" class="text-[17px] font-semibold text-ink">Trusted on landmark sites across Sri Lanka.</h2>
       <ul class="mt-6 grid grid-cols-2 gap-x-4 md:mt-8 md:grid-cols-4 md:gap-x-8">
         {
@@ -219,7 +213,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
 
   {
     shownTestimonials.length > 0 && (
-      <section class="section bg-paper" aria-labelledby="testimonials-heading">
+      <section class="section bg-mist" aria-labelledby="testimonials-heading">
         <div class="container-site">
           <h2 id="testimonials-heading" class="t-h2">What our clients say.</h2>
           <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-10">
@@ -244,18 +238,6 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     )
   }
 
-  <!-- Common questions -->
-  <section class="section bg-mist" aria-labelledby="faq-heading">
-    <div class="container-site">
-      <h2 id="faq-heading" class="t-h2">Common questions.</h2>
-      <div class="mt-3">
-        <TextLink href={whatsappUrl()} tone="mist" external location="home_faq">Still have a question? Chat on WhatsApp</TextLink>
-      </div>
-      <div class="mt-8 max-w-[880px] md:mt-10">
-        <Faq items={homeFaqs} />
-      </div>
-    </div>
-  </section>
 </Base>
 
 <style>

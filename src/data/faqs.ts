@@ -1,8 +1,8 @@
 import { site } from './site';
 import type { Faq } from './services';
 
-// Home page "Common questions". Also output as FAQPage structured data.
-export const homeFaqs: Faq[] = [
+// "Common questions" on the contact page (/contact#faq). Also output as FAQPage structured data.
+export const commonFaqs: Faq[] = [
   {
     q: 'Is the quotation free?',
     a: 'Yes. Consultations and quotations are free, with no obligation.',

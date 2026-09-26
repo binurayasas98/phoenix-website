@@ -3,7 +3,9 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import TextLink from '../components/TextLink.astro';
 import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
 import { labels, site, whatsappUrl, profileEmailUrl } from '../data/site';
+import { commonFaqs } from '../data/faqs';
 
 const tiles = [
   { label: 'WhatsApp', caption: 'Fastest response', href: whatsappUrl(site.whatsappMessages.contact), icon: 'whatsapp', external: true },
@@ -126,8 +128,23 @@ const [urgentBefore, urgentAfter] = site.urgentLine.split(site.phone.display);
     </div>
   </section>
 
+  <!-- Common questions -->
+  <section id="faq" class="section bg-paper" aria-labelledby="faq-heading">
+    <div class="container-site">
+      <h2 id="faq-heading" class="t-h2">Common questions.</h2>
+      <div class="mt-3">
+        <TextLink href={whatsappUrl(site.whatsappMessages.contact)} external location="contact_faq">
+          Still have a question? Chat on WhatsApp
+        </TextLink>
+      </div>
+      <div class="mt-8 max-w-[880px] md:mt-10">
+        <Faq items={commonFaqs} />
+      </div>
+    </div>
+  </section>
+
   <!-- Offices -->
-  <section class="section bg-paper" aria-labelledby="offices-heading">
+  <section class="section bg-mist" aria-labelledby="offices-heading">
     <div class="container-site">
       <h2 id="offices-heading" class="t-h2">Our offices.</h2>
       <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-10">
@@ -143,14 +160,14 @@ const [urgentBefore, urgentAfter] = site.urgentLine.split(site.phone.display);
                 <span class="block">{site.hoursNote}</span>
               </p>
               <div class="mt-2">
-                <TextLink href={directions(o.address)} external>Get directions</TextLink>
+                <TextLink href={directions(o.address)} tone="mist" external>Get directions</TextLink>
               </div>
             </div>
           ))
         }
       </div>
 
-      <div class="map-slot relative mt-12 overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:mt-16 md:rounded-[var(--radius-card)]" data-map-slot data-src={mapEmbed}>
+      <div class="map-slot relative mt-12 overflow-hidden rounded-[var(--radius-card-sm)] bg-paper md:mt-16 md:rounded-[var(--radius-card)]" data-map-slot data-src={mapEmbed}>
         <div class="flex h-full flex-col items-center justify-center gap-4 p-6 text-center" data-map-placeholder>
           <Icon name="map-pin" size={32} class="text-brand" />
           <p class="text-[17px] text-graphite">{site.commercialOffice.label}, {site.commercialOffice.lines[0]}, {site.commercialOffice.lines[1]}</p>
@@ -161,12 +178,12 @@ const [urgentBefore, urgentAfter] = site.urgentLine.split(site.phone.display);
   </section>
 
   <!-- Company profile -->
-  <section class="section bg-mist" aria-labelledby="profile-heading" data-track-area="contact_profile">
+  <section class="section bg-paper" aria-labelledby="profile-heading" data-track-area="contact_profile">
     <div class="container-site">
       <h2 id="profile-heading" class="t-h2 text-balance">Need our company profile?</h2>
       <div class="mt-8 flex flex-col items-start">
-        <TextLink href={whatsappUrl(site.whatsappMessages.profile)} tone="mist" external>Request by WhatsApp</TextLink>
-        <TextLink href={profileEmailUrl} tone="mist">Request by email</TextLink>
+        <TextLink href={whatsappUrl(site.whatsappMessages.profile)} external>Request by WhatsApp</TextLink>
+        <TextLink href={profileEmailUrl}>Request by email</TextLink>
       </div>
     </div>
   </section>
