@@ -31,6 +31,8 @@ export type ServiceSlug =
 export interface Photo {
   src: ImageMetadata;
   alt: string;
+  /** CSS object-position when the photo is cropped (defaults to centre). */
+  position?: string;
 }
 
 export interface Faq {

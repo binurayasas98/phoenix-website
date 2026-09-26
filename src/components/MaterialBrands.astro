@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+import dulux from '../assets/images/brand-dulux.png';
+import conmix from '../assets/images/brand-conmix.png';
+import deltaCoatings from '../assets/images/brand-delta-coatings.png';
+
+// Material brands we work with. They are suppliers, never clients.
+// Logos are 36px tall on mobile and 44px on desktop, greyscale at 70% until hovered on desktop.
+interface Props {
+  /** "large" for a standalone block (About, Safety and quality), "small" inside a section (home). */
+  size?: 'large' | 'small';
+  class?: string;
+}
+
+const { size = 'large', class: className } = Astro.props;
+
+const brands = [
+  { src: dulux, alt: 'Dulux' },
+  { src: conmix, alt: 'Conmix' },
+  { src: deltaCoatings, alt: 'Delta Coatings International' },
+];
+---
+
+<div class:list={['brands', className]}>
+  <p
+    class:list={[
+      'text-balance',
+      size === 'large' ? 't-h3 text-column text-ink' : 'max-w-[56ch] text-[17px] text-graphite md:text-[19px]',
+    ]}
+  >
+    We work with materials from trusted brands, including Dulux, Conmix and Delta Coatings.
+  </p>
+  <ul class="brands-row" aria-label="Material brands">
+    {
+      brands.map((b) => (
+        <li>
+          <Image
+            src={b.src}
+            alt={b.alt}
+            height={44}
+            densities={[1, 2, 3]}
+            quality={90}
+            loading="lazy"
+            decoding="async"
+            class="brand-logo"
+          />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .brands-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .brands-row li {
+    display: flex;
+    align-items: center;
+  }
+
+  .brand-logo {
+    width: auto;
+    height: 36px;
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition:
+      filter 300ms var(--ease),
+      opacity 300ms var(--ease);
+  }
+
+  @media (min-width: 768px) {
+    .brands-row {
+      justify-content: flex-start;
+      gap: 64px;
+      margin-top: 40px;
+    }
+
+    .brand-logo {
+      height: 44px;
+    }
+  }
+
+  @media (hover: hover) and (min-width: 1024px) {
+    .brands-row li:hover .brand-logo {
+      filter: none;
+      opacity: 1;
+    }
+  }
+</style>

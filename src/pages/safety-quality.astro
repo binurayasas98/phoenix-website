@@ -4,6 +4,7 @@ import PageHero from '../components/PageHero.astro';
 import OverlayCard from '../components/OverlayCard.astro';
 import TwoToneHeading from '../components/TwoToneHeading.astro';
 import Icon from '../components/Icon.astro';
+import MaterialBrands from '../components/MaterialBrands.astro';
 import { accessMethods } from '../data/services';
 import { site, whatsappUrl, profileEmailUrl } from '../data/site';
 
@@ -85,9 +86,7 @@ const items = [
   <!-- Materials -->
   <section class="section bg-paper" aria-label="Materials">
     <div class="container-site">
-      <p class="t-h3 text-column text-balance text-ink">
-        Tested, researched products from brands including Dulux, Conmix and Delta Coatings.
-      </p>
+      <MaterialBrands />
     </div>
   </section>
 
