@@ -1,20 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import TextLink from '../components/TextLink.astro';
 import Icon from '../components/Icon.astro';
-import { site, whatsappUrl } from '../data/site';
+import { labels, site, whatsappUrl, profileEmailUrl } from '../data/site';
 
 const tiles = [
   { label: 'WhatsApp', caption: 'Fastest response', href: whatsappUrl(site.whatsappMessages.contact), icon: 'whatsapp', external: true },
   { label: 'Call', caption: 'Speak to our team', href: site.phone.href, icon: 'phone', external: false },
   { label: 'Email', caption: 'For documents and tenders', href: `mailto:${site.email}`, icon: 'mail', external: false },
 ] as const;
+
+const directions = (address: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+const offices = [site.headOffice, site.commercialOffice];
+const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(site.commercialOffice.address)}&output=embed`;
+
+// The urgent line, with the number as a tap-to-call link.
+const [urgentBefore, urgentAfter] = site.urgentLine.split(site.phone.display);
 ---
 
 <Base
   title="Contact | Phoenix Decorators"
   description="Message Phoenix Decorators on WhatsApp, call +94 77 036 2222 or email info@phoenixdecorator.com. Offices in Kochchikade and Colombo 10."
   ctaBand={false}
+  whatsappMessage={site.whatsappMessages.contact}
 >
   <PageHero
     title="How can we help?"
@@ -40,20 +50,232 @@ const tiles = [
         ))
       }
     </ul>
+    <p class="mt-6 text-[17px] font-medium text-ink" data-track-area="contact_urgent">
+      {urgentBefore}<a href={site.phone.href} class="tabular text-brand underline-offset-4 hover:underline">{site.phone.display}</a>{urgentAfter}
+    </p>
   </PageHero>
-  <section class="bg-paper pb-[var(--section-y)]" aria-label="Offices">
-    <div class="container-site grid gap-10 border-t border-hairline pt-12 md:grid-cols-2">
-      {
-        [site.headOffice, site.commercialOffice].map((o) => (
+
+  <!-- Send us a message -->
+  <section class="section bg-mist" aria-labelledby="message-heading">
+    <div class="container-site grid gap-10 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <h2 id="message-heading" class="t-h2 text-balance" tabindex="-1" data-contact-heading>Send us a message.</h2>
+      </div>
+
+      <div class="md:col-span-7">
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="contact-form flex flex-col gap-6"
+          novalidate
+          data-contact-form
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden" aria-hidden="true">
+            <label>Leave this empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
           <div>
-            <h2 class="t-h3">{o.label}</h2>
-            <address class="mt-3 not-italic text-graphite">
-              {o.lines.map((l) => <span class="block">{l}</span>)}
-            </address>
-            <p class="mt-3 text-graphite">{site.hours}</p>
+            <label for="c-name" class="field-label">Name</label>
+            <input id="c-name" name="name" type="text" class="input" autocomplete="name" required aria-describedby="c-name-error" />
+            <p id="c-name-error" class="field-error" aria-live="polite"></p>
           </div>
-        ))
-      }
+
+          <div>
+            <label for="c-phone" class="field-label">Phone</label>
+            <input
+              id="c-phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              class="input"
+              autocomplete="tel"
+              placeholder="077 123 4567"
+              required
+              aria-describedby="c-phone-error"
+            />
+            <p id="c-phone-error" class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div>
+            <label for="c-email" class="field-label">Email <span class="field-hint">(optional)</span></label>
+            <input id="c-email" name="email" type="email" inputmode="email" class="input" autocomplete="email" aria-describedby="c-email-error" />
+            <p id="c-email-error" class="field-error" aria-live="polite"></p>
+          </div>
+
+          <div>
+            <label for="c-message" class="field-label">Message</label>
+            <textarea id="c-message" name="message" class="input" rows="5" required aria-describedby="c-message-error"></textarea>
+            <p id="c-message-error" class="field-error" aria-live="polite"></p>
+          </div>
+
+          <p class="field-error text-[15px]" role="alert" data-form-error></p>
+
+          <div>
+            <button type="submit" class="btn btn-primary w-full sm:w-auto" data-submit>Send message</button>
+          </div>
+        </form>
+
+        <div class="rounded-[var(--radius-card-sm)] bg-paper p-8 md:rounded-[var(--radius-card)] md:p-10" hidden data-contact-success>
+          <Icon name="check" size={32} class="text-brand" />
+          <p class="t-h3 mt-4 text-ink" tabindex="-1" data-success-heading>Thank you. We'll reply within working hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offices -->
+  <section class="section bg-paper" aria-labelledby="offices-heading">
+    <div class="container-site">
+      <h2 id="offices-heading" class="t-h2">Our offices.</h2>
+      <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-10">
+        {
+          offices.map((o) => (
+            <div class="border-t border-hairline pt-8">
+              <h3 class="t-h3">{o.label}</h3>
+              <address class="mt-3 not-italic text-graphite">
+                {o.lines.map((l) => <span class="block">{l}</span>)}
+              </address>
+              <p class="mt-3 text-graphite">
+                <span class="block">{site.hours}</span>
+                <span class="block">{site.hoursNote}</span>
+              </p>
+              <div class="mt-2">
+                <TextLink href={directions(o.address)} external>Get directions</TextLink>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="map-slot relative mt-12 overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:mt-16 md:rounded-[var(--radius-card)]" data-map-slot data-src={mapEmbed}>
+        <div class="flex h-full flex-col items-center justify-center gap-4 p-6 text-center" data-map-placeholder>
+          <Icon name="map-pin" size={32} class="text-brand" />
+          <p class="text-[17px] text-graphite">{site.commercialOffice.label}, {site.commercialOffice.lines[0]}, {site.commercialOffice.lines[1]}</p>
+          <button type="button" class="btn btn-secondary" data-map-load>Show map</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company profile -->
+  <section class="section bg-mist" aria-labelledby="profile-heading" data-track-area="contact_profile">
+    <div class="container-site">
+      <h2 id="profile-heading" class="t-h2 text-balance">Need our company profile?</h2>
+      <div class="mt-8 flex flex-col items-start">
+        <TextLink href={whatsappUrl(site.whatsappMessages.profile)} tone="mist" external>Request by WhatsApp</TextLink>
+        <TextLink href={profileEmailUrl} tone="mist">Request by email</TextLink>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing band (night, flows into the footer) -->
+  <section class="on-night bg-night text-white" aria-labelledby="price-heading">
+    <div class="container-site py-24 text-center md:py-32">
+      <h2 id="price-heading" class="t-h2 mx-auto max-w-[16ch] text-balance">Need a price for your project?</h2>
+      <a href="/quote" class="btn btn-lg btn-light mt-10 w-full sm:w-auto">{labels.quote}</a>
     </div>
   </section>
 </Base>
+
+<style>
+  .map-slot {
+    aspect-ratio: 4 / 5;
+  }
+
+  @media (min-width: 768px) {
+    .map-slot {
+      aspect-ratio: 21 / 9;
+    }
+  }
+
+  .map-slot :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
+
+<script>
+  import { submitNetlifyForm, isValidPhone, isValidEmail, setFieldError } from '../scripts/forms';
+
+  // Contact form
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const success = document.querySelector<HTMLElement>('[data-contact-success]');
+
+  if (form && success) {
+    const get = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+    const errorFor = (el: HTMLElement) => document.getElementById(`${el.id}-error`);
+    const formError = form.querySelector<HTMLElement>('[data-form-error]');
+    const button = form.querySelector<HTMLButtonElement>('[data-submit]');
+
+    const rules: [string, (v: string) => string][] = [
+      ['name', (v) => (v.trim() ? '' : 'Enter your name.')],
+      ['phone', (v) => (isValidPhone(v) ? '' : 'Enter a phone number like 077 123 4567.')],
+      ['email', (v) => (!v.trim() || isValidEmail(v) ? '' : 'Enter a valid email address, or leave it empty.')],
+      ['message', (v) => (v.trim() ? '' : 'Enter your message.')],
+    ];
+
+    const validate = () => {
+      let first: HTMLElement | null = null;
+      for (const [name, rule] of rules) {
+        const el = get(name);
+        const message = rule(el.value);
+        setFieldError(el, errorFor(el), message);
+        if (message && !first) first = el;
+      }
+      first?.focus();
+      return !first;
+    };
+
+    // Clear an error as soon as the field is fixed.
+    rules.forEach(([name, rule]) => {
+      const el = get(name);
+      el.addEventListener('blur', () => {
+        if (el.getAttribute('aria-invalid') === 'true') setFieldError(el, errorFor(el), rule(el.value));
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (formError) formError.textContent = '';
+      if (!validate()) return;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending...';
+      }
+      try {
+        await submitNetlifyForm(form);
+        form.hidden = true;
+        success.hidden = false;
+        success.querySelector<HTMLElement>('[data-success-heading]')?.focus();
+      } catch {
+        if (formError)
+          formError.textContent = "We couldn't send your message. Please try again, or contact us on WhatsApp.";
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Send message';
+        }
+      }
+    });
+  }
+
+  // Click-to-load map: Google Maps loads only after the visitor asks for it.
+  document.querySelectorAll<HTMLElement>('[data-map-slot]').forEach((slot) => {
+    slot.querySelector('[data-map-load]')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = slot.dataset.src ?? '';
+      iframe.title = 'Map of the commercial office, Colombo 10';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      slot.querySelector('[data-map-placeholder]')?.remove();
+      slot.appendChild(iframe);
+      iframe.focus();
+    });
+  });
+</script>
