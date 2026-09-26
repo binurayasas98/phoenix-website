@@ -38,6 +38,11 @@ export interface Faq {
   a: string;
 }
 
+export interface Guide {
+  heading: string;
+  paragraphs: string[];
+}
+
 export interface Service {
   slug: ServiceSlug;
   name: string;
@@ -48,8 +53,12 @@ export interface Service {
   gallery: Photo[];
   oneLiner: string;
   tagline: string;
+  proofLine: string;
+  accessLine: string;
   intro: string;
   scope: string[];
+  guide: Guide;
+  /** "Trusted by" names. Empty hides the block. */
   proof: string[];
   faqs: Faq[];
   whatsappMessage: string;
@@ -74,8 +83,11 @@ const list: ServiceInput[] = [
     ],
     oneLiner: 'Long-term protection against roof leaks, seepage and dampness.',
     tagline: 'Stop leaks at the source, for the long term.',
+    proofLine:
+      'Trusted at Bandaranaike International Airport, One Galle Face Residence and Cinnamon Garden Residence.',
+    accessLine: 'Rooftops, podiums and wet areas, with rope access for external walls.',
     intro:
-      "Leaks and seepage rarely stay small. They damage finishes, electrical systems and structure, and they disrupt the people who use your building. We trace the source, select the right system for each surface and apply it with tested products, following the manufacturer's specifications.",
+      "Leaks and seepage rarely stay small. They damage finishes, electrical systems and structure, and they disrupt the people who use your building. We trace the true source, select the right system for each surface and apply it with tested products, following the manufacturer's specifications.",
     scope: [
       'Rooftop and concrete slab waterproofing',
       'Sprayed-on polyurea membranes',
@@ -83,16 +95,27 @@ const list: ServiceInput[] = [
       'Roof leak detection and repair',
       'Terraces, balconies and rooftop flower troughs',
       'Bathrooms and wet areas',
+      'Swimming pools',
       'Car park ramps and podium decks',
       'External wall waterproofing',
       'Weak concrete rectification',
     ],
+    guide: {
+      heading: 'Why leaks happen, and how we stop them',
+      paragraphs: [
+        'A leak needs three things: water, a gap and a force that drives the water through, such as gravity, wind or pressure. Patching the visible damp spot rarely works, because the water often enters somewhere else.',
+        'We find the real entry point, choose a barrier system that suits the surface and its exposure, and detail every junction, drain and upstand so the whole area is sealed, not just the visible patch.',
+        'The best time to waterproof is in dry weather, before the monsoon arrives.',
+      ],
+    },
     proof: [
-      'Cinnamon Garden Residence',
-      'One Galle Face Residence',
       'Bandaranaike International Airport',
+      'One Galle Face Residence',
+      'Cinnamon Garden Residence',
       'Dialog Head Office',
       'Survey Department',
+      'Monarch Residence',
+      'Hemas Hospitals',
     ],
     faqs: [
       {
@@ -106,6 +129,10 @@ const list: ServiceInput[] = [
       {
         q: 'Do you inspect before quoting?',
         a: 'Yes. A specialist visits the site, identifies the cause of the problem and then prepares a written quotation.',
+      },
+      {
+        q: 'When is the best time to waterproof?',
+        a: 'In dry weather, before the monsoon. If you already have a leak, contact us straight away and we will advise on a temporary and a permanent solution.',
       },
     ],
   },
@@ -121,6 +148,8 @@ const list: ServiceInput[] = [
     ],
     oneLiner: 'Exterior and interior painting, with crack repair and high-rise work by rope access.',
     tagline: 'Durable finishes, inside and out.',
+    proofLine: 'Trusted at Aitken Spence, HSBC, NDB Bank and One Galle Face.',
+    accessLine: 'High-rise facades and ventilation shafts by rope access, gondola or boom truck.',
     intro:
       'A lasting finish depends on preparation. We repair cracks and prepare every surface before we paint, choose the right paint system for the exposure, and reach high-rise walls and ventilation shafts by rope access.',
     scope: [
@@ -131,6 +160,13 @@ const list: ServiceInput[] = [
       'Basement and car park painting',
       'Podium and facade painting',
     ],
+    guide: {
+      heading: 'The right paint for the right place',
+      paragraphs: [
+        'Interior paints use harder resins that resist stains and clean easily. Exterior paints use more flexible resins that move with heat, rain and sun without cracking.',
+        "Exterior paint doesn't belong indoors, because it releases stronger fumes as it cures. Choosing the correct system, and preparing the surface properly, decides how long the finish lasts.",
+      ],
+    },
     proof: [
       'Aitken Spence Head Office',
       'HSBC Head Office',
@@ -138,6 +174,7 @@ const list: ServiceInput[] = [
       'One Galle Face Office Tower and Mall',
       'Access Towers',
       'Kandy City Center',
+      'Marine City Residence',
     ],
     faqs: [
       {
@@ -163,14 +200,23 @@ const list: ServiceInput[] = [
     gallery: [],
     oneLiner: 'Facade, glazing and joint sealants that keep water out of modern buildings.',
     tagline: 'Sealed joints. Dry facades.',
+    proofLine: 'Trusted at the World Trade Center, Dialog Head Office and Hemas Hospitals.',
+    accessLine: 'Glazing and joints at any height, by rope access, gondola or boom truck.',
     intro:
-      'Failed sealant around glazing and joints is one of the most common causes of water ingress in modern buildings. We remove and replace facade and window sealants, seal movement joints and waterproof external walls, working at height where needed. We also carry out sealing work for industrial clients, protecting critical infrastructure and equipment.',
+      'Failed sealant around glazing and joints is one of the most common causes of water ingress in modern buildings. We remove and replace facade and window sealants, seal movement joints and waterproof external walls, working at height where needed.',
     scope: [
       'Facade and window sealant replacement',
       'Expansion and movement joints',
       'External wall waterproofing',
       'Industrial sealing',
     ],
+    guide: {
+      heading: 'Signs your sealant has failed',
+      paragraphs: [
+        'Cracked, shrunken or detached sealant, stains around windows and damp patches inside after rain are the usual signs.',
+        'For industrial clients, we seal critical infrastructure and equipment with high-quality sealants that resist heat, moisture and chemicals, which protects the asset and extends its working life.',
+      ],
+    },
     proof: [
       'World Trade Center',
       'Dialog Head Office',
@@ -178,6 +224,7 @@ const list: ServiceInput[] = [
       'Hemas Hospital Thalawathugoda',
       'Empire City Residence',
       'Monarch Residence',
+      'Browns Capital',
     ],
     faqs: [
       {
@@ -199,6 +246,9 @@ const list: ServiceInput[] = [
     gallery: [],
     oneLiner: 'Glass and facade cleaning at any height, one-off or on a regular contract.',
     tagline: 'Clear glass and clean facades, at any height.',
+    proofLine:
+      'Monthly at Shangri-La, quarterly at the Civil Aviation Authority, annually at the World Trade Center.',
+    accessLine: 'Any height, by rope access, gondola or boom truck.',
     intro:
       'Your facade is the first thing tenants, guests and clients see. We clean glass and facades by rope access, gondola or boom truck, as a one-off service or on a monthly, quarterly or annual contract. We also wash roofs, clean construction sites before handover and replace damaged glass.',
     scope: [
@@ -209,13 +259,22 @@ const list: ServiceInput[] = [
       'Construction-site cleaning before handover',
       'Glass replacement',
     ],
+    guide: {
+      heading: 'What a proper clean involves',
+      paragraphs: [
+        'The right cleaning solution for the glass and frame, applied evenly. Consistent, lint-free strokes, extra attention to stubborn marks, then a polished finish.',
+        'The result is more natural light inside and a better first impression outside. On a regular contract, your facade stays that way all year.',
+      ],
+    },
     proof: [
-      'Shangri-La Hotel (monthly)',
-      'World Trade Center (annual)',
-      'Civil Aviation Authority Katunayake (every three months)',
+      'Shangri-La Hotel',
+      'World Trade Center',
+      'Civil Aviation Authority',
       'Cinnamon Life',
+      'Cinnamon Suites and Residence',
       'Marriott Hotel Weligama',
       'Grand Bell Hotel',
+      'ICONIC Building',
     ],
     faqs: [
       {
@@ -241,8 +300,10 @@ const list: ServiceInput[] = [
     gallery: [],
     oneLiner: 'Resin industrial floors and protective pipeline coatings for demanding sites.',
     tagline: 'Protection for hard-working surfaces.',
+    proofLine: 'For factories, warehouses, ports and industrial plants.',
+    accessLine: 'Planned around your operations to keep downtime low.',
     intro:
-      'The wrong floor fails early, creates safety risks and disrupts operations. We install resin industrial floors that are durable, hygienic and available with anti-slip finishes, and apply protective coatings that control corrosion on pipelines, including in harsh environments. Success depends on the right material, proper substrate preparation and a clear understanding of site conditions, so that is where we start.',
+      'The wrong floor fails early, creates safety risks and disrupts operations. We install resin industrial floors that are durable, hygienic and available with anti-slip finishes, and apply protective coatings that control corrosion on pipelines, including in harsh environments.',
     scope: [
       'Resin and epoxy industrial flooring',
       'Anti-slip finishes',
@@ -250,11 +311,22 @@ const list: ServiceInput[] = [
       'Pipeline corrosion-protection coatings',
       'Coatings for harsh and coastal environments',
     ],
+    guide: {
+      heading: 'Choosing a floor or coating that lasts',
+      paragraphs: [
+        'Floors fail early when they are chosen on appearance or price alone. Success depends on the right material, proper substrate preparation and a clear understanding of loads, cleaning and safety needs, so that is where we start.',
+        'A good pipeline coating controls corrosion, even in seawater and other harsh environments. A smoother coated surface can also improve flow, make inspections faster and reduce long-term maintenance.',
+      ],
+    },
     proof: [],
     faqs: [
       {
         q: 'How do you choose the right floor?',
         a: "We assess the substrate, the loads, cleaning needs and safety requirements, then recommend a system. We don't choose floors on appearance or price alone.",
+      },
+      {
+        q: 'Can you work around our operations?',
+        a: 'Yes. We plan the work in phases with you so production and access continue where possible.',
       },
     ],
   },
@@ -269,20 +341,31 @@ const list: ServiceInput[] = [
     ],
     oneLiner: 'Planned maintenance for tall buildings, with the right access for every job.',
     tagline: 'Planned care for tall buildings.',
+    proofLine: 'Trusted at One Galle Face, NTB Head Office and Marine City Residence.',
+    accessLine: 'Rope access, gondola, boom truck or scaffolding, chosen for each job.',
     intro:
-      "Preventive maintenance keeps a building's surfaces and systems in good order and avoids the cost of emergency repairs. We maintain high-rise, commercial and industrial buildings and choose the safest, most efficient access for each job: rope access, gondola, boom truck or scaffolding.",
+      "Preventive maintenance keeps a building's surfaces and systems in good order and avoids the cost of emergency repairs. We maintain high-rise, commercial and industrial buildings and choose the safest, most efficient access for each job.",
     scope: [
       'Planned facade maintenance',
       'Crack and plaster repairs',
       'Plumbing repairs and replacement',
+      'Construction-site cleaning before handover',
       'Access by rope, gondola, boom truck or scaffolding',
     ],
+    guide: {
+      heading: 'Preventive, not reactive',
+      paragraphs: [
+        'Reactive maintenance waits for something to fail. Preventive maintenance finds small defects early, while they are still quick and inexpensive to fix.',
+        'The right access depends on the building, the work and the time available. Rope access is fast to set up, a gondola suits long continuous facades, a boom truck reaches canopies and soffits, and scaffolding gives a stable platform for heavy or detailed work.',
+      ],
+    },
     proof: [
       'Aitken Spence (crack repair)',
       'NTB Head Office',
       'One Galle Face Office Tower',
       'Marine City Residence',
       'VFS Global',
+      'Empire Residencies',
     ],
     faqs: [
       {

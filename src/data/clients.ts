@@ -62,6 +62,7 @@ export const clientGroups: ClientGroup[] = [
       'Western Province Building, Battaramulla (annual)',
       'Shangri-La Hotel (monthly)',
       'One Galle Face Residence (annual)',
+      'Cinnamon Suites and Residence (facade cleaning)',
       'Siyapatha Building, D S Senanayake Mawatha',
       'ICONIC Building, Rajagiriya',
       'Kandy City Center (roof washing)',
@@ -111,8 +112,7 @@ export const clientGroups: ClientGroup[] = [
   },
 ];
 
-/** Also named on the previous website. */
-export const otherClients: string[] = ['Havelock City, Colombo'];
+export const otherClients: string[] = ['Havelock City, Colombo', 'City of Dreams, Colombo'];
 
 /** The "trusted by" row on the home page. */
 export const trustedBy: string[] = [

@@ -122,3 +122,7 @@ export const sectors: Sector[] = [
 
 export const facilityManagementLine =
   'We also work with facility management companies that look after buildings in every sector.';
+
+export function getSector(slug: string): Sector | undefined {
+  return sectors.find((s) => s.slug === slug);
+}

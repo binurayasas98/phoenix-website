@@ -1,4 +1,5 @@
 import type { Photo, ServiceSlug } from './services';
+import type { SectorSlug } from './sectors';
 
 import aitkenSpenceImg from '../assets/images/project-aitken-spence.jpg';
 import grandBellImg from '../assets/images/project-grand-bell.jpg';
@@ -7,7 +8,7 @@ export interface Project {
   slug: string;
   client: string;
   location: string;
-  sector: string;
+  sector: SectorSlug;
   services: ServiceSlug[];
   scope: string;
   contract?: string;
@@ -20,17 +21,16 @@ export const projects: Project[] = [
     slug: 'bia',
     client: 'Bandaranaike International Airport',
     location: 'Katunayake',
-    sector: 'Aviation',
+    sector: 'public',
     services: ['waterproofing', 'painting'],
-    scope:
-      'Terminal 1 waterproofing and painting, carried out under the supervision of director Ranga Gamachchi.',
+    scope: 'Terminal 1 waterproofing and painting, supervised by director Ranga Gamachchi.',
     featured: true,
   },
   {
     slug: 'aitken-spence',
     client: 'Aitken Spence Head Office',
     location: 'Vauxhall Street, Colombo 2',
-    sector: 'Corporate',
+    sector: 'corporate',
     services: ['painting', 'waterproofing', 'high-rise-maintenance'],
     scope: 'Exterior painting by rope access, waterproofing and crack repair.',
     image: { src: aitkenSpenceImg, alt: 'Rope access painting at the Aitken Spence Head Office' },
@@ -40,7 +40,7 @@ export const projects: Project[] = [
     slug: 'shangri-la',
     client: 'Shangri-La Hotel',
     location: 'Colombo',
-    sector: 'Hospitality',
+    sector: 'hospitality',
     services: ['glass-cleaning'],
     scope: 'Glass washing.',
     contract: 'Monthly',
@@ -50,7 +50,7 @@ export const projects: Project[] = [
     slug: 'grand-bell',
     client: 'Grand Bell Hotel',
     location: 'Colombo 3',
-    sector: 'Hospitality',
+    sector: 'hospitality',
     services: ['glass-cleaning'],
     scope: 'Glass washing by rope access.',
     image: { src: grandBellImg, alt: 'Rope access glass washing at the Grand Bell Hotel' },
@@ -60,7 +60,7 @@ export const projects: Project[] = [
     slug: 'cinnamon-garden',
     client: 'Cinnamon Garden Residence',
     location: 'Ward Place, Colombo 7',
-    sector: 'Residential',
+    sector: 'residential',
     services: ['waterproofing'],
     scope: 'Rooftop waterproofing with a sprayed-on polyurea system.',
     featured: true,
@@ -69,7 +69,7 @@ export const projects: Project[] = [
     slug: 'one-galle-face',
     client: 'One Galle Face',
     location: 'Colombo 2',
-    sector: 'Mixed use',
+    sector: 'residential',
     services: ['waterproofing', 'painting', 'glass-cleaning', 'high-rise-maintenance'],
     scope:
       'Car park ramp waterproofing and annual glass washing at the residence, painting and crack repair at the office tower and mall.',
@@ -79,7 +79,7 @@ export const projects: Project[] = [
     slug: 'world-trade-center',
     client: 'World Trade Center',
     location: 'Colombo',
-    sector: 'Corporate',
+    sector: 'corporate',
     services: ['glass-cleaning', 'sealant-application'],
     scope: 'Glass washing and sealant application.',
     contract: 'Annual',
@@ -88,7 +88,7 @@ export const projects: Project[] = [
     slug: 'civil-aviation',
     client: 'Civil Aviation Authority',
     location: 'Katunayake',
-    sector: 'Aviation',
+    sector: 'public',
     services: ['glass-cleaning'],
     scope: 'Glass washing.',
     contract: 'Every three months',
@@ -97,16 +97,15 @@ export const projects: Project[] = [
     slug: 'monarch',
     client: 'Monarch Residence',
     location: 'Colombo 3',
-    sector: 'Residential',
+    sector: 'residential',
     services: ['waterproofing', 'painting', 'sealant-application', 'glass-cleaning'],
-    scope:
-      'Rooftop concrete slab waterproofing and painting, sealant application and glass washing.',
+    scope: 'Rooftop concrete slab waterproofing and painting, sealant application and glass washing.',
   },
   {
     slug: 'kandy-city-center',
     client: 'Kandy City Center',
     location: 'Kandy',
-    sector: 'Retail',
+    sector: 'retail-industrial',
     services: ['painting', 'glass-cleaning'],
     scope: 'Basement car park painting, fifth floor internal painting and roof washing.',
   },
@@ -114,16 +113,15 @@ export const projects: Project[] = [
     slug: 'marine-city',
     client: 'Marine City Residence',
     location: 'Dehiwala',
-    sector: 'Residential',
+    sector: 'residential',
     services: ['painting', 'waterproofing', 'high-rise-maintenance'],
-    scope:
-      'Podium external wall painting, rooftop flower trough waterproofing and external crack repair.',
+    scope: 'Podium external wall painting, rooftop flower trough waterproofing and external crack repair.',
   },
   {
     slug: 'empire',
     client: 'Empire Residencies',
     location: 'Colombo 2',
-    sector: 'Residential',
+    sector: 'residential',
     services: ['painting', 'waterproofing', 'sealant-application', 'high-rise-maintenance'],
     scope: 'External wall crack repair and painting, waterproofing and sealant application.',
   },
@@ -131,7 +129,7 @@ export const projects: Project[] = [
     slug: 'survey-department',
     client: 'Survey Department',
     location: 'Narahenpita',
-    sector: 'Government',
+    sector: 'public',
     services: ['waterproofing'],
     scope: 'Weak concrete rectification and waterproofing.',
   },
@@ -139,7 +137,7 @@ export const projects: Project[] = [
     slug: 'hemas-hospitals',
     client: 'Hemas Hospitals',
     location: 'Wattala and Thalawathugoda',
-    sector: 'Healthcare',
+    sector: 'healthcare',
     services: ['waterproofing', 'painting', 'sealant-application', 'high-rise-maintenance'],
     scope: 'Waterproofing, painting, sealant application and crack repair.',
   },
@@ -147,7 +145,7 @@ export const projects: Project[] = [
     slug: 'marriott-weligama',
     client: 'Marriott Hotel',
     location: 'Weligama',
-    sector: 'Hospitality',
+    sector: 'hospitality',
     services: ['glass-cleaning'],
     scope: 'Glass washing.',
   },
@@ -155,10 +153,46 @@ export const projects: Project[] = [
     slug: 'cinnamon-life',
     client: 'Cinnamon Life',
     location: 'Colombo 2',
-    sector: 'Mixed use',
+    sector: 'hospitality',
     services: ['glass-cleaning'],
     scope: 'Glass washing.',
+  },
+  {
+    slug: 'cinnamon-suites',
+    client: 'Cinnamon Suites and Residence',
+    location: 'Colombo',
+    sector: 'residential',
+    services: ['glass-cleaning'],
+    scope: 'External facade cleaning.',
+  },
+  {
+    slug: 'dialog',
+    client: 'Dialog Head Office',
+    location: 'Union Place, Colombo 2',
+    sector: 'corporate',
+    services: ['waterproofing', 'painting', 'sealant-application'],
+    scope: 'Waterproofing including the new building rooftop, painting and sealant application.',
+  },
+  {
+    slug: 'hsbc',
+    client: 'HSBC Head Office',
+    location: 'Colombo 1',
+    sector: 'corporate',
+    services: ['painting', 'glass-cleaning'],
+    scope: 'Painting and glass washing.',
+  },
+  {
+    slug: 'west-port-terminal',
+    client: 'Access West Port Terminal',
+    location: 'Colombo Port',
+    sector: 'retail-industrial',
+    services: ['painting'],
+    scope: 'Painting of the terminal buildings.',
   },
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);
+
+export function projectsForService(slug: ServiceSlug): Project[] {
+  return projects.filter((p) => p.services.includes(slug));
+}
