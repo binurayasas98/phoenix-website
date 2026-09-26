@@ -1,0 +1,292 @@
+---
+import Icon from './Icon.astro';
+
+// A horizontal card rail on native scrolling: scroll snap, a progress bar, previous and next buttons,
+// mouse drag with a short glide on desktop and arrow keys. No autoplay, no looping.
+// Pass the cards as <li> children. Each size sets the card widths (all cards are 4:5):
+// services 82vw (max 360px) / 44vw / 400px, access 78vw / 44vw / 360px, projects 82vw (max 360px).
+interface Props {
+  id: string;
+  /** Names the carousel for screen readers, for example "Services". */
+  label: string;
+  size?: 'services' | 'access' | 'projects';
+  tone?: 'light' | 'night';
+  /** From 768px up, show the cards as a grid (2 columns, 3 from 1024px) instead of a rail. */
+  gridFromTablet?: boolean;
+  class?: string;
+}
+
+const { id, label, size = 'services', tone = 'light', gridFromTablet = false, class: className } = Astro.props;
+const noun = label.toLowerCase();
+---
+
+<div
+  class:list={['rail-root', `rail-${size}`, tone === 'night' && 'rail-night', gridFromTablet && 'rail-grid-md', className]}
+  data-rail-root
+  data-grid-from={gridFromTablet ? '768px' : undefined}
+>
+  <div
+    id={id}
+    class="rail no-scrollbar"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label={label}
+    tabindex="0"
+    data-rail
+  >
+    <ul class="rail-list" data-rail-list>
+      <slot />
+    </ul>
+  </div>
+
+  <div class="container-site rail-controls" data-rail-controls>
+    <div class="rail-track" aria-hidden="true">
+      <span class="rail-thumb" data-rail-thumb></span>
+    </div>
+    <div class="rail-buttons">
+      <button type="button" class="rail-btn" aria-label={`Previous ${noun}`} aria-controls={id} aria-disabled="true" data-rail-prev>
+        <Icon name="chevron-left" size={22} />
+      </button>
+      <button type="button" class="rail-btn" aria-label={`Next ${noun}`} aria-controls={id} data-rail-next>
+        <Icon name="chevron-right" size={22} />
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .rail-root {
+    --gap: 16px;
+    --item-w: min(82vw, 360px);
+  }
+
+  .rail-access {
+    --item-w: 78vw;
+  }
+
+  @media (min-width: 768px) {
+    .rail-root {
+      --gap: 20px;
+    }
+
+    .rail-services,
+    .rail-access {
+      --item-w: 44vw;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .rail-services {
+      --item-w: 400px;
+    }
+
+    .rail-access {
+      --item-w: 360px;
+    }
+  }
+
+  /* The scroller spans the full width; the first card lines up with the page grid. */
+  .rail {
+    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    touch-action: pan-x pan-y;
+  }
+
+  /* Keyboard focus on the rail shows as a ring just inside its edges. */
+  .rail:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+
+  .rail-night .rail:focus-visible {
+    outline-color: var(--color-brand-light);
+  }
+
+  .rail-list {
+    display: flex;
+    gap: var(--gap);
+    width: max-content;
+    padding-inline: var(--gutter);
+  }
+
+  .rail-list > :global(li) {
+    flex: none;
+    width: var(--item-w);
+    scroll-snap-align: start;
+  }
+
+  /* Desktop mouse: the rail can be dragged. */
+  @media (hover: hover) and (pointer: fine) {
+    :global(html.js) .rail,
+    :global(html.js) .rail :global(a) {
+      cursor: grab;
+    }
+
+    .rail-root.is-dragging .rail,
+    .rail-root.is-dragging .rail :global(a) {
+      cursor: grabbing;
+    }
+  }
+
+  .rail-root.is-dragging .rail {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .rail :global(img) {
+    -webkit-user-drag: none;
+  }
+
+  /* Controls: the progress bar on the left, previous and next on the right. */
+  .rail-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  :global(html:not(.js)) .rail-controls,
+  .rail-root[data-static] .rail-controls {
+    display: none;
+  }
+
+  .rail-track {
+    position: relative;
+    flex: none;
+    width: min(40%, 320px);
+    min-width: 120px;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--color-hairline);
+  }
+
+  .rail-thumb {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 30%;
+    border-radius: 2px;
+    background: var(--color-ink);
+    will-change: transform;
+  }
+
+  .rail-night .rail-track {
+    background: var(--hairline-night);
+  }
+
+  .rail-night .rail-thumb {
+    background: #fff;
+  }
+
+  .rail-buttons {
+    display: none;
+    gap: 12px;
+  }
+
+  .rail-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: var(--color-mist);
+    color: var(--color-ink);
+    transition:
+      background-color 300ms var(--ease),
+      opacity 300ms var(--ease),
+      transform 150ms var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .rail-btn:hover:not([aria-disabled='true']) {
+    background: #e8e8ed;
+  }
+
+  .rail-btn:active:not([aria-disabled='true']) {
+    transform: scale(0.97);
+  }
+
+  .rail-btn[aria-disabled='true'] {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .rail-night .rail-btn {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .rail-night .rail-btn:hover:not([aria-disabled='true']) {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (min-width: 768px) {
+    .rail-controls {
+      margin-top: 32px;
+    }
+
+    .rail-buttons {
+      display: flex;
+    }
+  }
+
+  /* Projects: a rail on mobile, a grid from 768px (2 columns) and 1024px (3 columns). */
+  @media (min-width: 768px) {
+    .rail-grid-md .rail {
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+
+    .rail-grid-md .rail-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+      max-width: calc(var(--max) + var(--pad) * 2);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    .rail-grid-md .rail-list > :global(li) {
+      width: auto;
+    }
+
+    .rail-grid-md .rail-controls {
+      display: none;
+    }
+
+    :global(html.js) .rail-grid-md .rail {
+      cursor: auto;
+    }
+
+    :global(html.js) .rail-grid-md .rail :global(a) {
+      cursor: pointer;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .rail-grid-md .rail-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-btn:active:not([aria-disabled='true']) {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { initRails } from '../scripts/rail';
+
+  initRails();
+</script>

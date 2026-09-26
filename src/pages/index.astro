@@ -7,6 +7,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import TextLink from '../components/TextLink.astro';
 import DirectorCard from '../components/DirectorCard.astro';
 import Faq from '../components/Faq.astro';
+import Rail from '../components/Rail.astro';
 import IntroStatement from '../components/home/IntroStatement.astro';
 import ServicesRail from '../components/home/ServicesRail.astro';
 import WhyPhoenix from '../components/home/WhyPhoenix.astro';
@@ -86,7 +87,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
   <WhyPhoenix />
 
   <!-- Access (night) -->
-  <section class="section on-night bg-night text-white" aria-labelledby="access-heading" data-track-area="access">
+  <section class="access-section section on-night bg-night text-white" aria-labelledby="access-heading" data-track-area="access">
     <div class="container-site">
       <div class="max-w-[960px]">
         <TwoToneHeading id="access-heading" first="Any height." second="The right access." tone="night" />
@@ -95,20 +96,20 @@ const nb = (text: string) => text.replace(/-/g, '‑');
         </p>
       </div>
     </div>
-    <ul class="access-row no-scrollbar mt-12 md:mt-16">
+    <Rail id="access-rail" label="Access methods" size="access" tone="night" class="mt-12 md:mt-16">
       {
         accessMethods.map((m) => (
-          <li class="access-item">
+          <li>
             <OverlayCard
               image={m.image}
               title={m.name}
               text={m.text}
-              sizes="(min-width: 1024px) 304px, (min-width: 640px) 50vw, 78vw"
+              sizes="(min-width: 1024px) 360px, (min-width: 768px) 44vw, 78vw"
             />
           </li>
         ))
       }
-    </ul>
+    </Rail>
     <div class="container-site mt-8">
       <TextLink href={whatsappUrl(site.whatsappMessages.access)} tone="night" external>
         Ask about access for your building
@@ -262,53 +263,13 @@ const nb = (text: string) => text.replace(/-/g, '‑');
 </Base>
 
 <style>
-  .access-row {
-    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
-    padding-inline: var(--gutter);
-  }
-
-  .access-item {
-    flex: none;
-    width: 78vw;
-    scroll-snap-align: start;
-  }
-
-  @media (min-width: 640px) {
-    .access-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      overflow: visible;
-      max-width: calc(var(--max) + var(--pad) * 2);
-      margin-inline: auto;
-      padding-inline: var(--pad);
-    }
-
-    .access-item {
-      width: auto;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .access-row {
-      gap: 20px;
-    }
-  }
-
+  /* Access cards are 360px wide on desktop, so their type steps down a little. */
   @media (min-width: 1024px) {
-    .access-row {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .access-row :global(h3) {
+    .access-section :global(.rail h3) {
       font-size: 24px;
     }
 
-    .access-row :global(p) {
+    .access-section :global(.rail p) {
       font-size: 15px;
     }
   }
