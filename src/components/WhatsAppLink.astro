@@ -1,0 +1,22 @@
+---
+import { whatsappUrl } from '../data/site';
+
+// Every WhatsApp link carries a prefilled message with context.
+interface Props {
+  message?: string;
+  class?: string;
+  location?: string;
+  'aria-label'?: string;
+}
+
+const { message, class: className, location, 'aria-label': ariaLabel } = Astro.props;
+---
+
+<a
+  href={whatsappUrl(message)}
+  target="_blank"
+  rel="noopener"
+  class={className}
+  data-track-location={location}
+  aria-label={ariaLabel}
+><slot /></a>

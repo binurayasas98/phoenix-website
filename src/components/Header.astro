@@ -1,0 +1,328 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/images/logo.png';
+import logoWhite from '../assets/images/logo-white.png';
+import { nav, labels, site, whatsappUrl } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** Home page only: starts transparent over the hero. */
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header
+  id="site-header"
+  class="site-header fixed inset-x-0 top-0 z-50"
+  data-state={transparent ? 'clear' : 'solid'}
+  data-transparent={transparent ? 'true' : undefined}
+>
+  <div class="container-site flex h-[var(--header-h)] items-center justify-between gap-4">
+    <a href="/" class="logo relative flex h-11 items-center" aria-label={`${site.legalName}, home`}>
+      <Image
+        src={logo}
+        alt=""
+        height={80}
+        loading="eager"
+        class="logo-dark h-8 w-auto md:h-10"
+      />
+      <Image
+        src={logoWhite}
+        alt=""
+        height={80}
+        loading="eager"
+        class="logo-light absolute left-0 top-1/2 h-8 w-auto -translate-y-1/2 md:h-10"
+      />
+    </a>
+
+    <nav aria-label="Main" class="hidden md:block">
+      <ul class="flex items-center gap-1">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="nav-link"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="/quote" class="btn btn-sm header-cta">{labels.quote}</a>
+      <button
+        type="button"
+        class="menu-toggle flex size-11 items-center justify-center rounded-full md:hidden"
+        aria-label="Open menu"
+        aria-haspopup="dialog"
+        aria-controls="menu-sheet"
+        data-menu-open
+      >
+        <Icon name="menu" size={24} />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog id="menu-sheet" class="menu-sheet on-night" aria-label="Menu">
+  <div class="flex h-full flex-col">
+    <div class="container-site flex h-[var(--header-h)] flex-none items-center justify-between">
+      <a href="/" class="flex h-11 items-center" aria-label={`${site.legalName}, home`}>
+        <Image src={logoWhite} alt="" height={80} class="h-8 w-auto" />
+      </a>
+      <button
+        type="button"
+        class="flex size-11 items-center justify-center rounded-full text-white"
+        aria-label="Close menu"
+        data-menu-close
+      >
+        <Icon name="x" size={24} />
+      </button>
+    </div>
+    <nav aria-label="Mobile" class="container-site flex-1 overflow-y-auto pt-8">
+      <ul class="menu-list">
+        <li><a href="/" class="menu-link" aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="menu-link"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="container-site flex-none pb-[calc(24px+env(safe-area-inset-bottom))] pt-6">
+      <div class="flex flex-col gap-3">
+        <a href="/quote" class="btn btn-lg btn-light w-full">{labels.quote}</a>
+        <a
+          href={whatsappUrl()}
+          target="_blank"
+          rel="noopener"
+          class="btn btn-lg btn-frost w-full"
+          data-track-location="menu"
+        >
+          <Icon name="whatsapp" size={20} class="text-whatsapp" />
+          {labels.whatsapp}
+        </a>
+        <a href={site.phone.href} class="link link-on-night justify-center" data-track-location="menu">
+          <span>{labels.call}: {site.phone.display}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .site-header {
+    color: var(--color-ink);
+    transition:
+      background-color 300ms var(--ease),
+      color 300ms var(--ease),
+      box-shadow 300ms var(--ease);
+  }
+
+  .site-header[data-state='solid'] {
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .site-header[data-state='clear'] {
+    background: transparent;
+    color: #fff;
+  }
+
+  .logo-light {
+    opacity: 0;
+    transition: opacity 300ms var(--ease);
+  }
+
+  .logo-dark {
+    transition: opacity 300ms var(--ease);
+  }
+
+  .site-header[data-state='clear'] .logo-light {
+    opacity: 1;
+  }
+
+  .site-header[data-state='clear'] .logo-dark {
+    opacity: 0;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding-inline: 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    color: inherit;
+    opacity: 0.85;
+    transition: opacity 300ms var(--ease);
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current='page'] {
+    opacity: 1;
+  }
+
+  .site-header[data-state='solid'] .nav-link[aria-current='page'] {
+    color: var(--color-brand);
+  }
+
+  .header-cta {
+    background: var(--color-ink);
+    color: #fff;
+  }
+
+  .site-header[data-state='clear'] .header-cta {
+    background: #fff;
+    color: var(--color-ink);
+  }
+
+  .site-header[data-state='clear'] :focus-visible {
+    outline-color: #fff;
+  }
+
+  @media (max-width: 767px) {
+    .header-cta {
+      height: 40px;
+      padding-inline: 16px;
+      font-size: 14px;
+      /* Keep a 44px tap target around a slimmer pill. */
+      position: relative;
+    }
+
+    .header-cta::after {
+      content: '';
+      position: absolute;
+      inset: -2px 0;
+    }
+  }
+
+  /* Full-screen menu sheet on night */
+  .menu-sheet {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-night);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 300ms var(--ease),
+      transform 600ms var(--spring),
+      overlay 300ms allow-discrete,
+      display 300ms allow-discrete;
+  }
+
+  .menu-sheet[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .menu-sheet[open] {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  .menu-sheet::backdrop {
+    background: transparent;
+  }
+
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    border-bottom: 1px solid var(--hairline-night);
+  }
+
+  .menu-link[aria-current='page'] {
+    color: var(--color-brand-light);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-sheet,
+    .menu-sheet[open] {
+      transform: none;
+    }
+
+    @starting-style {
+      .menu-sheet[open] {
+        transform: none;
+      }
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const sheet = document.getElementById('menu-sheet') as HTMLDialogElement | null;
+
+  if (header?.dataset.transparent) {
+    const update = () => {
+      header.dataset.state = window.scrollY > 24 ? 'solid' : 'clear';
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
+  if (sheet) {
+    const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+    const closeBtn = sheet.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+    openBtn?.addEventListener('click', () => {
+      sheet.showModal();
+      document.documentElement.style.overflow = 'hidden';
+      openBtn.setAttribute('aria-expanded', 'true');
+    });
+
+    const close = () => sheet.close();
+    closeBtn?.addEventListener('click', close);
+    sheet.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+      openBtn?.setAttribute('aria-expanded', 'false');
+      openBtn?.focus();
+    });
+    sheet.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+
+    // Close the sheet if the window grows past the mobile breakpoint.
+    window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
+      if (e.matches && sheet.open) close();
+    });
+  }
+</script>

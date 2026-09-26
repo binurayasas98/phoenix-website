@@ -1,0 +1,77 @@
+---
+import { Picture } from 'astro:assets';
+import type { Photo } from '../data/services';
+import Icon from './Icon.astro';
+
+// Image fills the card, a night gradient rises from the bottom, white title and one-liner sit on it.
+interface Props {
+  image: Photo;
+  title: string;
+  text?: string;
+  href?: string;
+  /** Show the round "+" in the corner (only for linked cards). */
+  plus?: boolean;
+  headingLevel?: 'h2' | 'h3';
+  aspect?: string;
+  sizes?: string;
+  position?: string;
+  class?: string;
+  titleClass?: string;
+}
+
+const {
+  image,
+  title,
+  text,
+  href,
+  plus = Boolean(href),
+  headingLevel: Heading = 'h3',
+  aspect = '4 / 5',
+  sizes = '(min-width: 768px) 400px, 82vw',
+  position = 'center',
+  class: className,
+  titleClass = 't-h3',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    'card media-reveal group relative block overflow-hidden rounded-[var(--radius-card-sm)] bg-night text-white md:rounded-[var(--radius-card)]',
+    href && 'card-zoom',
+    className,
+  ]}
+  style={`aspect-ratio: ${aspect};`}
+  data-reveal
+>
+  <Picture
+    src={image.src}
+    alt={image.alt}
+    formats={['avif', 'webp']}
+    widths={[400, 640, 800, 1200]}
+    sizes={sizes}
+    loading="lazy"
+    decoding="async"
+    class="card-img absolute inset-0 h-full w-full object-cover"
+    style={`object-position: ${position};`}
+  />
+  <div class="overlay-night absolute inset-0" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 md:p-8">
+    <div class="min-w-0 flex-1">
+      <Heading class:list={[titleClass, 'text-white text-balance']}>{title}</Heading>
+      {text && <p class="mt-2 text-[15px] leading-snug text-white/80 md:text-[17px]">{text}</p>}
+    </div>
+    {
+      plus && (
+        <span
+          class="flex size-11 flex-none items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-md transition-colors duration-300 group-hover:bg-white group-hover:text-ink"
+          aria-hidden="true"
+        >
+          <Icon name="plus" size={20} />
+        </span>
+      )
+    }
+  </div>
+</Tag>

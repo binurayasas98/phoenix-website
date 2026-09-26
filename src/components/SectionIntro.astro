@@ -1,0 +1,27 @@
+---
+import TwoToneHeading from './TwoToneHeading.astro';
+
+// Section heading with an optional second tone and a short lead underneath.
+interface Props {
+  first: string;
+  second?: string;
+  lead?: string;
+  tone?: 'light' | 'night';
+  id?: string;
+  class?: string;
+}
+
+const { first, second, lead, tone = 'light', id, class: className } = Astro.props;
+---
+
+<div class:list={['max-w-[960px]', className]}>
+  <TwoToneHeading id={id} first={first} second={second} tone={tone} />
+  {
+    lead && (
+      <p class:list={['t-lead mt-6 text-column', tone === 'night' ? 'text-white/70' : 'text-graphite']}>
+        {lead}
+      </p>
+    )
+  }
+  <slot />
+</div>

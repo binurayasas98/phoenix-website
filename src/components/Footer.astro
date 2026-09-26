@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import logoWhite from '../assets/images/logo-white.png';
+import { site, whatsappUrl } from '../data/site';
+import { services } from '../data/services';
+
+const year = new Date().getFullYear();
+
+const company = [
+  { label: 'About', href: '/about' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Privacy', href: '/privacy' },
+];
+
+const social = [
+  { label: 'Facebook', href: site.facebookUrl },
+  { label: 'LinkedIn', href: site.linkedinUrl },
+  { label: 'Instagram', href: site.instagramUrl },
+].filter((s) => s.href);
+---
+
+<footer class="on-night bg-night text-white" data-track-area="footer">
+  <div class="container-site">
+    <div class="border-t border-[var(--hairline-night)] pb-12 pt-16 md:pt-20">
+      <div class="grid gap-12 lg:grid-cols-12">
+        <div class="lg:col-span-4">
+          <a href="/" class="inline-flex h-11 items-center" aria-label={`${site.legalName}, home`}>
+            <Image src={logoWhite} alt="" height={80} class="h-10 w-auto" />
+          </a>
+          <p class="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/70">
+            Quality that lasts. Service you can trust. Waterproofing, painting, sealants, glass cleaning
+            and building maintenance specialists since 2011.
+          </p>
+          {
+            social.length > 0 && (
+              <ul class="mt-6 flex flex-wrap gap-x-6">
+                {social.map((s) => (
+                  <li>
+                    <a href={s.href} target="_blank" rel="noopener" class="footer-link">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+
+        <nav aria-labelledby="footer-services" class="lg:col-span-3">
+          <h2 id="footer-services" class="footer-heading">Services</h2>
+          <ul class="mt-4">
+            {services.map((s) => (
+              <li><a href={`/services/${s.slug}`} class="footer-link">{s.name}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-labelledby="footer-company" class="lg:col-span-2">
+          <h2 id="footer-company" class="footer-heading">Company</h2>
+          <ul class="mt-4">
+            {company.map((c) => (
+              <li><a href={c.href} class="footer-link">{c.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <div class="lg:col-span-3">
+          <h2 class="footer-heading">Contact</h2>
+          <ul class="mt-4">
+            <li><a href={site.phone.href} class="footer-link tabular">{site.phone.display}</a></li>
+            <li>
+              <a href={whatsappUrl()} target="_blank" rel="noopener" class="footer-link">WhatsApp</a>
+            </li>
+            <li><a href={`mailto:${site.email}`} class="footer-link">{site.email}</a></li>
+          </ul>
+          <div class="mt-6 space-y-5 text-[15px] leading-relaxed text-white/70">
+            <address class="not-italic">
+              <span class="block text-white">{site.headOffice.label}</span>
+              {site.headOffice.lines.map((l) => <span class="block">{l}</span>)}
+            </address>
+            <address class="not-italic">
+              <span class="block text-white">{site.commercialOffice.label}</span>
+              {site.commercialOffice.lines.map((l) => <span class="block">{l}</span>)}
+            </address>
+            <p class="text-pretty">{site.hours}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 flex flex-col gap-2 border-t border-[var(--hairline-night)] pt-6 text-[13px] text-white/55 md:flex-row md:justify-between">
+        <p>© {year} {site.legalName}. All rights reserved.</p>
+        <p>CIDA SP2 registered for painting and waterproofing.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-heading {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 300ms var(--ease);
+  }
+
+  .footer-link:hover {
+    color: #fff;
+  }
+
+  @media (min-width: 1024px) {
+    .footer-link {
+      min-height: 36px;
+    }
+  }
+</style>
