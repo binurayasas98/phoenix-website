@@ -1,4 +1,4 @@
-# Phoenix Decorators: site content and facts (version 2)
+# Phoenix Decorators: site content and facts (version 3)
 
 Sources: the company profile (March 2026), the previous website phoenixdecorator.com, and the directors. This file replaces version 1. Use this copy exactly. British English. No em dashes or en dashes.
 
@@ -7,7 +7,7 @@ Voice: the whole site speaks as "we", "our" and "us". Never describe the company
 Structure goal: an international-standard B2B contractor website. Every page answers four questions for a facility manager, engineer or building owner: what do you do, can I trust you, have you done it for someone like me, and how do I start.
 
 ## 0. Values to confirm (keep each one in src/data/site.ts)
-- warranty: "15+ year workmanship guarantee", short form "15+ year guarantee", number 15. The March 2026 company profile says "over 15 years"; the previous website said 25 years. [CONFIRM] Keep the number and labels only in site.ts.
+- warranty: { waterproofingYears: 25, label: "25+ year waterproofing guarantee", short: "25+ year waterproofing guarantee" }. Only waterproofing gets a number. Every other service gets a "Written workmanship guarantee" with the period stated in the quotation. Keep the number and labels only in site.ts. Never show "15+" anywhere.
 - Director titles and the spelling "Gamachchi". [CONFIRM]
 - Director messages in section 4 are their own words, lightly edited for grammar. [CONFIRM] with each director before launch.
 - instagramUrl: empty (hidden) until confirmed. [CONFIRM]
@@ -19,7 +19,7 @@ Structure goal: an international-standard B2B contractor website. Every page ans
 - Founded in 2011. More than 350 projects completed, in Colombo and across Sri Lanka.
 - Registered with the Construction Industry Development Authority (CIDA, formerly ICTAD) at SP2 level for painting and waterproofing.
 - Fully insured against third-party claims on every project.
-- Continuous research and development of the materials and methods we use. Product brands we work with: Dulux, Conmix, Delta Coatings.
+- Continuous research and development of the materials and methods we use. Product brands we work with: Dulux, Conmix, Delta Coatings, UCC.
 - Founded by Mr. Christy Marcelline, who co-owns the company with Mr. Ranga Gamachchi. The directors are hands-on in the daily running of the company. A technically qualified management team of the directors and a dedicated supervisor oversees every project.
 - Access methods: rope access, gondola, boom truck and scaffolding.
 - No compromises on safety: strict safety protocols on every job, for our people and the places we work.
@@ -38,7 +38,7 @@ Structure goal: an international-standard B2B contractor website. Every page ans
 - urgentLine: Urgent leak? Call or WhatsApp +94 77 036 2222.
 - facebookUrl: https://www.facebook.com/people/Phoenix-Decorators-pvt-ltd/61570341385061/
 - linkedinUrl: https://lk.linkedin.com/company/phoenix-decorators-pvt-ltd
-- announcement: { enabled: true, text: "Book a pre-monsoon waterproofing inspection", link: "/quote?service=waterproofing", expires: "2026-11-30" }. Show it only while enabled and not expired.
+- announcement: { enabled: false, text: "Book a pre-monsoon waterproofing inspection", link: "/quote?service=waterproofing", expires: "2026-11-30" }. Switched off (update 3); the feature stays in the code for later. Show it only while enabled and not expired.
 
 ## 3. WhatsApp and email messages (prefilled)
 - General: "Hi Phoenix Decorators, I'd like a quote for work on my building."
@@ -66,9 +66,11 @@ Each director's pull quote and message read as one continuous quote: one hanging
 - Fact: Ranga personally supervised the waterproofing and painting of Terminal 1 at Bandaranaike International Airport.
 
 ## 5. Services (src/data/services.ts)
-Waterproofing, painting and glass cleaning are the growth lines. Order and visual weight follow this list. Each service page has: hero, proof line, intro, at-a-glance facts, scope of work, expert guide, selected projects, gallery (if any), guarantee strip, process, FAQs, other services.
+Waterproofing, painting and glass cleaning are the growth lines. Order and visual weight follow this list. Each service page has: hero, proof line, intro (lead plus introMore), at-a-glance facts, "Signs you need [short name]", scope of work, "How we do it" (the service's method), expert guide, extra block (if any), selected projects, gallery (if any), trusted by and guarantee strip, FAQs, other services, CtaBand. See the service page template in section 12.
 
-At-a-glance facts for every service page (four items): "[warranty short label]" / "Fully insured" / "Directors and a dedicated supervisor on every project" / the service's access line (below).
+At-a-glance facts for every service page (four items): the guarantee item / "Fully insured" / "Directors and a dedicated supervisor on every project" / the service's access line (below). The guarantee item is "25+ year waterproofing guarantee" on Waterproofing and "Written workmanship guarantee" on every other service.
+
+Fields per service in services.ts: introMore (second intro paragraph), signs (checklist; heading "Signs you need [phrase]" unless a signsHeading is given), method (numbered steps for "How we do it"), extra (optional checklist block after the guide), phrase (the short name as it reads in a sentence).
 
 ### 5.1 Waterproofing (slug: waterproofing)
 - Name: Waterproofing. Long name: Waterproofing, damp proofing and roof leak repairs.
@@ -78,6 +80,9 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: Trusted at Bandaranaike International Airport, One Galle Face Residence and Cinnamon Garden Residence.
 - Access line: Rooftops, podiums and wet areas, with rope access for external walls.
 - Intro: Leaks and seepage rarely stay small. They damage finishes, electrical systems and structure, and they disrupt the people who use your building. We trace the true source, select the right system for each surface and apply it with tested products, following the manufacturer's specifications.
+- introMore: Waterproofing is a protective barrier that stops water getting into a structure, or out of one, such as a swimming pool. We use proven systems, including sprayed-on polyurea membranes, and name the exact products in your quotation.
+- Signs (heading "Signs you need waterproofing"): Damp patches or stains on ceilings and walls after rain. / Peeling paint, bubbling plaster or white salt deposits on walls. / Mould or a musty smell in rooms, basements or car parks. / Water pooling on roofs, terraces or podium decks. / Leaks around drains, pipes, upstands or expansion joints.
+- How we do it: 1 Inspect: We trace the real entry point, not just the damp patch. 2 Specify: We choose a system that suits the surface, its movement and its exposure to sun and standing water. 3 Prepare: We clean and repair the surface, treat cracks and weak concrete, and prime where the system requires it. 4 Apply and detail: We apply the system to the manufacturer's specification and seal every drain, upstand, junction and joint. 5 Check and hand over: We inspect the finished work, hand over a clean site and confirm your guarantee in writing.
 - Scope: Rooftop and concrete slab waterproofing. Sprayed-on polyurea membranes. Damp proofing. Roof leak detection and repair. Terraces, balconies and rooftop flower troughs. Bathrooms and wet areas. Swimming pools. Car park ramps and podium decks. External wall waterproofing. Weak concrete rectification.
 - Expert guide, heading "Why leaks happen, and how we stop them":
   - "A leak needs three things: water, a gap and a force that drives the water through, such as gravity, wind or pressure. Patching the visible damp spot rarely works, because the water often enters somewhere else."
@@ -88,6 +93,7 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
   - How long does waterproofing last? / It depends on the system and how exposed the surface is. After the inspection we recommend the right system and state the guarantee period in your quotation.
   - Can you work while the building is in use? / Yes. We plan the work in sections and agree timings with you, so occupants and operations are disturbed as little as possible.
   - Do you inspect before quoting? / Yes. A specialist visits the site, identifies the cause of the problem and then prepares a written quotation.
+  - What guarantee do you give on waterproofing? / A written guarantee of 25+ years. The exact period for your system is stated in your quotation.
   - When is the best time to waterproof? / In dry weather, before the monsoon. If you already have a leak, contact us straight away and we will advise on a temporary and a permanent solution.
 
 ### 5.2 Painting (slug: painting)
@@ -98,6 +104,9 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: Trusted at Aitken Spence, HSBC, NDB Bank and One Galle Face.
 - Access line: High-rise facades and ventilation shafts by rope access, gondola or boom truck.
 - Intro: A lasting finish depends on preparation. We repair cracks and prepare every surface before we paint, choose the right paint system for the exposure, and reach high-rise walls and ventilation shafts by rope access.
+- introMore: We paint offices, hotels, hospitals, apartment towers and homes, inside and out, and reach high-rise walls and ventilation shafts by rope access, gondola or boom truck.
+- Signs (heading "Signs you need painting"): Faded, chalky or stained exterior walls. / Cracks, peeling or flaking paint. / Mould or algae on shaded or damp walls. / Tired interiors before a handover, an inspection or a new tenant.
+- How we do it: 1 Survey: We check every surface, note cracks and damp, and plan safe access. 2 Repair and prepare: We clean the walls, repair cracks and treat damp before any paint goes on. 3 Specify: We choose the right interior or exterior system and list the products in your quotation. 4 Apply: We apply the specified coats, working in sections to keep disruption low. 5 Inspect and hand over: We check the finish with you and leave the site clean.
 - Scope: Exterior painting with crack repair. Interior painting. Colour wash. High-rise and ventilation shaft walls by rope access. Basement and car park painting. Podium and facade painting.
 - Expert guide, heading "The right paint for the right place":
   - "Interior paints use harder resins that resist stains and clean easily. Exterior paints use more flexible resins that move with heat, rain and sun without cracking."
@@ -116,9 +125,11 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: Trusted at the World Trade Center, Dialog Head Office and Hemas Hospitals.
 - Access line: Glazing and joints at any height, by rope access, gondola or boom truck.
 - Intro: Failed sealant around glazing and joints is one of the most common causes of water ingress in modern buildings. We remove and replace facade and window sealants, seal movement joints and waterproof external walls, working at height where needed.
+- introMore: Sealants are the flexible joints that keep water out where two materials meet: around windows, along curtain walls and across movement joints. When they crack or come loose, water finds its way in.
+- Signs (heading "Signs you need new sealant"): Cracked, shrunken or hardened sealant. / Sealant pulling away from the glass or frame. / Stains or streaks around windows. / Damp patches inside after heavy rain.
+- How we do it: 1 Inspect: We check the joints and find the cause of the failure. 2 Remove: We cut out the old sealant completely and clean the joint. 3 Prepare: We prime the surfaces and fit a backing rod where the joint needs one. 4 Seal: We apply the specified sealant to the correct depth and tool it to a neat, smooth finish. 5 Check: We inspect every joint before we hand over.
 - Scope: Facade and window sealant replacement. Expansion and movement joints. External wall waterproofing. Industrial sealing.
-- Expert guide, heading "Signs your sealant has failed":
-  - "Cracked, shrunken or detached sealant, stains around windows and damp patches inside after rain are the usual signs."
+- Expert guide, heading "Sealing for industry" (the signs have their own section):
   - "For industrial clients, we seal critical infrastructure and equipment with high-quality sealants that resist heat, moisture and chemicals, which protects the asset and extends its working life."
 - Proof clients: World Trade Center, Dialog Head Office, Hemas Hospital Wattala, Hemas Hospital Thalawathugoda, Empire City Residence, Monarch Residence, Browns Capital.
 - FAQs:
@@ -133,6 +144,9 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: Monthly at Shangri-La, quarterly at the Civil Aviation Authority, annually at the World Trade Center.
 - Access line: Any height, by rope access, gondola or boom truck.
 - Intro: Your facade is the first thing tenants, guests and clients see. We clean glass and facades by rope access, gondola or boom truck, as a one-off service or on a monthly, quarterly or annual contract. We also wash roofs, clean construction sites before handover and replace damaged glass.
+- introMore: In Colombo, sea salt, city dust and rain streaks build up quickly on glass. Regular cleaning keeps your building looking its best and lets in more natural light.
+- Signs (heading "When to call us"): Streaks, water marks or salt build-up on glass. / A dull facade that makes the building look older than it is. / A new building before handover, or a refurbished one before opening. / Guests, tenants or clients arriving at a high-profile entrance.
+- How we do it: 1 Plan: We choose the safest access (rope access, gondola or boom truck) and agree timings with you. 2 Protect: We secure the area below and protect signage, frames and fittings. 3 Clean: We apply the right solution evenly and clean with consistent, lint-free strokes, with extra attention to stubborn marks. 4 Finish: We polish the glass for a streak-free result and inspect each section before we move on.
 - Scope: Glass and curtain wall cleaning. Facade washing. Roof washing. Monthly, quarterly and annual contracts. Construction-site cleaning before handover. Glass replacement.
 - Expert guide, heading "What a proper clean involves":
   - "The right cleaning solution for the glass and frame, applied evenly. Consistent, lint-free strokes, extra attention to stubborn marks, then a polished finish."
@@ -151,6 +165,10 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: For factories, warehouses, ports and industrial plants.
 - Access line: Planned around your operations to keep downtime low.
 - Intro: The wrong floor fails early, creates safety risks and disrupts operations. We install resin industrial floors that are durable, hygienic and available with anti-slip finishes, and apply protective coatings that control corrosion on pipelines, including in harsh environments.
+- introMore: A good industrial floor is durable under heavy traffic, hygienic and easy to clean, with anti-slip finishes where safety needs them. A good pipeline coating controls corrosion for years, even in harsh environments.
+- Signs (heading "Signs you need industrial flooring and coatings"): Cracked, dusting or worn concrete floors. / Slippery areas in production, loading or wash-down zones. / Floors that are hard to clean or fail hygiene checks. / Rust or coating breakdown on pipelines and steelwork.
+- How we do it: 1 Assess: We check the substrate, loads, traffic, cleaning routine, chemicals and safety needs. 2 Specify: We recommend the right resin floor or coating system. 3 Prepare: We prepare the surface properly, because good preparation decides how long the system lasts. 4 Apply: We install in planned phases around your operations. 5 Cure and hand over: We allow full curing before traffic and hand over a clean area.
+- Extra block after the guide, heading "Why coat a pipeline?", a 2-column checklist: Controls corrosion, including in seawater and other harsh environments. / A smoother surface can improve flow and lower energy costs. / Faster, easier inspections. / Less reliance on corrosion inhibitors. / A cleaner product in the line. / A cost-effective, low-maintenance way to control corrosion.
 - Scope: Resin and epoxy industrial flooring. Anti-slip finishes. Substrate preparation. Pipeline corrosion-protection coatings. Coatings for harsh and coastal environments.
 - Expert guide, heading "Choosing a floor or coating that lasts":
   - "Floors fail early when they are chosen on appearance or price alone. Success depends on the right material, proper substrate preparation and a clear understanding of loads, cleaning and safety needs, so that is where we start."
@@ -168,6 +186,9 @@ At-a-glance facts for every service page (four items): "[warranty short label]" 
 - Proof line: Trusted at One Galle Face, NTB Head Office and Marine City Residence.
 - Access line: Rope access, gondola, boom truck or scaffolding, chosen for each job.
 - Intro: Preventive maintenance keeps a building's surfaces and systems in good order and avoids the cost of emergency repairs. We maintain high-rise, commercial and industrial buildings and choose the safest, most efficient access for each job.
+- introMore: We look after high-rise, commercial and industrial buildings on planned schedules, and clean construction sites so new buildings are ready for handover.
+- Signs (heading "Signs you need maintenance"): Cracks, loose plaster or stains appearing on the facade. / Repeated small leaks or plumbing faults. / No planned maintenance schedule for the building's exterior. / A new building that needs a full clean before handover.
+- How we do it: 1 Survey: We inspect the building and list what needs attention now and what can be planned. 2 Plan: We propose a maintenance schedule and the right access for each task. 3 Carry out: One team handles repairs, painting, sealing and cleaning under one contract. 4 Review: We check the completed work with you and agree the next visit.
 - Scope: Planned facade maintenance. Crack and plaster repairs. Plumbing repairs and replacement. Construction-site cleaning before handover. Access by rope, gondola, boom truck or scaffolding.
 - Expert guide, heading "Preventive, not reactive":
   - "Reactive maintenance waits for something to fail. Preventive maintenance finds small defects early, while they are still quick and inexpensive to fix."
@@ -257,47 +278,47 @@ Start as an empty array. The testimonials section renders only when it has items
 - Desktop and tablet: Services (opens a mega menu from 1024px), Sectors, Projects, About, Contact. Button: Get a free quote.
 - Mobile header (under 768px): the logo and the menu button only. "Get a free quote" sits in the hero and the bottom action bar.
 - Services mega menu: the six services, each with a small image, name and one-liner, plus "All services ›" and a small panel on the right: "Not sure what you need?" / "Send us a few photos on WhatsApp." with the not-sure WhatsApp link.
-- Mobile menu sheet: Home, Services (expands to the six services), Sectors, Projects, About, Safety and quality, Contact. Then Get a free quote, Chat on WhatsApp, Call us.
+- Mobile menu sheet: Home, Services (expands to the six services), Sectors, Projects, About, Safety and quality, Contact (26px links, 52px rows). Then "Get a free quote" (full width, 48px, 16px text) and, under it, "WhatsApp" and "Call us" side by side (44px, 15px text, with icons). The whole menu fits a 375 x 667 screen without scrolling. In the menu only, the WhatsApp label is "WhatsApp" because "Chat on WhatsApp" does not fit at half width.
 
 ### Footer
 - Brand line: "Quality that lasts. Service you can trust."
 - Description: "Waterproofing, painting, sealants, glass cleaning and building maintenance specialists since 2011. CIDA SP2 registered and fully insured."
+- Mobile (under 768px): logo 40px tall; Services and Company are collapsible groups (details and summary, closed by default, hairline rows, chevron icon); Contact stays open. Desktop unchanged.
 - Columns: Services (all six). Company (About, Sectors, Projects, Safety and quality, Contact, Common questions (/contact#faq), Privacy). Contact (phone, WhatsApp, email, both offices with labels, hours, hours note, "Request our company profile ›").
 - Fine print: "© [current year] Phoenix Decorators (Pvt) Ltd. All rights reserved." and "CIDA SP2 registered for painting and waterproofing."
 
 ### CtaBand (night, all pages except /contact and /quote)
-- Headline: Have a project in mind?
-- Subline: Book a free consultation and receive a clear, written quotation, with no obligation.
-- Buttons: Get a free quote. Chat on WhatsApp.
+- Headline: Need expert support?
+- Subline: Talk to our specialists about your building. We'll assess the site and send a clear, written quotation, with no obligation.
+- Buttons: Get a free quote. Chat on WhatsApp. On mobile: full width, 46px tall, 16px text, like the hero.
 - Small line: "Urgent leak? Call +94 77 036 2222." (tel link)
 
 ### Home
-Rhythm: section padding 80px on mobile and 112px on desktop. One idea per section, no sentence repeated across sections, every heading balanced with no orphan words. No two sections with the same background next to each other: hero (photo), trusted (paper), intro (mist), services (paper), why (mist), access (night), projects (paper), directors (mist), sectors (paper), testimonials when shown (mist), CtaBand (night).
+Rhythm: section padding 64px on mobile and 112px on desktop; heading to content 32px on mobile. Where two blocks share a background (the fact strip and "Trusted on landmark sites"), at most 40px between them. At most 64px between a "View all" or "Explore" link and the next section. One idea per section, no sentence repeated across sections, every heading balanced with no orphan words. No two sections with the same background next to each other: hero (photo), trusted (paper), intro (mist), services (paper), why (mist), access (night), projects (paper), directors (mist), sectors (paper), testimonials when shown (mist), CtaBand (night).
 
 1. Hero (full-screen photo: hero.jpg)
-   - Announcement pill (when active), always on one line.
+   - No announcement pill (switched off in site.ts; the feature stays in the code).
    - h1: Waterproofing and facade specialists. (Desktop lines: "Waterproofing and" / "facade specialists.")
    - Subline (max 36ch on desktop): "Waterproofing, painting, sealants and glass cleaning at any height. Trusted at Bandaranaike International Airport, Shangri-La and One Galle Face."
-   - Buttons: Get a free quote. Chat on WhatsApp.
-   - Fact strip: "350+ projects since 2011". "CIDA SP2 registered". "Fully insured". "[warranty short label]". Inside the hero on desktop; on mobile a white 2 x 2 strip directly under the hero (15px, hairline dividers), at the top of the trusted section.
+   - Buttons: Get a free quote. Chat on WhatsApp. Mobile (under 768px): full width, 46px tall, 16px text, 10px gap. Desktop unchanged.
+   - Fact strip: "350+ projects since 2011". "CIDA SP2 registered". "Fully insured". "25+ year waterproofing guarantee". Inside the hero on desktop; on mobile a white 2 x 2 strip directly under the hero (15px, hairline dividers), at the top of the trusted section.
    - Desktop: a soft left scrim over the bottom gradient. Text never covers the technician's face or hands: the headline scales with the screen so it always starts below his hands.
    - Mobile: content anchored to the bottom under a strong night gradient, buttons full width, technician in the top half, rope line hidden.
-2. Trusted by: heading "Trusted on landmark sites across Sri Lanka." (17px semibold), then a typographic client wall (4 columns desktop, 2 mobile): hairline top, name, descriptor underneath. Names only, no logos.
-3. Intro statement on a mist band (scroll highlight; words stay in ink with reduced motion): "Since 2011, facility managers, engineers and building owners have trusted us with more than 350 projects. One specialist team takes responsibility for every job, from the first inspection to the final handover."
+2. Trusted by: heading "Trusted on landmark sites across Sri Lanka." (17px semibold), then a typographic client wall (4 columns desktop, 2 mobile): hairline top, name, descriptor underneath. Names only, no logos. Mobile: 12px vertical padding per cell, 16px names, 13px descriptors.
+3. Intro statement on a mist band (24px on mobile) (scroll highlight; words stay in ink with reduced motion): "Since 2011, facility managers, engineers and building owners have trusted us with more than 350 projects. One specialist team takes responsibility for every job, from the first inspection to the final handover."
 4. Services: heading "Six specialist services." second tone "One accountable team." The Rail carousel (progress bar and previous and next under the cards, no arrows in the heading row), then "Explore all services ›" to /services.
 5. Why Phoenix: heading "Quality that lasts." second tone "Service you can trust."
-   - Big numbers (one row of three on every screen): "350+" / "Projects completed since 2011". "SP2" / "CIDA grade for painting and waterproofing". "[warranty number]+" / "Year workmanship guarantee".
-   - Two columns: brand-lotus-tower.jpg (4:5, no taller than 640px) with the caption "Our team at work in Colombo.", and four reasons with icons:
+   - Big numbers (one row of three on every screen): "350+" / "Projects completed since 2011". "SP2" / "CIDA grade for painting and waterproofing". "25+" / "Year guarantee on waterproofing".
+   - Two columns: brand-lotus-tower.jpg (4:5 from 768px and 4:3 on mobile, no taller than 640px) with the caption "Our team at work in Colombo.", and four reasons with icons:
      - "Directors on every project" / "Our directors and a dedicated supervisor oversee each job personally."
      - "The right system, specified" / "We assess the site first, then follow manufacturer specifications and industry standards."
      - "Fully insured" / "Every project is covered against third-party claims."
      - "Safe at any height" / "Rope access, gondola, boom truck or scaffolding, with strict safety protocols."
-   - Materials row at the end: the line "We work with materials from trusted brands, including Dulux, Conmix and Delta Coatings." and the three brand logos.
+   - Materials row at the end: the line "We work with materials from trusted brands, including Dulux, Conmix, Delta Coatings and UCC." and the four brand logos.
    - team.jpg is not used on the home page (it stays on About).
 6. Access (night): heading "Any height." second tone "The right access." Body: "We choose the safest, most efficient way to reach every surface, with strict safety protocols on every job." Four cards in the Rail carousel on every screen size. Link: "Ask about access for your building ›".
 7. Projects: heading "Proven on demanding sites." second tone "Selected work for hotels, banks, hospitals and landmark towers."
-   - Bandaranaike International Airport as a wide feature card (2:1 on tablet and desktop, 4:3 on mobile).
-   - Then six photo cards, each a link to /projects#slug: Shangri-La Hotel, One Galle Face, World Trade Center, Aitken Spence Head Office, Grand Bell Hotel, Hemas Hospitals. Desktop: a 3-column grid of 4:3 cards. Tablet: 2 columns. Mobile: the Rail carousel (4:5 cards).
+   - No feature card: all six project cards are equal, each a link to /projects#slug, in this order: Shangri-La Hotel, World Trade Center, One Galle Face, Aitken Spence Head Office, Hemas Hospitals, Bandaranaike International Airport. Desktop: a 3-column grid of 4:3 cards. Tablet: 2 columns. Mobile: the Rail carousel (4:5 cards, 82vw wide, max 360px, progress bar).
    - Card text on the gradient: client name, location, the contract pill if there is one, and the scope (one line on desktop, two lines at most on mobile and tablet).
    - No text-only project list on the home page (every project stays on /projects).
    - Ongoing contracts strip: "Trusted for ongoing contracts." / "Monthly at Shangri-La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center." Link: View all projects ›
@@ -308,7 +329,7 @@ Rhythm: section padding 80px on mobile and 112px on desktop. One idea per sectio
 
 "Common questions" is not on the home page; it lives on /contact#faq.
 
-The "How we work" process is not on the home page; every service page shows it.
+The "How we work" process is not on the home page. Service pages show their own "How we do it" steps instead.
 
 ### Services index (/services)
 - h1: Our services.
@@ -317,7 +338,8 @@ The "How we work" process is not on the home page; every service page shows it.
 - Band (night): "Not sure what your building needs?" / "Send us a few photos on WhatsApp and a specialist will recommend the right solution." Button: Chat on WhatsApp (not-sure message).
 
 ### Service page template (/services/[slug])
-Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line under the hero / intro as a lead paragraph / at-a-glance facts (four items with icons) / "Scope of work" / expert guide (heading from section 5, on mist) / "Selected projects" (projects whose services include this slug) / gallery if any / "Trusted by" (proof clients) / guarantee strip: "[warranty label]" with "Stated in your quotation, based on the system installed." and "Fully insured" with "Every project is covered by third-party insurance." / "How we work" / "Frequently asked questions" / "Explore other services" / CtaBand.
+Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line under the hero / intro: the lead paragraph, then introMore / at-a-glance facts (four items with icons) / "Signs you need [phrase]" (hairline checklist with brand-blue checks, 2 columns on desktop, 19px text on desktop and 17px on mobile) / "Scope of work" / "How we do it" (the service's method as numbered steps joined by a thin rope line, one column, max 720px), then "Every job starts with a free site assessment and a written quotation." with a "Get a free quote" link / expert guide (heading from section 5, on mist) / extra block where listed / "Selected projects" (at most 6, photo projects first; desktop 3-column grid, mobile the Rail; then "View all [phrase] projects" to /projects?service=[slug]) / gallery if any / "Trusted by" (proof clients) / guarantee strip: Waterproofing "25+ year waterproofing guarantee" with "The exact period for your system is stated in your quotation."; every other service "Written workmanship guarantee" with "The guarantee period is stated in your quotation, based on the work and materials."; then "Fully insured" with "Every project is covered by third-party insurance." / "Frequently asked questions" / "Explore other services" / CtaBand.
+The generic 4-step "How we work" process is no longer used on service pages.
 
 ### Sectors (/sectors)
 - h1: Sectors we serve.
@@ -329,10 +351,11 @@ Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line
 - h1: Our projects.
 - Subline: More than 350 projects since 2011, for hotels, hospitals, banks, offices, residences and public buildings across Sri Lanka.
 - Filter (segmented control, synced to ?service=): All, Waterproofing, Painting, Sealants, Glass cleaning, Industrial, Maintenance.
-- Project cards (client, location, sector, scope, contract, service tags). Each card has an id equal to its slug so /projects#slug links work.
+- Photo projects first, as 4:3 photo cards (client, location, contract pill, sector, scope). Then every project without a photo as a compact hairline list row under "More projects." (client, location, sector, scope, service tags, contract), with no empty boxes. The filter works on both. Every card and row has an id equal to its slug so /projects#slug links work.
 - Ongoing contracts callout: "Trusted for ongoing contracts." / "Monthly glass washing at Shangri-La, every three months at the Civil Aviation Authority and annually at the World Trade Center."
 - "Where we have worked": map of Sri Lanka with pins from section 10 (label "Map of Sri Lanka showing where we have worked"), and beside it "More than 350 projects across Sri Lanka."
-- "Client references": the section 9 lists grouped by service, then "Other clients".
+- "Client references": the section 9 lists grouped by service, then "Other clients". On mobile each group is collapsible (closed after load, open without scripts); from 768px all groups are open.
+- Target height at 390px: under 9,000px.
 
 ### About (/about)
 - h1: Built on quality since 2011.
@@ -350,7 +373,7 @@ Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line
 - Values (five, hairline tops): "Right first time": Efficient procedures, so clients get the highest quality in the shortest possible time. "Respect": We listen, meet expectations and build long-term relationships. "Integrity": Honest, ethical business in everything we do. "Innovation": We keep improving our methods and materials. "Our people": Skills development and knowledge transfer for every team member.
 - Relationship line (large, centred): "We don't just provide services. We build long-term relationships based on trust, quality and performance."
 - Safety and quality teaser (night): heading "No compromises on safety." Body: "CIDA SP2 registered, fully insured and supervised by our directors on every project." Link: "Safety and quality ›". Image: brand-lotus-tower.jpg.
-- Materials: "We work with materials from trusted brands, including Dulux, Conmix and Delta Coatings." with the three brand logos underneath.
+- Materials: "We work with materials from trusted brands, including Dulux, Conmix, Delta Coatings and UCC." with the four brand logos underneath (one row on desktop, 2 x 2 on mobile).
 - Community: heading "Giving back." Body: "We support young people from disadvantaged backgrounds through skills and employment, and we take part in community work."
   - Temple renovation, three photos in a row (a swipe row on mobile) labelled "Before", "During" and "After": community-temple-before.jpg, community-temple-work.jpg, community-temple-after.jpg. Caption: "Renovation of Mahawalawa Temple, Dadalla." (The before and after photos are taken from different angles, so do not use a drag slider.)
   - Two tiles: community-kandy-cleanup.jpg "Solid waste management at the Exhibition of the Sacred Tooth Relic, Kandy." / community-water-donation.jpg "Drinking water donated to the Sri Dalada Maligawa."
@@ -365,9 +388,9 @@ Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line
   - "Supervised by our directors" / "Our directors and a dedicated supervisor oversee every project, from assessment to handover."
   - "Specified, not guessed" / "Detailed site assessments, correct system selection and strict compliance with manufacturer specifications and industry standards."
   - "Quality control at every stage" / "We check the work at each stage and hand over a clean site."
-  - "Written guarantee" / "[warranty label], stated in your quotation."
+  - "Written guarantee" / "25+ years on waterproofing. For other services, the period is stated in your quotation."
 - Safe at any height (night): the four access methods with images, and "Strict safety protocols on every job, for our people and the places we work."
-- Materials: "We work with materials from trusted brands, including Dulux, Conmix and Delta Coatings." with the three brand logos underneath.
+- Materials: "We work with materials from trusted brands, including Dulux, Conmix, Delta Coatings and UCC." with the four brand logos underneath (one row on desktop, 2 x 2 on mobile).
 - Vendor registration band: heading "Registering us as a vendor?" Body: "Request our company profile and registration details for your vendor file." Buttons: "Request by WhatsApp" and "Request by email" (messages from section 3).
 - CtaBand.
 
@@ -383,7 +406,7 @@ Order: photo hero (name as h1, tagline, quote and WhatsApp buttons) / proof line
   - Are you registered and insured? / Yes. We are registered with CIDA at SP2 level for painting and waterproofing, and every project is covered by third-party insurance.
   - Can you work while the building is in use? / Yes. We plan the work in sections and agree timings with you, so occupants and operations are disturbed as little as possible.
   - Do you offer maintenance contracts? / Yes. Clients use us on monthly, quarterly and annual contracts, and we can propose a plan for your building.
-  - What guarantee do you give? / A written workmanship guarantee of [warranty label], depending on the system installed. The exact period is stated in your quotation.
+  - What guarantee do you give? / Our waterproofing carries a written guarantee of 25+ years. For other services, the guarantee depends on the work and materials, and the exact period is stated in your quotation.
 - Offices: "Head office" and "Commercial office" with addresses, hours, hours note and "Get directions ›" for each. A click-to-load map for the commercial office.
 - Company profile: "Need our company profile?" with the WhatsApp and email request links.
 - Band: "Need a price for your project?" Button: Get a free quote.
@@ -419,5 +442,5 @@ Plain-language notice in six short sections: what we collect (details sent throu
 ## 15. Deliberately not used from the previous website
 - Testimonials under famous footballers' names (not genuine).
 - "Countries: 47", "Projects: 215" and "Offices: 0" counters (unverified or out of date; the profile says 350+ projects and there are 2 offices).
-- "Royal Clients" label on product brand logos (Dulux, Conmix and Delta Coatings are material brands, not clients). Their logos now appear only in the materials row, never as clients.
+- "Royal Clients" label on product brand logos (Dulux, Conmix, Delta Coatings and UCC are material brands, not clients). Their logos now appear only in the materials row, never as clients.
 - "Decades of experience" and "better service than anyone else" (not supportable).
