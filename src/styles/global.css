@@ -31,7 +31,7 @@
 :root {
   --pad: 24px;
   --max: 1280px;
-  --header-h: 56px;
+  --header-h: 64px;
   --hairline-night: rgba(255, 255, 255, 0.12);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --spring: linear(
@@ -44,7 +44,7 @@
 @media (min-width: 768px) {
   :root {
     --pad: 48px;
-    --header-h: 64px;
+    --header-h: 72px;
     --section-y: 160px;
   }
 }
