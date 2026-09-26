@@ -1,0 +1,178 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import type { Photo } from '../data/services';
+import Icon from './Icon.astro';
+
+// A swipe row on mobile and a grid on desktop. Tap a photo to open it larger; Escape closes it.
+interface Props {
+  photos: Photo[];
+}
+
+const { photos } = Astro.props;
+const full = await Promise.all(photos.map((p) => getImage({ src: p.src, width: 1600, format: 'webp' })));
+---
+
+<div class="gallery" data-gallery>
+  <ul class="gallery-row no-scrollbar">
+    {
+      photos.map((photo, i) => (
+        <li class="gallery-item">
+          <button
+            type="button"
+            class="media-reveal card-zoom block w-full overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]"
+            aria-label={`Open photo: ${photo.alt}`}
+            data-full={full[i].src}
+            data-alt={photo.alt}
+          >
+            <Picture
+              src={photo.src}
+              alt={photo.alt}
+              formats={['avif', 'webp']}
+              widths={[400, 640, 960]}
+              sizes="(min-width: 1024px) 413px, (min-width: 768px) 50vw, 80vw"
+              loading="lazy"
+              decoding="async"
+              class="card-img aspect-[4/3] h-auto w-full object-cover"
+            />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="lightbox" aria-label="Photo" data-lightbox>
+    <button type="button" class="lightbox-close" aria-label="Close photo" data-lightbox-close>
+      <Icon name="x" size={24} />
+    </button>
+    <img src="" alt="" class="lightbox-img" data-lightbox-img />
+  </dialog>
+</div>
+
+<style>
+  .gallery-row {
+    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+  }
+
+  .gallery-item {
+    flex: none;
+    width: 80vw;
+    scroll-snap-align: start;
+  }
+
+  .gallery-item button {
+    cursor: zoom-in;
+  }
+
+  @media (min-width: 768px) {
+    .gallery-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      overflow: visible;
+      max-width: calc(var(--max) + var(--pad) * 2);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    .gallery-item {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .lightbox {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(6, 23, 43, 0.94);
+    opacity: 0;
+    transition:
+      opacity 300ms var(--ease),
+      overlay 300ms allow-discrete,
+      display 300ms allow-discrete;
+  }
+
+  .lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+  }
+
+  @starting-style {
+    .lightbox[open] {
+      opacity: 0;
+    }
+  }
+
+  .lightbox::backdrop {
+    background: transparent;
+  }
+
+  .lightbox-img {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100svh - 128px);
+    width: auto;
+    height: auto;
+    border-radius: 18px;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top));
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox :focus-visible {
+    outline-color: var(--color-brand-light);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const dialog = gallery.querySelector<HTMLDialogElement>('[data-lightbox]');
+    const img = gallery.querySelector<HTMLImageElement>('[data-lightbox-img]');
+    if (!dialog || !img) return;
+    let opener: HTMLElement | null = null;
+
+    gallery.querySelectorAll<HTMLButtonElement>('[data-full]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        opener = btn;
+        img.src = btn.dataset.full ?? '';
+        img.alt = btn.dataset.alt ?? '';
+        dialog.showModal();
+      });
+    });
+
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+    // A click on the dark area around the photo closes it.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener('close', () => opener?.focus());
+  });
+</script>

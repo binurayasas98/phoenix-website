@@ -23,6 +23,10 @@ interface Props {
   /** Mobile action bar and floating WhatsApp button (hidden on /quote). */
   actions?: boolean;
   noindex?: boolean;
+  /** Service pages point every quote button at /quote?service=slug. */
+  quoteHref?: string;
+  /** Prefilled WhatsApp message for this page (defaults to the general one). */
+  whatsappMessage?: string;
 }
 
 const {
@@ -32,6 +36,8 @@ const {
   ctaBand = true,
   actions = true,
   noindex = false,
+  quoteHref = '/quote',
+  whatsappMessage,
 } = Astro.props;
 
 // Clean path: drop ".html", a trailing "/index" and a trailing slash, so the home page is exactly "/".
@@ -129,17 +135,17 @@ const organisation = {
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
-    <Header transparent={transparentHeader} />
+    <Header transparent={transparentHeader} quoteHref={quoteHref} />
     <main id="main" tabindex="-1" class="outline-none">
       <slot />
     </main>
-    {ctaBand && <CtaBand />}
-    <Footer />
+    {ctaBand && <CtaBand quoteHref={quoteHref} whatsappMessage={whatsappMessage} />}
+    <Footer quoteHref={quoteHref} whatsappMessage={whatsappMessage} />
     {
       actions && (
         <>
-          <ActionBar />
-          <FloatingWhatsApp />
+          <ActionBar quoteHref={quoteHref} whatsappMessage={whatsappMessage} />
+          <FloatingWhatsApp whatsappMessage={whatsappMessage} />
         </>
       )
     }

@@ -2,11 +2,18 @@
 import { labels, whatsappUrl } from '../data/site';
 import Icon from './Icon.astro';
 
+interface Props {
+  whatsappMessage?: string;
+}
+
+const { whatsappMessage } = Astro.props;
+
+
 // Desktop only (768px and up).
 ---
 
 <a
-  href={whatsappUrl()}
+  href={whatsappUrl(whatsappMessage)}
   target="_blank"
   rel="noopener"
   class="fab group hidden md:flex"

@@ -2,6 +2,14 @@
 import { labels, site, whatsappUrl } from '../data/site';
 import Icon from './Icon.astro';
 
+interface Props {
+  quoteHref?: string;
+  whatsappMessage?: string;
+}
+
+const { quoteHref = '/quote', whatsappMessage } = Astro.props;
+
+
 // Mobile only (under 768px). Appears once the hero has scrolled away.
 ---
 
@@ -15,7 +23,7 @@ import Icon from './Icon.astro';
       <Icon name="phone" size={20} />
     </a>
     <a
-      href={whatsappUrl()}
+      href={whatsappUrl(whatsappMessage)}
       target="_blank"
       rel="noopener"
       class="btn btn-icon btn-secondary flex-none"
@@ -23,7 +31,7 @@ import Icon from './Icon.astro';
     >
       <Icon name="whatsapp" size={22} class="text-whatsapp" />
     </a>
-    <a href="/quote" class="btn btn-primary flex-1">{labels.quote}</a>
+    <a href={quoteHref} class="btn btn-primary flex-1">{labels.quote}</a>
   </div>
 </div>
 
