@@ -8,7 +8,10 @@ import OverlayCard from '../../components/OverlayCard.astro';
 import Gallery from '../../components/Gallery.astro';
 import Faq from '../../components/Faq.astro';
 import Icon from '../../components/Icon.astro';
-import Process from '../../components/home/Process.astro';
+import Process from '../../components/Process.astro';
+import Checklist from '../../components/Checklist.astro';
+import Rail from '../../components/Rail.astro';
+import TextLink from '../../components/TextLink.astro';
 import { services, type Service } from '../../data/services';
 import { projectsForService } from '../../data/projects';
 import { site } from '../../data/site';
@@ -23,21 +26,33 @@ interface Props {
 const { service } = Astro.props;
 const quoteHref = `/quote?service=${service.slug}`;
 const description = `${service.oneLiner} ${service.tagline}`.slice(0, 155);
-const selected = projectsForService(service.slug);
+// At most six projects, photo projects first.
+const selected = projectsForService(service.slug).slice(0, 6);
 const others = services.filter((s) => s.slug !== service.slug);
+const isWaterproofing = service.slug === 'waterproofing';
+
+// Waterproofing carries the 25+ year guarantee. Every other service states its period in the quotation.
+const guarantee = isWaterproofing
+  ? { title: site.warranty.label, text: 'The exact period for your system is stated in your quotation.' }
+  : {
+      title: 'Written workmanship guarantee',
+      text: 'The guarantee period is stated in your quotation, based on the work and materials.',
+    };
 
 const facts = [
-  { icon: 'file-check', text: site.warranty.short },
+  { icon: 'file-check', text: isWaterproofing ? site.warranty.short : 'Written workmanship guarantee' },
   { icon: 'shield-check', text: 'Fully insured' },
   { icon: 'users', text: 'Directors and a dedicated supervisor on every project' },
   { icon: 'hard-hat', text: service.accessLine },
 ] as const;
 
-// Sections below the scope alternate mist and paper, whichever optional blocks are present.
+const signsHeading = service.signsHeading ?? `Signs you need ${service.phrase}`;
+
+// Backgrounds alternate from the signs down, whichever optional blocks are present.
+// Scope of work and "How we do it" share one paper band; the guide is always on mist.
 const hasWork = selected.length > 0 || service.gallery.length > 0;
-const order = ['guide', hasWork ? 'work' : '', 'trust', 'process', 'faq', 'others'].filter(Boolean);
+const order = ['signs', 'how', 'guide', hasWork ? 'work' : '', 'trust', 'faq', 'others'].filter(Boolean);
 const bg = (block: string) => (order.indexOf(block) % 2 === 0 ? 'bg-mist' : 'bg-paper');
-const processTone = order.indexOf('process') % 2 === 0 ? 'mist' : 'paper';
 
 // Keep hyphenated names like "Shangri-La" on one line.
 const nb = (text: string) => text.replace(/-/g, '‑');
@@ -61,16 +76,19 @@ const nb = (text: string) => text.replace(/-/g, '‑');
   <!-- Proof line, intro and at-a-glance facts -->
   <section class="bg-paper pb-[var(--section-y)]" aria-label="Overview">
     <div class="border-b border-hairline">
-      <p class="container-site py-5 text-[15px] font-medium text-graphite md:py-6 md:text-[17px]">
+      <p class="container-site py-4 text-[15px] font-medium text-graphite md:py-6 md:text-[17px]">
         {nb(service.proofLine)}
       </p>
     </div>
-    <div class="container-site pt-16 md:pt-24">
-      <p class="t-lead text-column text-ink">{service.intro}</p>
-      <ul class="mt-12 grid grid-cols-1 gap-x-8 sm:grid-cols-2 md:mt-16 lg:grid-cols-4" aria-label="At a glance">
+    <div class="container-site pt-12 md:pt-24">
+      <div class="text-column">
+        <p class="t-lead text-ink">{service.intro}</p>
+        <p class="mt-5 text-[17px] text-graphite md:mt-6 md:text-[19px]">{service.introMore}</p>
+      </div>
+      <ul class="mt-10 grid grid-cols-1 gap-x-8 sm:grid-cols-2 md:mt-16 lg:grid-cols-4" aria-label="At a glance">
         {
           facts.map((f) => (
-            <li class="flex items-start gap-4 border-t border-hairline py-6">
+            <li class="flex items-start gap-4 border-t border-hairline py-4 md:py-6">
               <Icon name={f.icon} size={28} class="flex-none text-brand" />
               <span class="text-[17px] font-medium leading-snug text-ink">{f.text}</span>
             </li>
@@ -80,11 +98,19 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     </div>
   </section>
 
-  <!-- Scope of work -->
-  <section class="bg-paper pb-[var(--section-y)]" aria-labelledby="scope-heading">
+  <!-- Signs -->
+  <section class:list={['section', bg('signs')]} aria-labelledby="signs-heading">
+    <div class="container-site">
+      <h2 id="signs-heading" class="t-h2 text-balance">{signsHeading}.</h2>
+      <Checklist items={service.signs} class="mt-8 md:mt-14" />
+    </div>
+  </section>
+
+  <!-- Scope of work and how we do it share one band -->
+  <section class:list={['section', bg('how')]} aria-labelledby="scope-heading">
     <div class="container-site">
       <h2 id="scope-heading" class="t-h2">Scope of work.</h2>
-      <ul class="mt-10 border-b border-hairline md:mt-14 md:columns-2 md:gap-x-10">
+      <ul class="mt-8 border-b border-hairline md:mt-14 md:columns-2 md:gap-x-10">
         {
           service.scope.map((item) => (
             <li class="flex break-inside-avoid gap-3 border-t border-hairline py-4 text-[17px] text-ink">
@@ -94,17 +120,33 @@ const nb = (text: string) => text.replace(/-/g, '‑');
           ))
         }
       </ul>
+
+      <h2 id="how-heading" class="t-h2 mt-16 md:mt-28">How we do it.</h2>
+      <Process steps={service.method} tone={bg('how') === 'bg-mist' ? 'mist' : 'paper'} class="mt-8 md:mt-14">
+        <div class="mt-10 border-t border-hairline pt-6 md:mt-14">
+          <p class="text-[17px] text-ink md:text-[19px]">Every job starts with a free site assessment and a written quotation.</p>
+          <TextLink href={quoteHref}>Get a free quote</TextLink>
+        </div>
+      </Process>
     </div>
   </section>
 
-  <!-- Expert guide -->
+  <!-- Expert guide, and the extra block where a service has one -->
   <section class:list={['section', bg('guide')]} aria-labelledby="guide-heading">
-    <div class="container-site grid gap-10 md:grid-cols-12">
+    <div class="container-site grid gap-6 md:grid-cols-12 md:gap-10">
       <h2 id="guide-heading" class="t-h2 text-balance md:col-span-5">{service.guide.heading}.</h2>
       <div class="space-y-6 md:col-span-6 md:col-start-7">
         {service.guide.paragraphs.map((para) => <p class="t-lead text-graphite">{para}</p>)}
       </div>
     </div>
+    {
+      service.extra && (
+        <div class="container-site mt-16 md:mt-28">
+          <h2 id="extra-heading" class="t-h2 text-balance">{service.extra.heading}</h2>
+          <Checklist items={service.extra.items} class="mt-8 md:mt-14" />
+        </div>
+      )
+    }
   </section>
 
   {
@@ -112,13 +154,23 @@ const nb = (text: string) => text.replace(/-/g, '‑');
       <section class:list={['section', bg('work')]} aria-labelledby="selected-heading">
         <div class="container-site">
           <h2 id="selected-heading" class="t-h2">Selected projects.</h2>
-          <ul class="mt-12 grid gap-4 md:mt-16 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-            {selected.map((p) => (
-              <li>
-                <ProjectCard project={p} href={`/projects#${p.slug}`} class="h-full" />
-              </li>
-            ))}
-          </ul>
+        </div>
+        <Rail id="selected-rail" label="Selected projects" size="projects" gridFromTablet class="selected-grid mt-8 md:mt-14">
+          {selected.map((p) => (
+            <li>
+              <ProjectCard
+                project={p}
+                href={`/projects#${p.slug}`}
+                aspectClass="aspect-[4/5] md:aspect-[4/3]"
+                sizes="(min-width: 1376px) 413px, (min-width: 1024px) 30vw, (min-width: 768px) 50vw, min(82vw, 360px)"
+                clampScope
+                class="h-full"
+              />
+            </li>
+          ))}
+        </Rail>
+        <div class="container-site mt-4 md:mt-8">
+          <TextLink href={`/projects?service=${service.slug}`}>View all {service.phrase} projects</TextLink>
         </div>
       </section>
     )
@@ -133,7 +185,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
         <div class="container-site">
           <h2 id="gallery-heading" class="t-h2">Gallery.</h2>
         </div>
-        <div class="mt-12 md:mt-16">
+        <div class="mt-8 md:mt-16">
           <Gallery photos={service.gallery} />
         </div>
       </section>
@@ -145,9 +197,9 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     <div class="container-site">
       {
         service.proof.length > 0 && (
-          <div class="mb-16 md:mb-24">
+          <div class="mb-10 md:mb-24">
             <h2 class="text-[17px] font-semibold text-ink">Trusted by</h2>
-            <ul class="mt-6 flex flex-wrap gap-x-8 gap-y-3 md:gap-x-12 md:gap-y-4">
+            <ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 md:mt-6 md:gap-x-12 md:gap-y-4">
               {service.proof.map((name) => (
                 <li class="text-[19px] font-medium tracking-[-0.01em] text-graphite md:text-[24px]">{nb(name)}</li>
               ))}
@@ -156,14 +208,14 @@ const nb = (text: string) => text.replace(/-/g, '‑');
         )
       }
       <ul class="grid gap-x-10 md:grid-cols-2" aria-label="Guarantee and insurance">
-        <li class="flex gap-5 border-t border-hairline py-8">
+        <li class="flex gap-5 border-t border-hairline py-6 md:py-8">
           <Icon name="file-check" size={32} class="flex-none text-brand" />
           <div>
-            <p class="t-h3 text-ink">{site.warranty.label}</p>
-            <p class="mt-2 text-graphite">Stated in your quotation, based on the system installed.</p>
+            <p class="t-h3 text-ink">{guarantee.title}</p>
+            <p class="mt-2 text-graphite">{guarantee.text}</p>
           </div>
         </li>
-        <li class="flex gap-5 border-t border-hairline py-8">
+        <li class="flex gap-5 border-t border-hairline py-6 md:py-8">
           <Icon name="shield-check" size={32} class="flex-none text-brand" />
           <div>
             <p class="t-h3 text-ink">Fully insured</p>
@@ -174,11 +226,9 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     </div>
   </section>
 
-  <Process tone={processTone} />
-
   <!-- FAQs -->
   <section class:list={['section', bg('faq')]} aria-labelledby="faq-heading">
-    <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
+    <div class="container-site grid gap-8 md:grid-cols-12 md:gap-10">
       <div class="md:col-span-5">
         <h2 id="faq-heading" class="t-h2 text-balance">Frequently asked questions.</h2>
       </div>
@@ -193,7 +243,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     <div class="container-site">
       <TwoToneHeading id="others-heading" first="Explore other services." />
     </div>
-    <ul class="others-row no-scrollbar mt-12 md:mt-16">
+    <ul class="others-row no-scrollbar mt-8 md:mt-16">
       {
         others.map((s) => (
           <li class="others-item">

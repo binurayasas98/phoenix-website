@@ -9,19 +9,19 @@ interface Props {
 
 const { quoteHref = '/quote', whatsappMessage } = Astro.props;
 
-
 // Closing band on night. Flows straight into the footer.
 ---
 
 <section class="cta-band on-night bg-night text-white" aria-labelledby="cta-heading" data-track-area="cta_band">
-  <div class="container-site pb-24 pt-24 text-center md:pb-32 md:pt-40">
-    <h2 id="cta-heading" class="t-h2 mx-auto max-w-[14ch] text-balance">Have a project in mind?</h2>
+  <div class="container-site pb-16 pt-16 text-center md:pb-32 md:pt-40">
+    <h2 id="cta-heading" class="t-h2 mx-auto max-w-[14ch] text-balance">Need expert support?</h2>
     <p class="t-lead mx-auto mt-6 max-w-[40ch] text-white/70">
-      Book a free consultation and receive a clear, written quotation, with no obligation.
+      Talk to our specialists about your building. We'll assess the site and send a clear, written quotation, with no
+      obligation.
     </p>
-    <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href={quoteHref} class="btn btn-lg btn-light w-full sm:w-auto">{labels.quote}</a>
-      <a href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" class="btn btn-lg btn-frost w-full sm:w-auto">
+    <div class="cta-actions mt-10 flex flex-col items-center justify-center md:flex-row md:gap-3">
+      <a href={quoteHref} class="btn btn-lg btn-light w-full md:w-auto">{labels.quote}</a>
+      <a href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" class="btn btn-lg btn-frost w-full md:w-auto">
         <Icon name="whatsapp" size={20} class="text-whatsapp" />
         {labels.whatsapp}
       </a>
@@ -33,3 +33,17 @@ const { quoteHref = '/quote', whatsappMessage } = Astro.props;
     </p>
   </div>
 </section>
+
+<style>
+  /* Mobile buttons match the hero: full width, 46px tall, 16px text. */
+  @media (max-width: 767px) {
+    .cta-actions {
+      gap: 10px;
+    }
+
+    .cta-actions .btn {
+      height: 46px;
+      font-size: 16px;
+    }
+  }
+</style>

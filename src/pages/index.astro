@@ -27,8 +27,7 @@ const facts = [
 ];
 
 const bySlug = (slug: string) => getProject(slug) as Project;
-const featureProject = bySlug('bia');
-const gridProjects = ['shangri-la', 'one-galle-face', 'world-trade-center', 'aitken-spence', 'grand-bell', 'hemas-hospitals'].map(bySlug);
+const gridProjects = ['shangri-la', 'world-trade-center', 'one-galle-face', 'aitken-spence', 'hemas-hospitals', 'bia'].map(bySlug);
 
 const shownTestimonials = testimonials.filter((t) => t.permissionConfirmed);
 
@@ -61,12 +60,12 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     </ul>
     <div class="trusted container-site">
       <h2 id="trusted-heading" class="text-[17px] font-semibold text-ink">Trusted on landmark sites across Sri Lanka.</h2>
-      <ul class="mt-6 grid grid-cols-2 gap-x-4 md:mt-8 md:grid-cols-4 md:gap-x-8">
+      <ul class="mt-5 grid grid-cols-2 gap-x-4 md:mt-8 md:grid-cols-4 md:gap-x-8">
         {
           trustedBy.map((c) => (
-            <li class="border-t border-hairline pb-4 pt-3 md:pb-6 md:pt-4">
+            <li class="border-t border-hairline py-3 md:pb-6 md:pt-4">
               <span class="block text-[16px] font-semibold leading-snug tracking-[-0.01em] text-ink md:text-[19px]">{nb(c.name)}</span>
-              <span class="mt-1 block text-[14px] text-graphite">{c.type}</span>
+              <span class="mt-0.5 block text-[13px] text-graphite md:mt-1 md:text-[14px]">{c.type}</span>
             </li>
           ))
         }
@@ -85,12 +84,12 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     <div class="container-site">
       <div class="max-w-[960px]">
         <TwoToneHeading id="access-heading" first="Any height." second="The right access." tone="night" />
-        <p class="t-lead mt-6 max-w-[40ch] text-white/70">
+        <p class="t-lead mt-4 max-w-[40ch] text-white/70 md:mt-6">
           We choose the safest, most efficient way to reach every surface, with strict safety protocols on every job.
         </p>
       </div>
     </div>
-    <Rail id="access-rail" label="Access methods" size="access" tone="night" class="mt-12 md:mt-16">
+    <Rail id="access-rail" label="Access methods" size="access" tone="night" class="mt-8 md:mt-16">
       {
         accessMethods.map((m) => (
           <li>
@@ -104,7 +103,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
         ))
       }
     </Rail>
-    <div class="container-site mt-8">
+    <div class="container-site mt-4 md:mt-8">
       <TextLink href={whatsappUrl(site.whatsappMessages.access)} tone="night" external>
         Ask about access for your building
       </TextLink>
@@ -120,18 +119,9 @@ const nb = (text: string) => text.replace(/-/g, '‑');
         second="Selected work for hotels, banks, hospitals and landmark towers."
         class="max-w-[20em]"
       />
-      <ProjectCard
-        project={featureProject}
-        size="large"
-        href={`/projects#${featureProject.slug}`}
-        aspectClass="aspect-[4/3] md:aspect-[2/1]"
-        sizes="(min-width: 1376px) 1280px, (min-width: 768px) calc(100vw - 96px), calc(100vw - 48px)"
-        clampScope
-        class="project-feature mt-12 md:mt-16"
-      />
     </div>
 
-    <Rail id="projects-rail" label="Projects" size="projects" gridFromTablet class="project-grid mt-4 md:mt-5">
+    <Rail id="projects-rail" label="Projects" size="projects" gridFromTablet class="project-grid mt-8 md:mt-16">
       {
         gridProjects.map((p) => (
           <li>
@@ -149,7 +139,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     </Rail>
 
     <div class="container-site">
-      <div class="mt-12 grid gap-3 md:mt-16 md:grid-cols-12 md:gap-10">
+      <div class="mt-10 grid gap-2 md:mt-16 md:grid-cols-12 md:gap-10">
         <p class="text-[21px] font-semibold tracking-[-0.015em] text-ink md:col-span-5 md:text-[24px]">
           Trusted for ongoing contracts.
         </p>
@@ -157,7 +147,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
           Monthly at Shangri&#8209;La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center.
         </p>
       </div>
-      <div class="mt-6">
+      <div class="mt-3 md:mt-6">
         <TextLink href="/projects">View all projects</TextLink>
       </div>
     </div>
@@ -194,7 +184,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
   <section class="section bg-paper" aria-labelledby="sectors-heading">
     <div class="container-site">
       <TwoToneHeading id="sectors-heading" first="Sectors we serve." second="The same standard in every building." />
-      <ul class="mt-12 border-b border-hairline md:mt-16">
+      <ul class="mt-8 border-b border-hairline md:mt-16">
         {
           sectors.map((s) => (
             <li class="border-t border-hairline">
@@ -216,7 +206,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
       <section class="section bg-mist" aria-labelledby="testimonials-heading">
         <div class="container-site">
           <h2 id="testimonials-heading" class="t-h2">What our clients say.</h2>
-          <div class="mt-12 grid gap-12 md:mt-16 md:grid-cols-2 md:gap-10">
+          <div class="mt-8 grid gap-10 md:mt-16 md:grid-cols-2 md:gap-10">
             {shownTestimonials.map((t) => (
               <figure class="border-t border-hairline pt-8">
                 <blockquote>
@@ -252,11 +242,7 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     }
   }
 
-  /* Home rhythm: 80px sections on mobile, 112px on desktop. Every heading balances its lines. */
-  :global(#main) {
-    --section-y: 80px;
-  }
-
+  /* Home rhythm: 64px sections on mobile, 112px on desktop. Every heading balances its lines. */
   @media (min-width: 768px) {
     :global(#main) {
       --section-y: 112px;
@@ -289,8 +275,9 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     border-top: 1px solid var(--color-hairline);
   }
 
+  /* The fact strip and the trusted grid share one band: no double padding between them. */
   .trusted {
-    padding-block: 56px 40px;
+    padding-block: 32px 48px;
   }
 
   @media (min-width: 768px) {

@@ -169,7 +169,7 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
         <Icon name="x" size={24} />
       </button>
     </div>
-    <nav aria-label="Mobile" class="container-site flex-1 overflow-y-auto pt-8">
+    <nav aria-label="Mobile" class="container-site flex-1 overflow-y-auto pt-4">
       <ul class="menu-list">
         <li><a href="/" class="menu-link" aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
         {
@@ -229,21 +229,22 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
         }
       </ul>
     </nav>
-    <div class="container-site flex-none pb-[calc(24px+env(safe-area-inset-bottom))] pt-6">
-      <div class="flex flex-col gap-3">
-        <a href={quoteHref} class="btn btn-lg btn-light w-full">{labels.quote}</a>
+    <div class="container-site flex-none pb-[calc(20px+env(safe-area-inset-bottom))] pt-5">
+      <a href={quoteHref} class="btn btn-light menu-btn-quote w-full">{labels.quote}</a>
+      <div class="mt-2.5 grid grid-cols-2 gap-2.5">
         <a
           href={whatsappUrl()}
           target="_blank"
           rel="noopener"
-          class="btn btn-lg btn-frost w-full"
+          class="btn btn-frost menu-btn-half"
           data-track-location="menu"
         >
-          <Icon name="whatsapp" size={20} class="text-whatsapp" />
-          {labels.whatsapp}
+          <Icon name="whatsapp" size={18} class="text-whatsapp" />
+          {/* Menu only: "WhatsApp", because "Chat on WhatsApp" does not fit at half width. */}
+          WhatsApp
         </a>
-        <a href={site.phone.href} class="btn btn-lg btn-frost w-full" data-track-location="menu">
-          <Icon name="phone" size={20} />
+        <a href={site.phone.href} class="btn btn-frost menu-btn-half" data-track-location="menu">
+          <Icon name="phone" size={18} />
           {labels.call}
         </a>
       </div>
@@ -485,12 +486,23 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
   .menu-link {
     display: flex;
     align-items: center;
-    min-height: 60px;
-    font-size: 32px;
+    min-height: 52px;
+    font-size: 26px;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: #fff;
     border-bottom: 1px solid var(--hairline-night);
+  }
+
+  .menu-btn-quote {
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .menu-btn-half {
+    height: 44px;
+    padding-inline: 12px;
+    font-size: 15px;
   }
 
   .menu-link[aria-current='page'],

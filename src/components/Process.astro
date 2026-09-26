@@ -1,46 +1,40 @@
 ---
-import { processSteps } from '../../data/services';
-import TwoToneHeading from '../TwoToneHeading.astro';
+import type { MethodStep } from '../data/services';
 
+// Numbered steps joined by a thin rope line that fills as you scroll. One column, 720px at most.
+// Used for "How we do it" on service pages. The slot sits under the steps.
 interface Props {
+  steps: MethodStep[];
+  /** Background behind the dots, so the line looks threaded through them. */
   tone?: 'paper' | 'mist';
+  class?: string;
 }
 
-const { tone = 'paper' } = Astro.props;
+const { steps, tone = 'paper', class: className } = Astro.props;
 ---
 
-<section
-  class:list={['section', tone === 'mist' ? 'bg-mist' : 'bg-paper']}
+<div
+  class:list={['text-column', className]}
   style={tone === 'mist' ? '--process-bg: var(--color-mist)' : undefined}
-  aria-labelledby="process-heading"
 >
-  <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
-    <div class="md:col-span-5">
-      <div class="md:sticky md:top-[calc(var(--header-h)+48px)]">
-        <TwoToneHeading id="process-heading" first="How we work." second="A clear process, documented at every step." />
-      </div>
-    </div>
-
-    <div class="md:col-span-6 md:col-start-7">
-      <ol class="process relative" data-process>
-        <span class="process-track" aria-hidden="true"></span>
-        <span class="process-fill" aria-hidden="true" data-process-fill></span>
-        {
-          processSteps.map((step, i) => (
-            <li class="process-step relative pb-14 pl-12 last:pb-0 md:pb-20 md:pl-16" data-step>
-              <span class="process-dot" aria-hidden="true" />
-              <span class="tabular block text-[15px] font-medium text-brand" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 class="t-h3 mt-2">{step.title}</h3>
-              <p class="mt-3 max-w-[44ch] text-graphite">{step.text}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </div>
-</section>
+  <ol class="process relative" data-process>
+    <span class="process-track" aria-hidden="true"></span>
+    <span class="process-fill" aria-hidden="true" data-process-fill></span>
+    {
+      steps.map((step, i) => (
+        <li class="process-step relative pb-10 pl-12 last:pb-0 md:pb-14 md:pl-16" data-step>
+          <span class="process-dot" aria-hidden="true" />
+          <span class="tabular block text-[15px] font-medium text-brand" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3 class="t-h3 mt-1">{step.title}</h3>
+          <p class="mt-2 max-w-[52ch] text-graphite">{step.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+  <slot />
+</div>
 
 <style>
   .process-track,

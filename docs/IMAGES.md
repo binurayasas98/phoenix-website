@@ -1,4 +1,4 @@
-# Images: where each photo goes (version 2)
+# Images: where each photo goes (version 3)
 
 All files are in src/assets/images. Real Phoenix work only. Crop with object-fit and object-position, never stretch. Alt text below; keep it factual.
 
@@ -44,7 +44,7 @@ All files are in src/assets/images. Real Phoenix work only. Crop with object-fit
 
 ## Client buildings (NEW, the one exception to "our work only")
 These show the client's building, not our team at work. Use each one only on that client's project card (home, /projects, service pages) and on the matching sector section on /sectors. Never in a hero, as a service image or as a background.
-- project-bia.jpg (1200 x 600). Alt: "Bandaranaike International Airport terminal building, Katunayake". Home: the wide feature card (2:1 on tablet and desktop, 4:3 on mobile). Sectors: Airports and public buildings.
+- project-bia.jpg (1200 x 600). Alt: "Bandaranaike International Airport terminal building, Katunayake". Home: one of the six equal project cards (the last one). Sectors: Airports and public buildings.
 - project-shangri-la.jpg (1200 x 857). Alt: "Shangri-La Hotel tower overlooking Galle Face, Colombo". Crop position 82% centre. Sectors: Hotels and resorts.
 - project-one-galle-face.jpg (1000 x 765). Alt: "One Galle Face mall and towers, Colombo". Crop position 90% centre on cards. Sectors: Residential towers and apartments.
 - project-world-trade-center.jpg (1440 x 851). Alt: "World Trade Center twin towers, Colombo". Crop position 58% centre. Sectors: Corporate offices and banks.
@@ -60,10 +60,10 @@ These show the client's building, not our team at work. Use each one only on tha
 - Airports and public buildings: project-bia.jpg, caption "Bandaranaike International Airport"
 - Retail, ports and industry: service-industrial.jpg, caption "Industrial floor preparation by our team"
 
-## Material brand logos (NEW, the MaterialBrands row)
-- brand-dulux.png (alt "Dulux"), brand-conmix.png (alt "Conmix"), brand-delta-coatings.png (alt "Delta Coatings International").
-- Used at the end of the home "Why" section, in the About materials block and in the Safety and quality materials block, under the line "We work with materials from trusted brands, including Dulux, Conmix and Delta Coatings."
-- 36px tall on mobile, 44px on desktop, greyscale at 70% opacity, full colour on hover on desktop. They are material suppliers: never call them clients.
+## Material brand logos (the MaterialBrands row)
+- brand-dulux.png (alt "Dulux"), brand-conmix.png (alt "Conmix"), brand-delta-coatings.png (alt "Delta Coatings International"), brand-ucc.png (alt "UCC", NEW in update 3, 202 x 80).
+- Used at the end of the home "Why" section, in the About materials block and in the Safety and quality materials block, under the line "We work with materials from trusted brands, including Dulux, Conmix, Delta Coatings and UCC."
+- Four logos in one row on desktop, a 2 x 2 grid on mobile. All optically the same size: base height 36px on mobile and 44px on desktop, scaled per logo to match visual weight (Dulux 100%, Conmix 92%, Delta Coatings 72% because it is about 4:1, UCC 74% because the mark is solid black). Greyscale at 70% opacity, full colour on hover on desktop. They are material suppliers: never call them clients.
 
 ## About
 - team.jpg: wide image under the hero.
@@ -85,4 +85,4 @@ These show the client's building, not our team at work. Use each one only on tha
 - team.jpg was restored from the faded background of the company profile. Replace it with the original file when you get it.
 - Better originals of the community photos can replace these at any time with the same file names.
 - To swap any photo, upload a new file with the same name to src/assets/images.
-- project-hemas-hospitals.jpg (800 x 600) and project-bia.jpg (1200 x 600) are small for large screens. Larger originals with the same file names will look sharper on the home feature card and on /sectors.
+- project-hemas-hospitals.jpg (800 x 600) and project-bia.jpg (1200 x 600) are small for large screens. Larger originals with the same file names will look sharper on the project cards and on /sectors.

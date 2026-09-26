@@ -25,6 +25,6 @@ export const commonFaqs: Faq[] = [
   },
   {
     q: 'What guarantee do you give?',
-    a: `A written workmanship guarantee of ${site.warranty.years}+ years, depending on the system installed. The exact period is stated in your quotation.`,
+    a: `Our waterproofing carries a written guarantee of ${site.warranty.waterproofingYears}+ years. For other services, the guarantee depends on the work and materials, and the exact period is stated in your quotation.`,
   },
 ];

@@ -90,7 +90,7 @@ const contract = project.contract && `Contract: ${project.contract.toLowerCase()
       href={href}
       class:list={[
         'group flex flex-col justify-between gap-8 rounded-[var(--radius-card-sm)] bg-mist p-6 text-ink transition-colors duration-300 hover:bg-[#ededf0] md:rounded-[var(--radius-card)]',
-        large ? 'min-h-[360px] md:aspect-[5/4] md:p-10' : 'min-h-[220px] lg:aspect-[4/5]',
+        large ? 'min-h-[360px] md:aspect-[5/4] md:p-10' : (aspectClass ?? 'min-h-[220px] lg:aspect-[4/5]'),
         className,
       ]}
     >

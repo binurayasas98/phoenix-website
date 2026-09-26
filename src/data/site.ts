@@ -36,16 +36,16 @@ export const site = {
   // [CONFIRM] Leave empty to keep hidden.
   companyProfileUrl: '',
 
-  // [CONFIRM] The March 2026 company profile says "over 15 years". The old website said 25 years.
+  // Waterproofing carries a 25+ year guarantee. Other services: the period is stated in the quotation.
   warranty: {
-    years: 15,
-    label: '15+ year workmanship guarantee',
-    short: '15+ year guarantee',
+    waterproofingYears: 25,
+    label: '25+ year waterproofing guarantee',
+    short: '25+ year waterproofing guarantee',
   },
 
   // Shown only while enabled and before the expiry date (YYYY-MM-DD).
   announcement: {
-    enabled: true,
+    enabled: false,
     text: 'Book a pre-monsoon waterproofing inspection',
     link: '/quote?service=waterproofing',
     expires: '2026-11-30',
