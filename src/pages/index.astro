@@ -10,7 +10,6 @@ import Faq from '../components/Faq.astro';
 import IntroStatement from '../components/home/IntroStatement.astro';
 import ServicesRail from '../components/home/ServicesRail.astro';
 import WhyPhoenix from '../components/home/WhyPhoenix.astro';
-import Process from '../components/home/Process.astro';
 import heroImg from '../assets/images/hero.jpg';
 import { site, whatsappUrl } from '../data/site';
 import { accessMethods } from '../data/services';
@@ -221,8 +220,6 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     </div>
   </section>
 
-  <Process tone="mist" second="Four clear steps, from first photo to handover." layout="row" />
-
   {
     shownTestimonials.length > 0 && (
       <section class="section bg-paper" aria-labelledby="testimonials-heading">
@@ -251,11 +248,11 @@ const nb = (text: string) => text.replace(/-/g, '‑');
   }
 
   <!-- Common questions -->
-  <section class="section bg-paper" aria-labelledby="faq-heading">
+  <section class="section bg-mist" aria-labelledby="faq-heading">
     <div class="container-site">
       <h2 id="faq-heading" class="t-h2">Common questions.</h2>
       <div class="mt-3">
-        <TextLink href={whatsappUrl()} external location="home_faq">Still have a question? Chat on WhatsApp</TextLink>
+        <TextLink href={whatsappUrl()} tone="mist" external location="home_faq">Still have a question? Chat on WhatsApp</TextLink>
       </div>
       <div class="mt-8 max-w-[880px] md:mt-10">
         <Faq items={homeFaqs} />
@@ -316,14 +313,14 @@ const nb = (text: string) => text.replace(/-/g, '‑');
     }
   }
 
-  /* Home rhythm: 96px sections on mobile, 144px on desktop. Every heading balances its lines. */
+  /* Home rhythm: 80px sections on mobile, 112px on desktop. Every heading balances its lines. */
   :global(#main) {
-    --section-y: 96px;
+    --section-y: 80px;
   }
 
   @media (min-width: 768px) {
     :global(#main) {
-      --section-y: 144px;
+      --section-y: 112px;
     }
   }
 

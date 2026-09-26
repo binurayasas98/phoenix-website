@@ -268,7 +268,7 @@ Start as an empty array. The testimonials section renders only when it has items
 - Small line: "Urgent leak? Call +94 77 036 2222." (tel link)
 
 ### Home
-Rhythm: section padding 96px on mobile and 144px on desktop. One idea per section, no sentence repeated across sections, every heading balanced with no orphan words.
+Rhythm: section padding 80px on mobile and 112px on desktop. One idea per section, no sentence repeated across sections, every heading balanced with no orphan words.
 
 1. Hero (full-screen photo: hero.jpg)
    - Announcement pill (when active), always on one line.
@@ -296,20 +296,17 @@ Rhythm: section padding 96px on mobile and 144px on desktop. One idea per sectio
    - Ongoing contracts strip: "Trusted for ongoing contracts." / "Monthly at Shangri-La. Every three months at the Civil Aviation Authority. Annually at the World Trade Center." Link: View all projects ›
 8. Directors: heading "Led by its directors." second tone "Hands-on, on every project." Line: "Christy Marcelline founded Phoenix Decorators in 2011 and runs it today with his co-owner, Ranga Gamachchi. With a dedicated supervisor, they oversee every project personally." Link: "Meet our leadership ›" to /about#leadership. Then both directors as compact rows (small portrait, pull quote, name, title).
 9. Sectors: heading "Sectors we serve." second tone "The same standard in every building." Six rows with hairlines, no numbers, each linking to /sectors#[slug] with a "›", showing the first three client names of the sector. Line under: the facility management line from section 8.
-10. Process: heading "How we work." second tone "Four clear steps, from first photo to handover." Steps in a row on desktop:
-    1 Share your requirement: Send us the details and a few photos through the quote form or on WhatsApp.
-    2 Site assessment: A specialist inspects the area, identifies the cause and selects the right system.
-    3 Written quotation: Scope, materials, timeline and guarantee, agreed in writing before work starts.
-    4 Supervised execution: We follow manufacturer specifications and industry standards, check quality at every stage and hand over a clean site.
-11. Testimonials (hidden while empty).
-12. Common questions (accordion, FAQPage schema). Under the heading: "Still have a question? Chat on WhatsApp ›" (general message).
+10. Testimonials (hidden while empty).
+11. Common questions (accordion, FAQPage schema, on mist). Under the heading: "Still have a question? Chat on WhatsApp ›" (general message).
     - Is the quotation free? / Yes. Consultations and quotations are free, with no obligation.
     - Which areas do you cover? / We are based in Colombo and work across Sri Lanka, with most projects in the Western Province. Recent work includes Kandy, Galle, Weligama and Mirissa.
     - Are you registered and insured? / Yes. We are registered with CIDA at SP2 level for painting and waterproofing, and every project is covered by third-party insurance.
     - Can you work while the building is in use? / Yes. We plan the work in sections and agree timings with you, so occupants and operations are disturbed as little as possible.
     - Do you offer maintenance contracts? / Yes. Clients use us on monthly, quarterly and annual contracts, and we can propose a plan for your building.
     - What guarantee do you give? / A written workmanship guarantee of [warranty label], depending on the system installed. The exact period is stated in your quotation.
-13. CtaBand.
+12. CtaBand.
+
+The "How we work" process is not on the home page; every service page shows it.
 
 ### Services index (/services)
 - h1: Our services.
