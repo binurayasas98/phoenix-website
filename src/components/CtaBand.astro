@@ -2,6 +2,14 @@
 import { labels, site, whatsappUrl } from '../data/site';
 import Icon from './Icon.astro';
 
+interface Props {
+  quoteHref?: string;
+  whatsappMessage?: string;
+}
+
+const { quoteHref = '/quote', whatsappMessage } = Astro.props;
+
+
 // Closing band on night. Flows straight into the footer.
 ---
 
@@ -12,8 +20,8 @@ import Icon from './Icon.astro';
       Book a free consultation and receive a clear, written quotation, with no obligation.
     </p>
     <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href="/quote" class="btn btn-lg btn-light w-full sm:w-auto">{labels.quote}</a>
-      <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-lg btn-frost w-full sm:w-auto">
+      <a href={quoteHref} class="btn btn-lg btn-light w-full sm:w-auto">{labels.quote}</a>
+      <a href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" class="btn btn-lg btn-frost w-full sm:w-auto">
         <Icon name="whatsapp" size={20} class="text-whatsapp" />
         {labels.whatsapp}
       </a>

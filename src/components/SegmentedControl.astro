@@ -1,0 +1,131 @@
+---
+// A row of segments. One is selected at a time. On narrow screens the row scrolls sideways inside itself.
+// It fires a "segment-change" event (detail: the value) on its root element.
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  options: Option[];
+  selected?: string;
+  label: string;
+  id?: string;
+  class?: string;
+}
+
+const { options, selected = options[0]?.value, label, id, class: className } = Astro.props;
+---
+
+<div class:list={['segmented-wrap no-scrollbar', className]}>
+  <div id={id} class="segmented" role="group" aria-label={label} data-segmented>
+    {
+      options.map((o) => (
+        <button
+          type="button"
+          class="segment"
+          aria-pressed={o.value === selected ? 'true' : 'false'}
+          data-value={o.value}
+        >
+          {o.label}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .segmented-wrap {
+    overflow-x: auto;
+    /* Let the shadow and focus ring breathe inside the scroller. */
+    padding: 4px;
+    margin: -4px;
+  }
+
+  .segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--color-mist);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .segment {
+    flex: none;
+    min-height: 44px;
+    padding-inline: 18px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-graphite);
+    cursor: pointer;
+    transition:
+      background-color 300ms var(--ease),
+      color 300ms var(--ease),
+      box-shadow 300ms var(--ease),
+      transform 150ms var(--ease);
+  }
+
+  .segment:hover {
+    color: var(--color-ink);
+  }
+
+  .segment[aria-pressed='true'] {
+    background: #fff;
+    color: var(--color-ink);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .segment:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .segment:active {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-segmented]').forEach((group) => {
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('button[data-value]')];
+
+    const select = (btn: HTMLButtonElement, notify = true) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      // Scroll the row sideways to show the segment, never the page.
+      const wrap = group.parentElement;
+      if (wrap) {
+        const w = wrap.getBoundingClientRect();
+        const b = btn.getBoundingClientRect();
+        if (b.left < w.left) wrap.scrollLeft -= w.left - b.left + 8;
+        else if (b.right > w.right) wrap.scrollLeft += b.right - w.right + 8;
+      }
+      if (notify) group.dispatchEvent(new CustomEvent('segment-change', { detail: btn.dataset.value }));
+    };
+
+    buttons.forEach((btn, i) => {
+      btn.addEventListener('click', () => select(btn));
+      // Arrow keys move between segments.
+      btn.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        const next = buttons[(i + step + buttons.length) % buttons.length];
+        next.focus();
+        select(next);
+      });
+    });
+
+    // Lets a page set the selection without firing the event (for example on the back button).
+    group.addEventListener('segment-set', (e) => {
+      const value = (e as CustomEvent<string>).detail;
+      const btn = buttons.find((b) => b.dataset.value === value);
+      if (btn) select(btn, false);
+    });
+  });
+</script>

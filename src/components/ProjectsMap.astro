@@ -1,0 +1,188 @@
+---
+import { geoMercator, geoPath } from 'd3-geo';
+import { feature } from 'topojson-client';
+import type { Topology, GeometryCollection } from 'topojson-specification';
+import type { Feature, Geometry } from 'geojson';
+import countries from 'world-atlas/countries-10m.json';
+import { locations } from '../data/locations';
+
+// Sri Lanka outline drawn at build time. Only the small pin-card script runs in the browser.
+const width = 400;
+const height = 640;
+
+const topology = countries as unknown as Topology<{ countries: GeometryCollection }>;
+const all = feature(topology, topology.objects.countries) as unknown as {
+  features: Feature<Geometry, { name: string }>[];
+};
+const sriLanka = all.features.find((f) => String(f.id) === '144');
+if (!sriLanka) throw new Error('Sri Lanka (144) not found in world-atlas');
+
+const projection = geoMercator().fitExtent(
+  [
+    [16, 16],
+    [width - 16, height - 16],
+  ],
+  sriLanka,
+);
+const outline = geoPath(projection)(sriLanka) ?? '';
+
+const pins = locations
+  .map((loc) => {
+    const [x, y] = projection([loc.lng, loc.lat]) ?? [0, 0];
+    return {
+      ...loc,
+      left: (x / width) * 100,
+      top: (y / height) * 100,
+      size: Math.round(8 + Math.min(10, Math.sqrt(loc.projects.length) * 2)),
+    };
+  })
+  // Larger pins first, so small neighbours stay on top and remain tappable.
+  .sort((a, b) => b.projects.length - a.projects.length);
+---
+
+<div class="map relative mx-auto w-full md:max-w-[520px]" data-map>
+  <svg viewBox={`0 0 ${width} ${height}`} class="block h-auto w-full" role="img" aria-label="Map of Sri Lanka showing where Phoenix Decorators has worked">
+    <path d={outline} fill="var(--color-mist)" stroke="var(--color-hairline)" stroke-width="1" />
+  </svg>
+
+  {
+    pins.map((pin) => (
+      <button
+        type="button"
+        class="pin"
+        style={`left: ${pin.left.toFixed(2)}%; top: ${pin.top.toFixed(2)}%; --dot: ${pin.size}px;`}
+        aria-label={`${pin.name}: ${pin.projects.join(', ')}`}
+        aria-expanded="false"
+        aria-controls="map-card"
+        data-name={pin.name}
+        data-projects={pin.projects.join('|')}
+      >
+        <span class="pin-dot" aria-hidden="true" />
+      </button>
+    ))
+  }
+
+  <div id="map-card" class="map-card" hidden data-map-card>
+    <p class="text-[15px] font-semibold text-ink" data-map-card-title></p>
+    <p class="mt-1 text-[14px] leading-snug text-graphite" data-map-card-list></p>
+  </div>
+</div>
+
+<style>
+  .pin {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pin-dot {
+    width: var(--dot);
+    height: var(--dot);
+    border-radius: 999px;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 2px #fff;
+    transition: transform 300ms var(--ease);
+  }
+
+  .pin:hover .pin-dot,
+  .pin[aria-expanded='true'] .pin-dot {
+    transform: scale(1.35);
+  }
+
+  .map-card {
+    position: absolute;
+    z-index: 2;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 32px));
+    padding: 12px 16px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 8px 24px rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pin-dot {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((map) => {
+    const card = map.querySelector<HTMLElement>('[data-map-card]');
+    const title = map.querySelector<HTMLElement>('[data-map-card-title]');
+    const list = map.querySelector<HTMLElement>('[data-map-card-list]');
+    const pins = [...map.querySelectorAll<HTMLButtonElement>('.pin')];
+    if (!card || !title || !list) return;
+
+    let active: HTMLButtonElement | null = null;
+    let pinned = false;
+
+    const show = (pin: HTMLButtonElement) => {
+      active?.setAttribute('aria-expanded', 'false');
+      active = pin;
+      pin.setAttribute('aria-expanded', 'true');
+      title.textContent = pin.dataset.name ?? '';
+      list.textContent = (pin.dataset.projects ?? '').split('|').join(', ');
+      card.hidden = false;
+
+      // Place the card above the pin, or below if there is no room, and keep it inside the screen.
+      const mapBox = map.getBoundingClientRect();
+      const pinBox = pin.getBoundingClientRect();
+      const cardBox = card.getBoundingClientRect();
+      const gap = 8;
+      const centre = pinBox.left + pinBox.width / 2;
+      const left = Math.min(Math.max(centre - cardBox.width / 2, 16), window.innerWidth - cardBox.width - 16);
+      let top = pinBox.top - cardBox.height - gap + 12;
+      if (top < 72) top = pinBox.bottom + gap - 12;
+      card.style.left = `${left - mapBox.left}px`;
+      card.style.top = `${top - mapBox.top}px`;
+    };
+
+    const hide = () => {
+      active?.setAttribute('aria-expanded', 'false');
+      active = null;
+      pinned = false;
+      card.hidden = true;
+    };
+
+    pins.forEach((pin) => {
+      pin.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse' && !pinned) show(pin);
+      });
+      pin.addEventListener('pointerleave', (e) => {
+        if (e.pointerType === 'mouse' && !pinned) hide();
+      });
+      pin.addEventListener('focus', () => show(pin));
+      pin.addEventListener('blur', () => {
+        if (!pinned) hide();
+      });
+      pin.addEventListener('click', () => {
+        if (active === pin && pinned) {
+          hide();
+        } else {
+          show(pin);
+          pinned = true;
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && active) hide();
+    });
+    document.addEventListener('click', (e) => {
+      if (active && !(e.target as Element).closest('.pin')) hide();
+    });
+    window.addEventListener('resize', () => active && show(active));
+  });
+</script>

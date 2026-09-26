@@ -2,7 +2,19 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import SegmentedControl from '../components/SegmentedControl.astro';
+import ProjectsMap from '../components/ProjectsMap.astro';
+import ClientList from '../components/ClientList.astro';
+import TextLink from '../components/TextLink.astro';
 import { projects } from '../data/projects';
+import { services } from '../data/services';
+import { clientGroups, otherClients } from '../data/clients';
+import { locations } from '../data/locations';
+
+// Photo projects first, then the typographic cards, keeping the data order within each group.
+const ordered = [...projects.filter((p) => p.image), ...projects.filter((p) => !p.image)];
+const filters = [{ value: 'all', label: 'All' }, ...services.map((s) => ({ value: s.slug, label: s.shortName }))];
+const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects'}`;
 ---
 
 <Base
@@ -13,15 +25,138 @@ import { projects } from '../data/projects';
     title="Our projects."
     lead="More than 350 projects since 2011, for hotels, hospitals, banks, offices, residences and public buildings across Sri Lanka."
   />
-  <section class="bg-paper pb-[var(--section-y)]" aria-label="All projects">
-    <ul class="container-site grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-      {
-        projects.map((p) => (
-          <li id={p.slug} class="scroll-mt-24">
-            <ProjectCard project={p} headingLevel="h2" />
-          </li>
-        ))
-      }
-    </ul>
+
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="Project list" data-projects>
+    <div class="container-site">
+      <SegmentedControl options={filters} label="Filter projects by service" id="project-filter" class="filter" />
+      <p class="mt-6 text-[15px] text-graphite tabular" aria-live="polite" data-count>{countText(ordered.length)}</p>
+
+      <ul class="mt-8 grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3" data-project-list>
+        {
+          ordered.map((p) => (
+            <li id={p.slug} class="project-item" data-services={p.services.join(' ')}>
+              <ProjectCard project={p} headingLevel="h2" details class="h-full" />
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="rounded-[var(--radius-card-sm)] bg-mist p-8 md:rounded-[var(--radius-card)] md:p-12" hidden data-empty>
+        <p class="t-h3 text-ink">No projects listed for this service yet.</p>
+        <div class="mt-4">
+          <TextLink href="/quote" tone="mist" class="empty-quote">Get a free quote</TextLink>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ongoing contracts -->
+  <section class="section bg-mist" aria-labelledby="contracts-heading">
+    <div class="container-site grid gap-6 md:grid-cols-12 md:gap-10">
+      <h2 id="contracts-heading" class="t-h2 text-balance md:col-span-6">Trusted for ongoing contracts.</h2>
+      <p class="t-lead text-graphite md:col-span-6">
+        Monthly glass washing at Shangri&#8209;La, every three months at the Civil Aviation Authority and annually at the World Trade Center.
+      </p>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section class="section bg-paper" aria-labelledby="map-heading">
+    <div class="container-site grid items-start gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-6 md:order-2 lg:col-span-5 lg:col-start-8">
+        <h2 id="map-heading" class="t-h2 text-balance">Where we have worked.</h2>
+        <p class="t-lead mt-6 text-graphite">More than 350 projects across Sri Lanka.</p>
+        <ul class="mt-10 columns-2 gap-x-8 border-t border-hairline pt-4" aria-label="Places">
+          {
+            locations.map((l) => (
+              <li class="break-inside-avoid py-2 text-[17px] text-ink">{l.name}</li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="md:col-span-6 md:order-1">
+        <ProjectsMap />
+      </div>
+    </div>
+  </section>
+
+  <!-- Client references -->
+  <section class="section bg-mist" aria-labelledby="clients-heading">
+    <div class="container-site">
+      <h2 id="clients-heading" class="t-h2">Client references.</h2>
+      <div class="mt-12 grid gap-x-10 gap-y-14 md:mt-16 md:grid-cols-2 lg:grid-cols-3">
+        {
+          clientGroups.map((g) => (
+            <div>
+              <h3 class="t-h3 text-ink">{g.title}</h3>
+              <ClientList names={g.names} label={`${g.title} clients`} class="mt-4" />
+            </div>
+          ))
+        }
+        <div>
+          <h3 class="t-h3 text-ink">Other clients</h3>
+          <ClientList names={otherClients} label="Other clients" class="mt-4" />
+        </div>
+      </div>
+    </div>
   </section>
 </Base>
+
+<style>
+  /* Hash links clear the fixed header through the global scroll-padding-top on html. */
+  /* The filter needs scripts to work, so hide it without them. */
+  :global(html:not(.js)) .filter {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-projects]');
+  const control = document.getElementById('project-filter');
+
+  if (root && control) {
+    const items = [...root.querySelectorAll<HTMLElement>('.project-item')];
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    const empty = root.querySelector<HTMLElement>('[data-empty]');
+    const emptyLink = root.querySelector<HTMLAnchorElement>('.empty-quote');
+    const valid = new Set([...control.querySelectorAll<HTMLElement>('[data-value]')].map((b) => b.dataset.value));
+
+    const fromUrl = () => {
+      const value = new URLSearchParams(location.search).get('service') ?? 'all';
+      return valid.has(value) ? value : 'all';
+    };
+
+    const apply = (value: string) => {
+      control.querySelectorAll<HTMLElement>('[data-value]').forEach((b) =>
+        b.setAttribute('aria-pressed', String(b.dataset.value === value)),
+      );
+      let shown = 0;
+      items.forEach((item) => {
+        const match = value === 'all' || (item.dataset.services ?? '').split(' ').includes(value);
+        item.hidden = !match;
+        if (match) shown++;
+      });
+      if (count) count.textContent = `Showing ${shown} ${shown === 1 ? 'project' : 'projects'}`;
+      if (empty) empty.hidden = shown > 0;
+      if (emptyLink) emptyLink.href = value === 'all' ? '/quote' : `/quote?service=${value}`;
+    };
+
+    control.addEventListener('segment-change', (e) => {
+      const value = (e as CustomEvent<string>).detail;
+      const url = new URL(location.href);
+      if (value === 'all') url.searchParams.delete('service');
+      else url.searchParams.set('service', value);
+      url.hash = '';
+      history.pushState({ service: value }, '', url);
+      apply(value);
+    });
+
+    window.addEventListener('popstate', () => {
+      const value = fromUrl();
+      control.dispatchEvent(new CustomEvent('segment-set', { detail: value }));
+      apply(value);
+    });
+
+    apply(fromUrl());
+  }
+</script>

@@ -5,6 +5,14 @@ import { labels, site, whatsappUrl, profileEmailUrl } from '../data/site';
 import { services } from '../data/services';
 import Icon from './Icon.astro';
 
+interface Props {
+  quoteHref?: string;
+  whatsappMessage?: string;
+}
+
+const { quoteHref = '/quote', whatsappMessage } = Astro.props;
+
+
 const year = new Date().getFullYear();
 
 const company = [
@@ -27,8 +35,8 @@ const social = [
     <div class="flex flex-col gap-6 border-t border-[var(--hairline-night)] py-12 md:flex-row md:items-center md:justify-between md:py-14">
       <p class="t-h3 text-white">Have a project in mind?</p>
       <div class="flex flex-col gap-3 sm:flex-row">
-        <a href="/quote" class="btn btn-light">{labels.quote}</a>
-        <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-frost">
+        <a href={quoteHref} class="btn btn-light">{labels.quote}</a>
+        <a href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" class="btn btn-frost">
           <Icon name="whatsapp" size={20} class="text-whatsapp" />
           {labels.whatsapp}
         </a>
@@ -84,7 +92,7 @@ const social = [
           <ul class="mt-4">
             <li><a href={site.phone.href} class="footer-link tabular">{site.phone.display}</a></li>
             <li>
-              <a href={whatsappUrl()} target="_blank" rel="noopener" class="footer-link">WhatsApp</a>
+              <a href={whatsappUrl(whatsappMessage)} target="_blank" rel="noopener" class="footer-link">WhatsApp</a>
             </li>
             <li><a href={`mailto:${site.email}`} class="footer-link">{site.email}</a></li>
           </ul>
