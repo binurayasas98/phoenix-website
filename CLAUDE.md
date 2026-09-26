@@ -65,7 +65,9 @@ Header: frosted white (rgba(255,255,255,0.72), saturate 180%, blur 20px), 64px d
 
 Mega menu (desktop, 1024px and up): "Services" opens a full-width frosted white panel under the header on hover (150ms intent delay) and on click or Enter. Three columns of service links (thumbnail, name, one-liner), plus a narrow right column with the "Not sure what you need?" WhatsApp prompt. It closes on Escape, on outside click and when the pointer leaves. aria-expanded on the trigger, focus moves into the panel from the keyboard. The header turns frosted white while the panel is open, even over the home hero. Mobile keeps the full-screen sheet, with Services as an expandable group.
 
-Director cards: 3:4 portrait with 28px radius (20px mobile), then the pull quote in large type (clamp(24px, 2.4vw, 34px), weight 600, ink), then name (17px semibold) and title (15px graphite). Two cards side by side from 768px, stacked below. Same crop and size for both directors, never one bigger than the other.
+Director cards: two variants, and both directors are always identical in size, crop and style.
+- Compact (home page): desktop (1024px and up) a 176px-wide 3:4 portrait (18px radius, object-position top) beside the pull quote (clamp(22px, 2vw, 28px), weight 600, ink, balanced, with a hanging opening quote mark), then name (17px semibold) and title (15px graphite). Tablet (768 to 1023px) the same with 144px portraits. Mobile: a byline row (88px-wide 3:4 portrait, 14px radius, name and title beside it), then the quote at 21px. Images at widths 176, 264 and 352 only.
+- Default (About): portrait column at most 400px wide on desktop with a wider text column, rows mirrored; on mobile the portrait is 4:5 and at most 300px wide, above the text.
 
 FAQ accordion: hairline rows, question 19px semibold, a plus icon that rotates 45 degrees when open, answer in graphite. Built on details and summary so it works without JavaScript.
 

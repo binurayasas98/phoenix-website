@@ -242,7 +242,7 @@ const showAnnouncement = announcement && isAnnouncementActive();
    */
   @media (min-width: 768px) {
     .is-home .hero-display {
-      font-size: min(clamp(56px, 8.5vw, 128px), calc(15.5svh + 10.5vw - 186px));
+      font-size: min(clamp(56px, 8.5vw, 128px), calc(15.5svh + 10.5vw - 180px));
     }
 
     .is-home .hero-pill {
@@ -267,6 +267,13 @@ const showAnnouncement = announcement && isAnnouncementActive();
 
     .is-home .hero-facts {
       margin-bottom: 20px;
+    }
+  }
+
+  /* Narrower than the photo (3:2): the photo fills the height, so his hands end at about 40% of the height. */
+  @media (min-width: 768px) and (max-aspect-ratio: 3/2) {
+    .is-home .hero-display {
+      font-size: min(clamp(56px, 8.5vw, 128px), calc(31.5svh - 180px));
     }
   }
 
