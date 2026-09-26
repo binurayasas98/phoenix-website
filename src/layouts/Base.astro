@@ -34,7 +34,13 @@ const {
   noindex = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/', site.url).href;
+// Clean path: drop ".html", a trailing "/index" and a trailing slash, so the home page is exactly "/".
+const cleanPath =
+  Astro.url.pathname
+    .replace(/\.html$/, '')
+    .replace(/\/index$/, '')
+    .replace(/\/$/, '') || '/';
+const canonical = new URL(cleanPath, site.url).href;
 const favicon32 = await getImage({ src: appIcon, width: 32, height: 32, format: 'png' });
 const appleTouch = await getImage({ src: appIcon, width: 180, height: 180, format: 'png' });
 const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' });

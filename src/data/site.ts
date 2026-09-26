@@ -26,6 +26,8 @@ export const site = {
     lines: ['141, D R Wijewardena Mawatha', 'Colombo 10', 'Sri Lanka'],
   },
   hours: 'Monday to Saturday, 8.00 am to 5.00 pm',
+  hoursNote: 'Closed on major public holidays.',
+  urgentLine: 'Urgent leak? Call or WhatsApp +94 77 036 2222.',
 
   facebookUrl: 'https://www.facebook.com/people/Phoenix-Decorators-pvt-ltd/61570341385061/',
   linkedinUrl: 'https://lk.linkedin.com/company/phoenix-decorators-pvt-ltd',
@@ -61,12 +63,24 @@ export const site = {
     access: "Hi Phoenix Decorators, I'd like advice on access for work at height on my building.",
     contact: 'Hi Phoenix Decorators, I have a question about my building.',
     notSure: "Hi Phoenix Decorators, I'm not sure which service I need. Can you help?",
+    urgent: 'Hi Phoenix Decorators, I have an urgent leak and need help.',
+    profile: 'Hi Phoenix Decorators, please send me your company profile.',
+  },
+
+  // Used while companyProfileUrl is empty: "Request our company profile" by email.
+  profileEmail: {
+    subject: 'Company profile request',
+    body: 'Hello, please send me your company profile and registration details. Thank you.',
   },
 } as const;
 
 export function whatsappUrl(message: string = site.whatsappMessages.general): string {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
+
+export const profileEmailUrl = `mailto:${site.email}?subject=${encodeURIComponent(
+  site.profileEmail.subject,
+)}&body=${encodeURIComponent(site.profileEmail.body)}`;
 
 export function serviceWhatsappMessage(serviceName: string): string {
   return `Hi Phoenix Decorators, I'd like a quote for ${serviceName.toLowerCase()}.`;
@@ -81,6 +95,7 @@ export function isAnnouncementActive(now: Date = new Date()): boolean {
 
 export const nav = [
   { label: 'Services', href: '/services' },
+  { label: 'Sectors', href: '/sectors' },
   { label: 'Projects', href: '/projects' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },

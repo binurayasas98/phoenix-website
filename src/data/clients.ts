@@ -129,14 +129,3 @@ export const trustedBy: string[] = [
   'Marriott Weligama',
   'Civil Aviation Authority',
 ];
-
-export const sectors: string[] = [
-  'Hotels and resorts',
-  'Hospitals and healthcare',
-  'Banks and corporate offices',
-  'Residential towers and apartments',
-  'Government and public buildings',
-  'Airports and ports',
-  'Factories and industrial sites',
-  'Facility management companies',
-];
