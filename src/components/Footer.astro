@@ -12,7 +12,6 @@ interface Props {
 
 const { quoteHref = '/quote', whatsappMessage } = Astro.props;
 
-
 const year = new Date().getFullYear();
 
 const company = [
@@ -23,6 +22,11 @@ const company = [
   { label: 'Contact', href: '/contact' },
   { label: 'Common questions', href: '/contact#faq' },
   { label: 'Privacy', href: '/privacy' },
+];
+
+const groups = [
+  { id: 'services', title: 'Services', links: services.map((s) => ({ label: s.name, href: `/services/${s.slug}` })) },
+  { id: 'company', title: 'Company', links: company },
 ];
 
 const social = [
@@ -60,23 +64,39 @@ const social = [
           }
         </div>
 
-        <nav aria-labelledby="footer-services" class="col-span-1 lg:col-span-3">
-          <h2 id="footer-services" class="footer-heading">Services</h2>
-          <ul class="mt-4">
-            {services.map((s) => (
-              <li><a href={`/services/${s.slug}`} class="footer-link">{s.name}</a></li>
-            ))}
-          </ul>
-        </nav>
+        <!-- Mobile: Services and Company as collapsible groups, closed by default -->
+        <div class="col-span-2 md:hidden">
+          {
+            groups.map((g) => (
+              <details class="footer-group">
+                <summary class="footer-summary">
+                  <span>{g.title}</span>
+                  <Icon name="chevron-down" size={20} class="footer-chevron" />
+                </summary>
+                <nav aria-label={g.title}>
+                  <ul class="pb-3">
+                    {g.links.map((l) => (
+                      <li><a href={l.href} class="footer-link">{l.label}</a></li>
+                    ))}
+                  </ul>
+                </nav>
+              </details>
+            ))
+          }
+        </div>
 
-        <nav aria-labelledby="footer-company" class="col-span-1 lg:col-span-2">
-          <h2 id="footer-company" class="footer-heading">Company</h2>
-          <ul class="mt-4">
-            {company.map((c) => (
-              <li><a href={c.href} class="footer-link">{c.label}</a></li>
-            ))}
-          </ul>
-        </nav>
+        {
+          groups.map((g, i) => (
+            <nav aria-labelledby={`footer-${g.id}`} class:list={['col-span-1 hidden md:block', i === 0 ? 'lg:col-span-3' : 'lg:col-span-2']}>
+              <h2 id={`footer-${g.id}`} class="footer-heading">{g.title}</h2>
+              <ul class="mt-4">
+                {g.links.map((l) => (
+                  <li><a href={l.href} class="footer-link">{l.label}</a></li>
+                ))}
+              </ul>
+            </nav>
+          ))
+        }
 
         <div class="col-span-2 lg:col-span-3">
           <h2 class="footer-heading">Contact</h2>
@@ -151,6 +171,46 @@ const social = [
   @media (min-width: 1024px) {
     .footer-link {
       min-height: 36px;
+    }
+  }
+
+  /* Mobile groups: hairline rows with a chevron, like apple.com. */
+  .footer-group {
+    border-top: 1px solid var(--hairline-night);
+  }
+
+  .footer-group:last-child {
+    border-bottom: 1px solid var(--hairline-night);
+  }
+
+  .footer-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .footer-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .footer-summary :global(.footer-chevron) {
+    color: rgba(255, 255, 255, 0.6);
+    transition: transform 300ms var(--ease);
+  }
+
+  .footer-group[open] :global(.footer-chevron) {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-summary :global(.footer-chevron) {
+      transition: none;
     }
   }
 </style>

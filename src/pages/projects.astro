@@ -6,13 +6,17 @@ import SegmentedControl from '../components/SegmentedControl.astro';
 import ProjectsMap from '../components/ProjectsMap.astro';
 import ClientList from '../components/ClientList.astro';
 import TextLink from '../components/TextLink.astro';
+import Icon from '../components/Icon.astro';
 import { projects } from '../data/projects';
-import { services } from '../data/services';
+import { services, getService } from '../data/services';
+import { getSector } from '../data/sectors';
 import { clientGroups, otherClients } from '../data/clients';
 import { locations } from '../data/locations';
 
-// Photo projects first, then the typographic cards, keeping the data order within each group.
-const ordered = [...projects.filter((p) => p.image), ...projects.filter((p) => !p.image)];
+// Photo projects as cards first, then every project without a photo as a compact list row.
+const photoProjects = projects.filter((p) => p.image);
+const listProjects = projects.filter((p) => !p.image);
+const total = projects.length;
 const filters = [{ value: 'all', label: 'All' }, ...services.map((s) => ({ value: s.slug, label: s.shortName }))];
 const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects'}`;
 ---
@@ -29,19 +33,61 @@ const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects
   <section class="bg-paper pb-[var(--section-y)]" aria-label="Project list" data-projects>
     <div class="container-site">
       <SegmentedControl options={filters} label="Filter projects by service" id="project-filter" class="filter" />
-      <p class="mt-6 text-[15px] text-graphite tabular" aria-live="polite" data-count>{countText(ordered.length)}</p>
+      <p class="mt-4 text-[15px] text-graphite tabular md:mt-6" aria-live="polite" data-count>{countText(total)}</p>
 
-      <ul class="mt-8 grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3" data-project-list>
+      <ul class="mt-6 grid gap-4 md:mt-8 md:grid-cols-2 md:gap-5 lg:grid-cols-3" data-group>
         {
-          ordered.map((p) => (
+          photoProjects.map((p) => (
             <li id={p.slug} class="project-item" data-services={p.services.join(' ')}>
-              <ProjectCard project={p} headingLevel="h2" details class="h-full" />
+              <ProjectCard
+                project={p}
+                headingLevel="h2"
+                details
+                aspectClass="aspect-[4/3]"
+                sizes="(min-width: 1376px) 413px, (min-width: 1024px) 30vw, (min-width: 768px) 50vw, calc(100vw - 48px)"
+                clampScope
+                class="h-full"
+              />
             </li>
           ))
         }
       </ul>
 
-      <div class="rounded-[var(--radius-card-sm)] bg-mist p-8 md:rounded-[var(--radius-card)] md:p-12" hidden data-empty>
+      <div class="mt-12 md:mt-20" data-group>
+        <h2 class="t-h3 text-ink">More projects.</h2>
+        <ul class="mt-4 border-b border-hairline md:mt-6">
+          {
+            listProjects.map((p) => (
+              <li id={p.slug} class="project-item project-row" data-services={p.services.join(' ')}>
+                <div class="row-main">
+                  <h3 class="row-client">{p.client.replace(/-/g, '\u2011')}</h3>
+                  <p class="row-meta">
+                    <span>{p.location}</span>
+                    <span class="row-sector">{getSector(p.sector)?.name}</span>
+                  </p>
+                </div>
+                <div class="row-detail">
+                  <p class="row-scope">{p.scope}</p>
+                  <ul class="row-tags" aria-label="Services">
+                    {p.services.map((slug) => (
+                      <li class="row-tag">
+                        {getService(slug)?.shortName ?? slug}
+                      </li>
+                    ))}
+                    {p.contract && (
+                      <li class="row-tag row-tag-contract">
+                        Contract: {p.contract.toLowerCase()}
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="mt-6 rounded-[var(--radius-card-sm)] bg-mist p-8 md:mt-8 md:rounded-[var(--radius-card)] md:p-12" hidden data-empty>
         <p class="t-h3 text-ink">No projects listed for this service yet.</p>
         <div class="mt-4">
           <TextLink href="/quote" tone="mist" class="empty-quote">Get a free quote</TextLink>
@@ -62,19 +108,19 @@ const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects
 
   <!-- Map -->
   <section class="section bg-paper" aria-labelledby="map-heading">
-    <div class="container-site grid items-start gap-12 md:grid-cols-12 md:gap-10">
+    <div class="container-site grid items-start gap-8 md:grid-cols-12 md:gap-10">
       <div class="md:col-span-6 md:order-2 lg:col-span-5 lg:col-start-8">
         <h2 id="map-heading" class="t-h2 text-balance">Where we have worked.</h2>
-        <p class="t-lead mt-6 text-graphite">More than 350 projects across Sri Lanka.</p>
-        <ul class="mt-10 columns-2 gap-x-8 border-t border-hairline pt-4" aria-label="Places">
+        <p class="t-lead mt-4 text-graphite md:mt-6">More than 350 projects across Sri Lanka.</p>
+        <ul class="mt-8 columns-2 gap-x-8 border-t border-hairline pt-3 md:mt-10 md:pt-4" aria-label="Places">
           {
             locations.map((l) => (
-              <li class="break-inside-avoid py-2 text-[17px] text-ink">{l.name}</li>
+              <li class="break-inside-avoid py-1.5 text-[15px] text-ink md:py-2 md:text-[17px]">{l.name}</li>
             ))
           }
         </ul>
       </div>
-      <div class="md:col-span-6 md:order-1">
+      <div class="mx-auto w-full max-w-[320px] md:order-1 md:col-span-6 md:max-w-none">
         <ProjectsMap />
       </div>
     </div>
@@ -84,19 +130,18 @@ const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects
   <section class="section bg-mist" aria-labelledby="clients-heading">
     <div class="container-site">
       <h2 id="clients-heading" class="t-h2">Client references.</h2>
-      <div class="mt-12 grid gap-x-10 gap-y-14 md:mt-16 md:grid-cols-2 lg:grid-cols-3">
+      <div class="refs mt-8 grid gap-x-10 md:mt-16 md:grid-cols-2 md:gap-y-14 lg:grid-cols-3" data-refs>
         {
-          clientGroups.map((g) => (
-            <div>
-              <h3 class="t-h3 text-ink">{g.title}</h3>
-              <ClientList names={g.names} label={`${g.title} clients`} class="mt-4" />
-            </div>
+          [...clientGroups, { title: 'Other clients', names: otherClients }].map((g) => (
+            <details class="ref-group" open>
+              <summary class="ref-summary">
+                <h3 class="t-h3 text-ink">{g.title}</h3>
+                <Icon name="chevron-down" size={22} class="ref-chevron" />
+              </summary>
+              <ClientList names={g.names} label={g.title === 'Other clients' ? 'Other clients' : `${g.title} clients`} class="mt-2 pb-6 md:mt-4 md:pb-0" />
+            </details>
           ))
         }
-        <div>
-          <h3 class="t-h3 text-ink">Other clients</h3>
-          <ClientList names={otherClients} label="Other clients" class="mt-4" />
-        </div>
       </div>
     </div>
   </section>
@@ -108,14 +153,154 @@ const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects
   :global(html:not(.js)) .filter {
     display: none;
   }
+
+  /* Projects without a photo: compact hairline rows, no empty boxes. */
+  .project-row {
+    display: grid;
+    gap: 6px;
+    padding-block: 16px;
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  .row-client {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .row-meta {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2px;
+    font-size: 15px;
+    color: var(--color-graphite);
+  }
+
+  .row-scope {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--color-ink);
+  }
+
+  .row-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .row-tag {
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-graphite);
+    box-shadow: inset 0 0 0 1px var(--color-hairline);
+  }
+
+  .row-tag-contract {
+    color: var(--color-brand-ink);
+    box-shadow: inset 0 0 0 1px rgba(0, 120, 176, 0.3);
+  }
+
+  /* Client references: collapsible groups on mobile (closed after load), always open from 768px. */
+  .ref-group {
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  .ref-group:last-child {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  .ref-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .ref-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ref-summary :global(.ref-chevron) {
+    flex: none;
+    color: var(--color-graphite);
+    transition: transform 300ms var(--ease);
+  }
+
+  .ref-group[open] :global(.ref-chevron) {
+    transform: rotate(180deg);
+  }
+
+  @media (min-width: 768px) {
+    .ref-group,
+    .ref-group:last-child {
+      border: 0;
+    }
+
+    .ref-summary {
+      display: block;
+      min-height: 0;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .ref-summary :global(.ref-chevron) {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ref-summary :global(.ref-chevron) {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .project-row {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: 40px;
+      padding-block: 24px;
+    }
+
+    .row-client {
+      font-size: 21px;
+    }
+
+    .row-scope {
+      font-size: 17px;
+    }
+  }
 </style>
 
 <script>
+  // Client references: closed on mobile after load; open and fixed from 768px (the full list shows without scripts).
+  const refs = document.querySelector<HTMLElement>('[data-refs]');
+  if (refs) {
+    const wide = window.matchMedia('(min-width: 768px)');
+    const groups = [...refs.querySelectorAll<HTMLDetailsElement>('details')];
+    const sync = () => groups.forEach((d) => (d.open = wide.matches));
+    sync();
+    wide.addEventListener('change', sync);
+    groups.forEach((d) =>
+      d.querySelector('summary')?.addEventListener('click', (e) => {
+        if (wide.matches) e.preventDefault();
+      }),
+    );
+  }
+
   const root = document.querySelector<HTMLElement>('[data-projects]');
   const control = document.getElementById('project-filter');
 
   if (root && control) {
     const items = [...root.querySelectorAll<HTMLElement>('.project-item')];
+    const groups = [...root.querySelectorAll<HTMLElement>('[data-group]')];
     const count = root.querySelector<HTMLElement>('[data-count]');
     const empty = root.querySelector<HTMLElement>('[data-empty]');
     const emptyLink = root.querySelector<HTMLAnchorElement>('.empty-quote');
@@ -136,6 +321,7 @@ const countText = (n: number) => `Showing ${n} ${n === 1 ? 'project' : 'projects
         item.hidden = !match;
         if (match) shown++;
       });
+      groups.forEach((g) => (g.hidden = !g.querySelector('.project-item:not([hidden])')));
       if (count) count.textContent = `Showing ${shown} ${shown === 1 ? 'project' : 'projects'}`;
       if (empty) empty.hidden = shown > 0;
       if (emptyLink) emptyLink.href = value === 'all' ? '/quote' : `/quote?service=${value}`;

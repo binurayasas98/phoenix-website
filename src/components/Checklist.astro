@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+
+// Hairline checklist with brand-blue check icons. Two columns from 768px.
+interface Props {
+  items: string[];
+  label?: string;
+  class?: string;
+}
+
+const { items, label, class: className } = Astro.props;
+---
+
+<ul class:list={['grid border-b border-hairline md:grid-cols-2 md:gap-x-10', className]} aria-label={label}>
+  {
+    items.map((item) => (
+      <li class="flex gap-3 border-t border-hairline py-4 md:gap-4 md:py-5">
+        <Icon name="check" size={22} class="mt-[2px] flex-none text-brand md:mt-[3px]" />
+        <span class="text-[17px] leading-snug text-ink md:text-[19px]">{item}</span>
+      </li>
+    ))
+  }
+</ul>
+
