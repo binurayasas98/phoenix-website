@@ -1,0 +1,87 @@
+---
+import { labels, site, whatsappUrl } from '../data/site';
+import Icon from './Icon.astro';
+
+// Mobile only (under 768px). Appears once the hero has scrolled away.
+---
+
+<div id="action-bar" class="action-bar md:hidden" data-track-area="action_bar" aria-label="Quick actions" role="region">
+  <div class="flex items-center gap-2 px-4 pt-3">
+    <a
+      href={site.phone.href}
+      class="btn btn-icon btn-secondary flex-none"
+      aria-label={`${labels.call}, ${site.phone.display}`}
+    >
+      <Icon name="phone" size={20} />
+    </a>
+    <a
+      href={whatsappUrl()}
+      target="_blank"
+      rel="noopener"
+      class="btn btn-icon btn-secondary flex-none"
+      aria-label={labels.whatsapp}
+    >
+      <Icon name="whatsapp" size={22} class="text-whatsapp" />
+    </a>
+    <a href="/quote" class="btn btn-primary flex-1">{labels.quote}</a>
+  </div>
+</div>
+
+<style>
+  .action-bar {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 40;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.08);
+    transform: translateY(110%);
+    visibility: hidden;
+    transition:
+      transform 300ms var(--ease),
+      visibility 0s linear 300ms;
+  }
+
+  .action-bar.is-visible {
+    transform: none;
+    visibility: visible;
+    transition:
+      transform 300ms var(--ease),
+      visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .action-bar {
+      transform: none;
+      opacity: 0;
+      transition:
+        opacity 300ms var(--ease),
+        visibility 0s linear 300ms;
+    }
+
+    .action-bar.is-visible {
+      opacity: 1;
+      transition:
+        opacity 300ms var(--ease),
+        visibility 0s;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('action-bar');
+  const hero = document.querySelector('[data-hero]');
+
+  if (bar) {
+    if (hero) {
+      new IntersectionObserver(([entry]) => {
+        bar.classList.toggle('is-visible', !entry.isIntersecting);
+      }).observe(hero);
+    } else {
+      bar.classList.add('is-visible');
+    }
+  }
+</script>

@@ -1,0 +1,20 @@
+---
+// "Label ›" link. The underline grows from the left on hover.
+interface Props {
+  href: string;
+  tone?: 'paper' | 'mist' | 'night';
+  class?: string;
+  external?: boolean;
+  location?: string;
+}
+
+const { href, tone = 'paper', class: className, external = false, location } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['link', tone === 'mist' && 'link-on-mist', tone === 'night' && 'link-on-night', className]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener' : undefined}
+  data-track-location={location}
+><span><slot /></span><span aria-hidden="true">&nbsp;›</span></a>

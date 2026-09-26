@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TextLink from '../components/TextLink.astro';
+import { labels } from '../data/site';
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'Projects', href: '/projects' },
+  { label: labels.quote, href: '/quote' },
+];
+---
+
+<Base title="Page not found | Phoenix Decorators" description="We couldn't find that page." noindex>
+  <PageHero title="We couldn't find that page." lead="It may have moved. Try one of these instead.">
+    <ul class="mt-8 flex flex-wrap gap-x-8">
+      {links.map((l) => <li><TextLink href={l.href}>{l.label}</TextLink></li>)}
+    </ul>
+  </PageHero>
+</Base>

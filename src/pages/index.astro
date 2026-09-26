@@ -1,0 +1,236 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PhotoHero from '../components/PhotoHero.astro';
+import TwoToneHeading from '../components/TwoToneHeading.astro';
+import OverlayCard from '../components/OverlayCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TextLink from '../components/TextLink.astro';
+import IntroStatement from '../components/home/IntroStatement.astro';
+import ServicesRail from '../components/home/ServicesRail.astro';
+import Commitments from '../components/home/Commitments.astro';
+import Process from '../components/home/Process.astro';
+import heroImg from '../assets/images/hero.jpg';
+import christyImg from '../assets/images/director-christy.jpg';
+import { site, whatsappUrl } from '../data/site';
+import { accessMethods } from '../data/services';
+import { featuredProjects } from '../data/projects';
+import { trustedBy, sectors } from '../data/clients';
+
+const facts = ['CIDA SP2 registered', '350+ projects', 'Fully insured', site.warranty.short];
+const [firstProjects, restProjects] = [featuredProjects.slice(0, 2), featuredProjects.slice(2)];
+---
+
+<Base
+  title="Waterproofing, Painting and Glass Cleaning in Colombo | Phoenix Decorators"
+  description="Waterproofing, painting, sealants and glass cleaning for commercial and residential buildings. CIDA SP2 registered, fully insured, 350+ projects since 2011."
+  transparentHeader
+>
+  <PhotoHero
+    image={{ src: heroImg, alt: 'Phoenix rope access technician applying sealant to a building facade' }}
+    position="58% center"
+    lines={['Waterproofing and', 'facade specialists.']}
+    subline="Waterproofing, painting, sealants and glass cleaning for commercial and residential buildings, at any height. Since 2011."
+    facts={facts}
+    announcement
+    rope
+    entrance
+  />
+
+  <!-- Trusted by -->
+  <section class="bg-paper pb-16 pt-20 md:pb-24 md:pt-28" aria-labelledby="trusted-heading">
+    <div class="container-site">
+      <h2 id="trusted-heading" class="text-[17px] font-semibold text-ink">Trusted on landmark sites.</h2>
+      <ul class="mt-6 flex flex-wrap gap-x-8 gap-y-3 md:mt-8 md:gap-x-12 md:gap-y-4">
+        {
+          trustedBy.map((name) => (
+            <li class="text-[19px] font-medium tracking-[-0.01em] text-graphite md:text-[24px]">{name}</li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <IntroStatement />
+
+  <ServicesRail />
+
+  <!-- Access (night) -->
+  <section class="section on-night bg-night text-white" aria-labelledby="access-heading" data-track-area="access">
+    <div class="container-site">
+      <div class="max-w-[960px]">
+        <TwoToneHeading id="access-heading" first="Any height." second="The right access." tone="night" />
+        <p class="t-lead mt-6 max-w-[40ch] text-white/70">
+          We choose the safest, most efficient way to reach every surface, with strict safety protocols on every job.
+        </p>
+      </div>
+    </div>
+    <ul class="access-row no-scrollbar mt-12 md:mt-16">
+      {
+        accessMethods.map((m) => (
+          <li class="access-item">
+            <OverlayCard
+              image={m.image}
+              title={m.name}
+              text={m.text}
+              sizes="(min-width: 1024px) 304px, (min-width: 640px) 50vw, 78vw"
+            />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="container-site mt-8">
+      <TextLink href={whatsappUrl(site.whatsappMessages.access)} tone="night" external>
+        Ask about access for your building
+      </TextLink>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section bg-paper" aria-labelledby="projects-heading">
+    <div class="container-site">
+      <TwoToneHeading
+        id="projects-heading"
+        first="Proven on demanding sites."
+        second={'Including Bandaranaike International Airport, Shangri\u2011La and One Galle Face.'}
+        class="max-w-[22ch]"
+      />
+      <div class="mt-12 grid gap-4 md:mt-16 md:gap-5 lg:grid-cols-2">
+        {firstProjects.map((p) => <ProjectCard project={p} size="large" href={`/projects#${p.slug}`} />)}
+      </div>
+      <div class="mt-4 grid gap-4 md:mt-5 md:grid-cols-2 md:gap-5 lg:grid-cols-4">
+        {restProjects.map((p) => <ProjectCard project={p} href={`/projects#${p.slug}`} />)}
+      </div>
+      <div class="mt-8">
+        <TextLink href="/projects">View all projects</TextLink>
+      </div>
+    </div>
+  </section>
+
+  <Commitments />
+
+  <!-- Director quote -->
+  <section class="section bg-paper" aria-label="A word from our founder">
+    <div class="container-site">
+      <figure class="max-w-[960px]">
+        <blockquote>
+          <p class="quote text-balance">
+            “Quality isn't just a promise, it's our identity. Every project deserves craftsmanship that lasts.”
+          </p>
+        </blockquote>
+        <figcaption class="mt-10 flex items-center gap-4">
+          <Picture
+            src={christyImg}
+            alt="Mr. Christy Marcelline, Founder and Managing Director"
+            formats={['avif', 'webp']}
+            widths={[64, 128]}
+            sizes="64px"
+            width={64}
+            height={64}
+            loading="lazy"
+            decoding="async"
+            class="size-16 rounded-full object-cover object-top"
+          />
+          <span>
+            <span class="block font-semibold text-ink">Mr. Christy Marcelline</span>
+            <span class="block text-[15px] text-graphite">Founder and Managing Director</span>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Sectors -->
+  <section class="section bg-mist" aria-labelledby="sectors-heading">
+    <div class="container-site">
+      <h2 id="sectors-heading" class="t-h2">Sectors we serve.</h2>
+      <p class="t-lead mt-6 max-w-[40ch] text-graphite">From hotels and hospitals to airports, factories and homes.</p>
+      <ol class="mt-12 grid md:mt-16 md:grid-flow-col md:grid-cols-2 md:grid-rows-4 md:gap-x-12">
+        {
+          sectors.map((s, i) => (
+            <li class="sector-row flex items-baseline gap-6 border-t border-hairline py-5 md:py-6">
+              <span class="tabular w-8 flex-none text-[15px] text-graphite" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="text-[21px] font-semibold tracking-[-0.015em] text-ink md:text-[24px]">{s}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Process />
+</Base>
+
+<style>
+  .access-row {
+    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+  }
+
+  .access-item {
+    flex: none;
+    width: 78vw;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 640px) {
+    .access-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      overflow: visible;
+      max-width: calc(var(--max) + var(--pad) * 2);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    .access-item {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .access-row {
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .access-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .access-row :global(h3) {
+      font-size: 24px;
+    }
+
+    .access-row :global(p) {
+      font-size: 15px;
+    }
+  }
+
+  .quote {
+    font-size: clamp(30px, 3.6vw, 52px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+
+  /* Close each column with a hairline. */
+  .sector-row:last-child {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  @media (min-width: 768px) {
+    .sector-row:nth-child(4) {
+      border-bottom: 1px solid var(--color-hairline);
+    }
+  }
+</style>

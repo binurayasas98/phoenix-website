@@ -1,0 +1,91 @@
+---
+import { Picture } from 'astro:assets';
+import type { Project } from '../data/projects';
+import { getService } from '../data/services';
+
+// Photo card when the project has an image, otherwise a typographic card. No fake imagery.
+interface Props {
+  project: Project;
+  size?: 'large' | 'small';
+  headingLevel?: 'h2' | 'h3';
+  href?: string;
+  class?: string;
+}
+
+const { project, size = 'small', headingLevel: Heading = 'h3', href, class: className } = Astro.props;
+const large = size === 'large';
+const Tag = href ? 'a' : 'article';
+const tags = project.services.map((slug) => getService(slug)?.shortName ?? slug);
+// Keep names like "Shangri-La" on one line.
+const client = project.client.replace(/-/g, '\u2011');
+---
+
+{
+  project.image ? (
+    <Tag
+      href={href}
+      class:list={[
+        'card media-reveal group relative flex flex-col justify-end overflow-hidden rounded-[var(--radius-card-sm)] bg-night text-white md:rounded-[var(--radius-card)]',
+        href && 'card-zoom',
+        large ? 'aspect-[4/5] md:aspect-[5/4]' : 'aspect-[4/5]',
+        className,
+      ]}
+      data-reveal
+    >
+      <Picture
+        src={project.image.src}
+        alt={project.image.alt}
+        formats={['avif', 'webp']}
+        widths={[400, 640, 960, 1280]}
+        sizes={large ? '(min-width: 1024px) 632px, 100vw' : '(min-width: 1024px) 304px, (min-width: 768px) 50vw, 100vw'}
+        loading="lazy"
+        decoding="async"
+        class="card-img absolute inset-0 h-full w-full object-cover"
+      />
+      <div class="overlay-night absolute inset-0" aria-hidden="true" />
+      <div class:list={['relative', large ? 'p-6 md:p-10' : 'p-6']}>
+        <Heading class:list={[large ? 't-h2 !text-[clamp(30px,3.2vw,44px)]' : 't-h3', 'text-balance text-white']}>
+          {client}
+        </Heading>
+        <p class="mt-1 text-[15px] text-white/80">{project.location}</p>
+        <p class:list={['mt-3 text-white/80', large ? 'max-w-[44ch] text-[17px]' : 'text-[15px] leading-snug']}>
+          {project.scope}
+        </p>
+      </div>
+    </Tag>
+  ) : (
+    <Tag
+      href={href}
+      class:list={[
+        'group flex flex-col justify-between gap-8 rounded-[var(--radius-card-sm)] bg-mist p-6 text-ink transition-colors duration-300 hover:bg-[#ededf0] md:rounded-[var(--radius-card)]',
+        large ? 'min-h-[360px] md:aspect-[5/4] md:p-10' : 'min-h-[220px] lg:aspect-[4/5]',
+        className,
+      ]}
+    >
+      <div>
+        <Heading
+          class:list={[
+            'text-balance font-semibold tracking-[-0.03em] leading-[1.02]',
+            large ? 'text-[clamp(36px,4.4vw,64px)]' : 'text-[clamp(28px,2.4vw,34px)]',
+          ]}
+        >
+          {client}
+        </Heading>
+        <p class="mt-3 text-graphite">{project.location}</p>
+      </div>
+      <div>
+        {large && <p class="mb-5 max-w-[44ch] text-[17px] text-ink/80">{project.scope}</p>}
+        <ul class="flex flex-wrap gap-2" aria-label="Services">
+          {tags.map((t) => (
+            <li class="rounded-full px-3 py-1 text-[13px] text-graphite ring-1 ring-hairline">{t}</li>
+          ))}
+          {project.contract && (
+            <li class="rounded-full px-3 py-1 text-[13px] text-brand-ink ring-1 ring-brand/30">
+              Contract: {project.contract.toLowerCase()}
+            </li>
+          )}
+        </ul>
+      </div>
+    </Tag>
+  )
+}

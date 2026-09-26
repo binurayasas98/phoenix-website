@@ -1,0 +1,58 @@
+---
+const text =
+  "Since 2011, Phoenix Decorators has completed more than 350 projects for hotels, hospitals, banks, offices, residences and the country's main international airport. One specialist team takes responsibility from the first inspection to the final handover.";
+const words = text.split(' ');
+---
+
+<section class="bg-paper" aria-label="About Phoenix Decorators">
+  <div class="container-site">
+    <p class="intro" data-intro>
+      {
+        words.map((w) => (
+          <>
+            <span class="intro-word">{w}</span>{' '}
+          </>
+        ))
+      }
+    </p>
+  </div>
+</section>
+
+<style>
+  .intro {
+    font-size: clamp(30px, 4vw, 56px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--color-ink);
+    max-width: 20em;
+  }
+
+  :global(html.js) .intro-word {
+    color: rgba(110, 110, 115, 0.35);
+    transition: color 300ms var(--ease);
+  }
+
+  :global(html.js) .intro-word.is-lit {
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  import { scroll } from 'motion';
+
+  document.querySelectorAll<HTMLElement>('[data-intro]').forEach((p) => {
+    const words = [...p.querySelectorAll<HTMLElement>('.intro-word')];
+    let lit = -1;
+
+    scroll(
+      (progress: number) => {
+        const count = Math.round(progress * words.length);
+        if (count === lit) return;
+        lit = count;
+        words.forEach((w, i) => w.classList.toggle('is-lit', i < count));
+      },
+      { target: p, offset: ['start 0.6', 'end 0.5'] },
+    );
+  });
+</script>

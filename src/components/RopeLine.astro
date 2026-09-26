@@ -1,0 +1,54 @@
+---
+// The signature "rope line": a 1px vertical line ending in an 8px circle.
+interface Props {
+  tone?: 'brand' | 'white' | 'light';
+  /** Circle colour, when it differs from the line. */
+  dot?: 'brand' | 'white' | 'light';
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+}
+
+const { tone = 'brand', dot, class: className, ...rest } = Astro.props;
+
+const colours = {
+  brand: 'var(--color-brand)',
+  white: '#fff',
+  light: 'var(--color-brand-light)',
+};
+---
+
+<span
+  class:list={['rope', className]}
+  style={`--rope: ${colours[tone]}; --rope-dot: ${colours[dot ?? tone]};`}
+  aria-hidden="true"
+  {...rest}
+>
+  <span class="rope-line"></span>
+  <span class="rope-dot"></span>
+</span>
+
+<style>
+  .rope {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 8px;
+    pointer-events: none;
+  }
+
+  .rope-line {
+    flex: 1 1 auto;
+    width: 1px;
+    min-height: 0;
+    background: var(--rope);
+    transform-origin: top;
+  }
+
+  .rope-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rope-dot);
+  }
+</style>

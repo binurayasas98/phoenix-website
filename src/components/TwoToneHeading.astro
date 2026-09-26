@@ -1,0 +1,31 @@
+---
+// A heading in ink with a second line in graphite, at the same size and weight.
+interface Props {
+  as?: 'h1' | 'h2' | 'h3';
+  first: string;
+  second?: string;
+  size?: 'display' | 'h1' | 'h2' | 'h3';
+  tone?: 'light' | 'night';
+  class?: string;
+  id?: string;
+}
+
+const { as: Tag = 'h2', first, second, size = 'h2', tone = 'light', class: className, id } = Astro.props;
+---
+
+<Tag
+  id={id}
+  class:list={[`t-${size}`, tone === 'night' ? 'text-white' : 'text-ink', 'text-balance', className]}
+>
+  {first}
+  {
+    second && (
+      <>
+        {' '}
+        <span class:list={['block', tone === 'night' ? 'text-white/55' : 'text-graphite']}>
+          {second}
+        </span>
+      </>
+    )
+  }
+</Tag>

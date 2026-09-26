@@ -1,0 +1,150 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import faviconSvg from '../assets/images/app-icon.svg?url';
+import appIcon from '../assets/images/app-icon.png';
+import ogImage from '../assets/images/hero.jpg';
+import { getImage } from 'astro:assets';
+import { site } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CtaBand from '../components/CtaBand.astro';
+import ActionBar from '../components/ActionBar.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Home page only: the header starts transparent over the hero. */
+  transparentHeader?: boolean;
+  /** End the page with the CtaBand (not on /contact or /quote). */
+  ctaBand?: boolean;
+  /** Mobile action bar and floating WhatsApp button (hidden on /quote). */
+  actions?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  transparentHeader = false,
+  ctaBand = true,
+  actions = true,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/', site.url).href;
+const favicon32 = await getImage({ src: appIcon, width: 32, height: 32, format: 'png' });
+const appleTouch = await getImage({ src: appIcon, width: 180, height: 180, format: 'png' });
+const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+const { gtmId, ga4Id, metaPixelId } = site.analytics;
+
+const organisation = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  name: site.legalName,
+  url: site.url,
+  telephone: site.phone.display,
+  email: site.email,
+  foundingDate: String(site.since),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '141, D R Wijewardena Mawatha',
+    addressLocality: 'Colombo 10',
+    addressCountry: 'LK',
+  },
+  openingHours: 'Mo-Sa 08:00-17:00',
+  sameAs: [site.facebookUrl, site.linkedinUrl, site.instagramUrl].filter(Boolean),
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" href={favicon32.src} sizes="32x32" type="image/png" />
+    <link rel="icon" href={faviconSvg} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={appleTouch.src} />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(og.src, site.url).href} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script type="application/ld+json" set:html={JSON.stringify(organisation)} />
+
+    {
+      gtmId && (
+        <script is:inline define:vars={{ gtmId }}>
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtmId);
+        </script>
+      )
+    }
+    {
+      ga4Id && !gtmId && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />
+          <script is:inline define:vars={{ ga4Id }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', ga4Id);
+          </script>
+        </>
+      )
+    }
+    {
+      metaPixelId && (
+        <script is:inline define:vars={{ metaPixelId }}>
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', metaPixelId);
+          fbq('track', 'PageView');
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header transparent={transparentHeader} />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    {ctaBand && <CtaBand />}
+    <Footer />
+    {
+      actions && (
+        <>
+          <ActionBar />
+          <FloatingWhatsApp />
+        </>
+      )
+    }
+
+    <script>
+      import { initLinkTracking } from '../scripts/track';
+      import { initReveal } from '../scripts/reveal';
+
+      initLinkTracking();
+      initReveal();
+    </script>
+  </body>
+</html>
+

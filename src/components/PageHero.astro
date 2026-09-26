@@ -1,0 +1,18 @@
+---
+// Text hero for inner pages: h1 and a lead on paper.
+interface Props {
+  title: string;
+  lead?: string;
+  tone?: 'paper' | 'mist';
+}
+
+const { title, lead, tone = 'paper' } = Astro.props;
+---
+
+<section class:list={[tone === 'mist' ? 'bg-mist' : 'bg-paper']} data-hero aria-labelledby="page-title">
+  <div class="container-site pb-16 pt-[calc(var(--header-h)+72px)] md:pb-24 md:pt-[calc(var(--header-h)+128px)]">
+    <h1 id="page-title" class="t-h1 max-w-[18ch] text-balance">{title}</h1>
+    {lead && <p class="t-lead text-column mt-6 text-graphite md:mt-8">{lead}</p>}
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,32 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PhotoHero from '../../components/PhotoHero.astro';
+import { services, type Service } from '../../data/services';
+
+export const getStaticPaths = (() =>
+  services.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+const description = `${service.oneLiner} ${service.tagline}`.slice(0, 155);
+---
+
+<Base title={`${service.name} in Colombo and across Sri Lanka | Phoenix Decorators`} description={description}>
+  <PhotoHero
+    image={service.image}
+    lines={[service.name]}
+    subline={service.tagline}
+    quoteHref={`/quote?service=${service.slug}`}
+    whatsappMessage={service.whatsappMessage}
+    display={false}
+  />
+  <section class="section bg-paper" aria-label="Introduction">
+    <div class="container-site">
+      <p class="t-lead text-column">{service.intro}</p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+
+const tiles = [
+  { label: 'WhatsApp', caption: 'Fastest response', href: whatsappUrl(site.whatsappMessages.contact), icon: 'whatsapp', external: true },
+  { label: 'Call', caption: 'Speak to our team', href: site.phone.href, icon: 'phone', external: false },
+  { label: 'Email', caption: 'For documents and tenders', href: `mailto:${site.email}`, icon: 'mail', external: false },
+] as const;
+---
+
+<Base
+  title="Contact | Phoenix Decorators"
+  description="Message Phoenix Decorators on WhatsApp, call +94 77 036 2222 or email info@phoenixdecorator.com. Offices in Kochchikade and Colombo 10."
+  ctaBand={false}
+>
+  <PageHero
+    title="How can we help?"
+    lead="For the fastest response, message us on WhatsApp. For pricing, get a free quote. It takes about a minute."
+  >
+    <ul class="mt-12 grid gap-4 md:grid-cols-3" data-track-area="contact">
+      {
+        tiles.map((t) => (
+          <li>
+            <a
+              href={t.href}
+              target={t.external ? '_blank' : undefined}
+              rel={t.external ? 'noopener' : undefined}
+              class="flex min-h-[120px] flex-col justify-between gap-6 rounded-[18px] bg-mist p-6 transition-colors duration-300 hover:bg-[#ededf0]"
+            >
+              <Icon name={t.icon} size={28} class={t.icon === 'whatsapp' ? 'text-whatsapp' : 'text-brand'} />
+              <span>
+                <span class="t-h3 block">{t.label}</span>
+                <span class="block text-graphite">{t.caption}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </PageHero>
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="Offices">
+    <div class="container-site grid gap-10 border-t border-hairline pt-12 md:grid-cols-2">
+      {
+        [site.headOffice, site.commercialOffice].map((o) => (
+          <div>
+            <h2 class="t-h3">{o.label}</h2>
+            <address class="mt-3 not-italic text-graphite">
+              {o.lines.map((l) => <span class="block">{l}</span>)}
+            </address>
+            <p class="mt-3 text-graphite">{site.hours}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
