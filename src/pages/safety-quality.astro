@@ -1,0 +1,158 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import OverlayCard from '../components/OverlayCard.astro';
+import TwoToneHeading from '../components/TwoToneHeading.astro';
+import Icon from '../components/Icon.astro';
+import { accessMethods } from '../data/services';
+import { site, whatsappUrl, profileEmailUrl } from '../data/site';
+
+const items = [
+  {
+    icon: 'award',
+    title: 'CIDA SP2 registered',
+    text: 'Registered with the Construction Industry Development Authority (formerly ICTAD) at SP2 level for painting and waterproofing.',
+  },
+  { icon: 'shield-check', title: 'Fully insured', text: 'Every project is covered against third-party claims.' },
+  {
+    icon: 'users',
+    title: 'Supervised by our directors',
+    text: 'Our directors and a dedicated supervisor oversee every project, from assessment to handover.',
+  },
+  {
+    icon: 'flask-conical',
+    title: 'Specified, not guessed',
+    text: 'Detailed site assessments, correct system selection and strict compliance with manufacturer specifications and industry standards.',
+  },
+  {
+    icon: 'clipboard-check',
+    title: 'Quality control at every stage',
+    text: 'We check the work at each stage and hand over a clean site.',
+  },
+  { icon: 'file-check', title: 'Written guarantee', text: `${site.warranty.label}, stated in your quotation.` },
+] as const;
+---
+
+<Base
+  title="Safety and quality | Phoenix Decorators"
+  description="CIDA SP2 registered, fully insured and supervised by our directors on every project. Safe access at any height with strict safety protocols."
+>
+  <PageHero
+    title="Safety and quality."
+    lead="No compromises on safety. Registered, insured and supervised on every project."
+  />
+
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="Our standards">
+    <ul class="container-site grid gap-x-10 md:grid-cols-2 lg:grid-cols-3">
+      {
+        items.map((item) => (
+          <li class="border-t border-hairline py-8">
+            <Icon name={item.icon} size={32} class="text-brand" />
+            <h2 class="t-h3 mt-5 text-ink">{item.title}</h2>
+            <p class="mt-2 max-w-[40ch] text-graphite">{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Safe at any height (night) -->
+  <section class="section on-night bg-night text-white" aria-labelledby="access-heading" data-track-area="access">
+    <div class="container-site">
+      <div class="max-w-[960px]">
+        <TwoToneHeading id="access-heading" first="Safe at any height." tone="night" />
+        <p class="t-lead mt-6 max-w-[40ch] text-white/70">
+          Strict safety protocols on every job, for our people and the places we work.
+        </p>
+      </div>
+    </div>
+    <ul class="access-row no-scrollbar mt-12 md:mt-16">
+      {
+        accessMethods.map((m) => (
+          <li class="access-item">
+            <OverlayCard
+              image={m.image}
+              title={m.name}
+              text={m.text}
+              sizes="(min-width: 1024px) 304px, (min-width: 640px) 50vw, 78vw"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Materials -->
+  <section class="section bg-paper" aria-label="Materials">
+    <div class="container-site">
+      <p class="t-h3 text-column text-balance text-ink">
+        Tested, researched products from brands including Dulux, Conmix and Delta Coatings.
+      </p>
+    </div>
+  </section>
+
+  <!-- Vendor registration -->
+  <section class="section bg-mist" aria-labelledby="vendor-heading" data-track-area="vendor">
+    <div class="container-site">
+      <h2 id="vendor-heading" class="t-h2 max-w-[16ch] text-balance">Registering us as a vendor?</h2>
+      <p class="t-lead mt-6 max-w-[40ch] text-graphite">
+        Request our company profile and registration details for your vendor file.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={whatsappUrl(site.whatsappMessages.profile)}
+          target="_blank"
+          rel="noopener"
+          class="btn btn-primary"
+        >
+          <Icon name="whatsapp" size={20} class="text-whatsapp" />
+          Request by WhatsApp
+        </a>
+        <a href={profileEmailUrl} class="btn btn-secondary">
+          <Icon name="mail" size={20} />
+          Request by email
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .access-row {
+    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+  }
+
+  .access-item {
+    flex: none;
+    width: 78vw;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 640px) {
+    .access-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      overflow: visible;
+      max-width: calc(var(--max) + var(--pad) * 2);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    .access-item {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .access-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+</style>
