@@ -1,0 +1,47 @@
+---
+import { Picture } from 'astro:assets';
+import type { Director } from '../data/directors';
+
+// 3:4 portrait, pull quote in large type, then name and title. Both directors always share the same crop and size.
+interface Props {
+  director: Director;
+  headingLevel?: 'h3' | 'h4';
+  class?: string;
+}
+
+const { director, headingLevel: Heading = 'h3', class: className } = Astro.props;
+---
+
+<figure class:list={['flex h-full flex-col', className]}>
+  <div class="media-reveal overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]">
+    <Picture
+      src={director.photo}
+      alt={director.alt}
+      formats={['avif', 'webp']}
+      widths={[400, 600, 768]}
+      sizes="(min-width: 1376px) 630px, (min-width: 768px) calc(50vw - 58px), calc(100vw - 48px)"
+      width={768}
+      height={1024}
+      loading="lazy"
+      decoding="async"
+      class="aspect-[3/4] h-auto w-full object-cover object-top"
+    />
+  </div>
+  <blockquote class="mt-8 flex-1 md:mt-10">
+    <p class="director-quote text-balance">“{director.pullQuote}”</p>
+  </blockquote>
+  <figcaption class="mt-6">
+    <Heading class="text-[17px] font-semibold text-ink">{director.name}</Heading>
+    <p class="text-[15px] text-graphite">{director.title}</p>
+  </figcaption>
+</figure>
+
+<style>
+  .director-quote {
+    font-size: clamp(24px, 2.4vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+</style>

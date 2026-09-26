@@ -1,0 +1,72 @@
+---
+// A row of short facts divided by hairlines. A 2 x 2 grid on mobile, one row from 768px.
+interface Props {
+  facts: string[];
+  tone?: 'light' | 'night';
+  class?: string;
+}
+
+const { facts, tone = 'light', class: className } = Astro.props;
+---
+
+<ul
+  class:list={[
+    'fact-strip grid grid-cols-2 border-t md:grid-cols-4',
+    tone === 'night' ? 'is-night border-white/20' : 'border-hairline',
+    className,
+  ]}
+>
+  {facts.map((fact) => <li class="fact">{fact}</li>)}
+</ul>
+
+<style>
+  .fact-strip {
+    --line: var(--color-hairline);
+    --text: var(--color-ink);
+  }
+
+  .fact-strip.is-night {
+    --line: rgba(255, 255, 255, 0.2);
+    --text: rgba(255, 255, 255, 0.85);
+  }
+
+  .fact {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 14px 16px 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fact:nth-child(even) {
+    padding-left: 16px;
+    border-left: 1px solid var(--line);
+  }
+
+  .fact:nth-child(n + 3) {
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .fact {
+      padding: 20px 24px 0;
+      font-size: 15px;
+      border-left: 1px solid var(--line);
+    }
+
+    .fact:nth-child(n + 3) {
+      margin-top: 0;
+      border-top: 0;
+    }
+
+    .fact:first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>
