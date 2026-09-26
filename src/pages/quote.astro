@@ -2,7 +2,39 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import TextLink from '../components/TextLink.astro';
-import { whatsappUrl } from '../data/site';
+import Icon from '../components/Icon.astro';
+import { labels, whatsappUrl } from '../data/site';
+
+const serviceChoices = [
+  { slug: 'waterproofing', label: 'Waterproofing' },
+  { slug: 'painting', label: 'Painting' },
+  { slug: 'sealant-application', label: 'Sealant application' },
+  { slug: 'glass-cleaning', label: 'Glass and facade cleaning' },
+  { slug: 'industrial-coatings', label: 'Industrial flooring and coatings' },
+  { slug: 'high-rise-maintenance', label: 'High-rise maintenance' },
+  { slug: 'not-sure', label: 'Not sure yet' },
+];
+const propertyTypes = [
+  'Office or commercial',
+  'Hotel',
+  'Hospital',
+  'Bank',
+  'Factory or industrial',
+  'Apartment or residential tower',
+  'House',
+  'Government or public',
+  'Other',
+];
+const floors = ['1 to 3', '4 to 10', '11 to 20', 'More than 20'];
+const timelines = ['As soon as possible', 'Within a month', '1 to 3 months', 'Just planning'];
+const roles = ['Facility manager', 'Engineer', 'Architect', 'Owner', 'Other'];
+const contactWays = ['WhatsApp', 'Call me back', 'Email'];
+
+const next = [
+  { title: 'We contact you', text: 'Usually by WhatsApp or phone, within working hours.' },
+  { title: 'Site assessment', text: 'A specialist inspects and identifies the cause.' },
+  { title: 'Written quotation', text: 'Scope, materials, timeline and guarantee, in writing.' },
+];
 ---
 
 <Base
@@ -16,4 +48,505 @@ import { whatsappUrl } from '../data/site';
       <TextLink href={whatsappUrl()} external location="quote_page">Prefer to chat? Open WhatsApp</TextLink>
     </p>
   </PageHero>
+
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="Quote request" data-quote-main>
+    <div class="container-site grid gap-16 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-7">
+        <form
+          name="quote"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="quote-form"
+          novalidate
+          data-quote-form
+        >
+          <input type="hidden" name="form-name" value="quote" />
+          <input type="hidden" name="reference" value="" data-reference />
+          <p class="hidden" aria-hidden="true">
+            <label>Leave this empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
+          <div class="mb-10" hidden data-progress>
+            <p class="text-[15px] font-medium text-graphite tabular" aria-live="polite" data-progress-text>Step 1 of 3</p>
+            <div class="mt-3 h-[3px] overflow-hidden rounded-full bg-hairline" aria-hidden="true">
+              <div class="progress-fill h-full rounded-full bg-brand" data-progress-fill></div>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <fieldset class="step" data-step="1">
+            <legend class="step-legend"><h2 class="t-h2 step-title" tabindex="-1">What do you need?</h2></legend>
+
+            <div class="mt-10" role="group" aria-labelledby="q-services-label" aria-describedby="q-services-error" data-group="services">
+              <p id="q-services-label" class="field-label">Services <span class="field-hint">(choose one or more)</span></p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  serviceChoices.map((s) => (
+                    <label class="choice">
+                      <input type="checkbox" name="services[]" value={s.label} data-slug={s.slug} />
+                      <span>{s.label}</span>
+                    </label>
+                  ))
+                }
+              </div>
+              <p id="q-services-error" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="mt-10" role="radiogroup" aria-labelledby="q-property-label" aria-describedby="q-property-error" data-group="property">
+              <p id="q-property-label" class="field-label">Property type</p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  propertyTypes.map((t) => (
+                    <label class="choice">
+                      <input type="radio" name="property" value={t} />
+                      <span>{t}</span>
+                    </label>
+                  ))
+                }
+              </div>
+              <p id="q-property-error" class="field-error" aria-live="polite"></p>
+            </div>
+          </fieldset>
+
+          <!-- Step 2 -->
+          <fieldset class="step" data-step="2">
+            <legend class="step-legend"><h2 class="t-h2 step-title" tabindex="-1">About your building</h2></legend>
+
+            <div class="mt-10">
+              <label for="q-location" class="field-label">Location</label>
+              <input
+                id="q-location"
+                name="location"
+                type="text"
+                class="input"
+                autocomplete="address-level2"
+                placeholder="For example, Colombo 03"
+                aria-describedby="q-location-error"
+              />
+              <p id="q-location-error" class="field-error" aria-live="polite"></p>
+            </div>
+
+            <div class="mt-10" role="radiogroup" aria-labelledby="q-floors-label">
+              <p id="q-floors-label" class="field-label">Floors</p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  floors.map((f) => (
+                    <label class="choice">
+                      <input type="radio" name="floors" value={f} />
+                      <span>{f}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="mt-10" role="radiogroup" aria-labelledby="q-timeline-label">
+              <p id="q-timeline-label" class="field-label">Timeline</p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  timelines.map((t) => (
+                    <label class="choice">
+                      <input type="radio" name="timeline" value={t} />
+                      <span>{t}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="mt-10">
+              <label for="q-details" class="field-label">Details <span class="field-hint">(optional)</span></label>
+              <textarea
+                id="q-details"
+                name="details"
+                class="input"
+                rows="5"
+                placeholder="Describe the problem or the work. You can send photos on WhatsApp after this."
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <!-- Step 3 -->
+          <fieldset class="step" data-step="3">
+            <legend class="step-legend"><h2 class="t-h2 step-title" tabindex="-1">Your details</h2></legend>
+
+            <div class="mt-10 grid gap-6 sm:grid-cols-2">
+              <div>
+                <label for="q-name" class="field-label">Name</label>
+                <input id="q-name" name="name" type="text" class="input" autocomplete="name" aria-describedby="q-name-error" />
+                <p id="q-name-error" class="field-error" aria-live="polite"></p>
+              </div>
+              <div>
+                <label for="q-phone" class="field-label">Phone</label>
+                <input
+                  id="q-phone"
+                  name="phone"
+                  type="tel"
+                  inputmode="tel"
+                  class="input"
+                  autocomplete="tel"
+                  placeholder="077 123 4567"
+                  aria-describedby="q-phone-error"
+                />
+                <p id="q-phone-error" class="field-error" aria-live="polite"></p>
+              </div>
+              <div>
+                <label for="q-email" class="field-label">Email <span class="field-hint">(optional)</span></label>
+                <input id="q-email" name="email" type="email" inputmode="email" class="input" autocomplete="email" aria-describedby="q-email-error" />
+                <p id="q-email-error" class="field-error" aria-live="polite"></p>
+              </div>
+              <div>
+                <label for="q-company" class="field-label">Company <span class="field-hint">(optional)</span></label>
+                <input id="q-company" name="company" type="text" class="input" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="mt-10" role="radiogroup" aria-labelledby="q-role-label">
+              <p id="q-role-label" class="field-label">Your role</p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  roles.map((r) => (
+                    <label class="choice">
+                      <input type="radio" name="role" value={r} />
+                      <span>{r}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="mt-10" role="radiogroup" aria-labelledby="q-contact-label">
+              <p id="q-contact-label" class="field-label">Preferred contact</p>
+              <div class="flex flex-wrap gap-2">
+                {
+                  contactWays.map((c, i) => (
+                    <label class="choice">
+                      <input type="radio" name="contact" value={c} checked={i === 0} />
+                      <span>{c}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+
+            <p class="mt-10 text-[15px] text-graphite">
+              We use your details only to reply and prepare your quotation. Read our <a href="/privacy" class="text-brand underline underline-offset-4">privacy notice</a>.
+            </p>
+          </fieldset>
+
+          <p class="field-error mt-8 text-[15px]" role="alert" data-form-error></p>
+
+          <div class="quote-nav mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
+            <button type="button" class="btn btn-secondary" hidden data-back>Back</button>
+            <button type="button" class="btn btn-primary sm:ml-auto" hidden data-next>Continue</button>
+            <button type="submit" class="btn btn-primary sm:ml-auto" data-submit>Send request</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="md:col-span-4 md:col-start-9" aria-labelledby="next-heading">
+        <div class="md:sticky md:top-[calc(var(--header-h)+48px)]">
+          <h2 id="next-heading" class="t-h3">What happens next</h2>
+          <ol class="mt-6 border-b border-hairline">
+            {
+              next.map((n, i) => (
+                <li class="flex gap-4 border-t border-hairline py-5">
+                  <span class="tabular w-6 flex-none text-[15px] font-medium text-brand">{i + 1}</span>
+                  <span>
+                    <span class="block font-semibold text-ink">{n.title}</span>
+                    <span class="block text-[15px] text-graphite">{n.text}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Success state -->
+  <section class="bg-paper" hidden data-quote-success aria-labelledby="success-title">
+    <div class="container-site pb-[var(--section-y)] pt-[calc(var(--header-h)+72px)] md:pt-[calc(var(--header-h)+128px)]">
+      <Icon name="check" size={40} class="text-brand" />
+      <h1 id="success-title" class="t-h1 mt-6 max-w-[18ch] text-balance" tabindex="-1">Thank you. Your request has been received.</h1>
+      <p class="t-lead text-column mt-6 text-graphite md:mt-8">
+        Your reference is <strong class="tabular font-semibold text-ink" data-success-reference></strong>. A specialist will contact you shortly.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+        <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-lg btn-primary" data-success-whatsapp data-track-location="quote_success">
+          <Icon name="whatsapp" size={20} class="text-whatsapp" />
+          Continue on WhatsApp
+        </a>
+        <a href="/" class="btn btn-lg btn-secondary">Back to home</a>
+      </div>
+    </div>
+  </section>
 </Base>
+
+<style>
+  .step {
+    min-width: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .step + .step {
+    margin-top: 72px;
+  }
+
+  .step-legend {
+    padding: 0;
+  }
+
+  .step-title {
+    font-size: clamp(30px, 3.2vw, 44px);
+  }
+
+  .step-title:focus {
+    outline: none;
+  }
+
+  .progress-fill {
+    width: 33.333%;
+    transition: width 300ms var(--ease);
+  }
+
+  /* With scripts, one step at a time. Without them, every step shows and the form still submits. */
+  :global(html.js) .quote-form[data-enhanced] .step {
+    display: none;
+  }
+
+  :global(html.js) .quote-form[data-enhanced] .step.is-current {
+    display: block;
+  }
+
+  :global(html.js) .quote-form[data-enhanced] .step + .step {
+    margin-top: 0;
+  }
+
+  @media (max-width: 639px) {
+    .quote-nav .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  import { submitNetlifyForm, isValidPhone, isValidEmail, setFieldError } from '../scripts/forms';
+  import { track } from '../scripts/track';
+
+  const form = document.querySelector<HTMLFormElement>('[data-quote-form]');
+
+  if (form) {
+    const steps = [...form.querySelectorAll<HTMLFieldSetElement>('.step')];
+    const progress = form.querySelector<HTMLElement>('[data-progress]');
+    const progressText = form.querySelector<HTMLElement>('[data-progress-text]');
+    const progressFill = form.querySelector<HTMLElement>('[data-progress-fill]');
+    const backBtn = form.querySelector<HTMLButtonElement>('[data-back]');
+    const nextBtn = form.querySelector<HTMLButtonElement>('[data-next]');
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-submit]');
+    const formError = form.querySelector<HTMLElement>('[data-form-error]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0;
+
+    const input = (name: string) => form.elements.namedItem(name) as HTMLInputElement;
+    const errorEl = (id: string) => document.getElementById(id);
+    const checked = (selector: string) => [...form.querySelectorAll<HTMLInputElement>(selector)].filter((i) => i.checked);
+    const radioValue = (name: string) => checked(`input[name="${name}"]`)[0]?.value ?? '';
+
+    // Preselect a service from ?service=
+    const preset = new URLSearchParams(location.search).get('service');
+    if (preset) {
+      const box = form.querySelector<HTMLInputElement>(`input[data-slug="${CSS.escape(preset)}"]`);
+      if (box) box.checked = true;
+    }
+
+    // quote_start fires once, on the first interaction.
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      track('quote_start', { service: preset ?? undefined });
+    };
+    form.addEventListener('focusin', start);
+    form.addEventListener('change', start);
+
+    const groupError = (group: string, id: string, message: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-group="${group}"]`);
+      if (el) setFieldError(el, errorEl(id), message);
+      return message ? (el?.querySelector<HTMLInputElement>('input') ?? null) : null;
+    };
+
+    const fieldError = (name: string, message: string) => {
+      const el = input(name);
+      setFieldError(el, errorEl(`${el.id}-error`), message);
+      return message ? el : null;
+    };
+
+    // Returns the first invalid control in a step, or null when the step is valid.
+    const validateStep = (index: number): HTMLElement | null => {
+      const problems: (HTMLElement | null)[] = [];
+      if (index === 0) {
+        problems.push(
+          groupError('services', 'q-services-error', checked('input[name="services[]"]').length ? '' : 'Choose at least one service.'),
+          groupError('property', 'q-property-error', radioValue('property') ? '' : 'Choose a property type.'),
+        );
+      }
+      if (index === 1) {
+        problems.push(fieldError('location', input('location').value.trim() ? '' : 'Enter the location of the building.'));
+      }
+      if (index === 2) {
+        const email = input('email').value.trim();
+        const wantsEmail = radioValue('contact') === 'Email';
+        problems.push(
+          fieldError('name', input('name').value.trim() ? '' : 'Enter your name.'),
+          fieldError('phone', isValidPhone(input('phone').value) ? '' : 'Enter a phone number like 077 123 4567.'),
+          fieldError(
+            'email',
+            email && !isValidEmail(email)
+              ? 'Enter a valid email address, or leave it empty.'
+              : wantsEmail && !email
+                ? 'Enter your email address so we can reply by email.'
+                : '',
+          ),
+        );
+      }
+      return problems.find(Boolean) ?? null;
+    };
+
+    // Clear errors as soon as a field changes.
+    form.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.name === 'services[]') groupError('services', 'q-services-error', '');
+      if (target.name === 'property') groupError('property', 'q-property-error', '');
+    });
+    form.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.getAttribute('aria-invalid') === 'true') setFieldError(target, errorEl(`${target.id}-error`), '');
+    });
+
+    const show = (index: number, direction: 1 | -1 = 1) => {
+      current = index;
+      steps.forEach((s, i) => s.classList.toggle('is-current', i === index));
+      const last = index === steps.length - 1;
+      if (backBtn) backBtn.hidden = index === 0;
+      if (nextBtn) nextBtn.hidden = last;
+      if (submitBtn) submitBtn.hidden = !last;
+      if (progressText) progressText.textContent = `Step ${index + 1} of ${steps.length}`;
+      if (progressFill) progressFill.style.width = `${((index + 1) / steps.length) * 100}%`;
+      if (formError) formError.textContent = '';
+
+      const step = steps[index];
+      step.animate(
+        reduce
+          ? [{ opacity: 0 }, { opacity: 1 }]
+          : [
+              { opacity: 0, transform: `translateX(${24 * direction}px)` },
+              { opacity: 1, transform: 'none' },
+            ],
+        { duration: 300, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+      );
+    };
+
+    const focusStep = () => {
+      const title = steps[current].querySelector<HTMLElement>('.step-title');
+      title?.focus({ preventScroll: true });
+      const top = form.getBoundingClientRect().top;
+      if (top < 0 || top > window.innerHeight * 0.5) {
+        form.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    };
+
+    // Turn on the one-step-at-a-time view.
+    form.dataset.enhanced = '';
+    if (progress) progress.hidden = false;
+    show(0);
+
+    nextBtn?.addEventListener('click', () => {
+      const invalid = validateStep(current);
+      if (invalid) {
+        invalid.focus();
+        return;
+      }
+      show(current + 1, 1);
+      focusStep();
+    });
+
+    backBtn?.addEventListener('click', () => {
+      show(current - 1, -1);
+      focusStep();
+    });
+
+    const makeReference = () => {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const bytes = crypto.getRandomValues(new Uint8Array(6));
+      return `PD-${[...bytes].map((b) => chars[b % chars.length]).join('')}`;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      // Enter in a field on steps 1 and 2 moves on instead of sending.
+      if (current < steps.length - 1) {
+        nextBtn?.click();
+        return;
+      }
+      for (let i = 0; i < steps.length; i++) {
+        const invalid = validateStep(i);
+        if (invalid) {
+          if (i !== current) show(i, -1);
+          invalid.focus();
+          return;
+        }
+      }
+
+      const reference = makeReference();
+      const refInput = form.querySelector<HTMLInputElement>('[data-reference]');
+      if (refInput) refInput.value = reference;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+      if (formError) formError.textContent = '';
+
+      try {
+        await submitNetlifyForm(form);
+        const services = checked('input[name="services[]"]').map((i) => i.value);
+        track('quote_submit', { reference, services: services.join(', ') });
+
+        const summary = [
+          `Hi Phoenix Decorators, I've just sent a quote request. Reference: ${reference}.`,
+          `Services: ${services.join(', ')}.`,
+          `Location: ${input('location').value.trim()}.`,
+          `Name: ${input('name').value.trim()}.`,
+        ].join(' ');
+
+        const success = document.querySelector<HTMLElement>('[data-quote-success]');
+        const refEl = document.querySelector<HTMLElement>('[data-success-reference]');
+        const wa = document.querySelector<HTMLAnchorElement>('[data-success-whatsapp]');
+        if (refEl) refEl.textContent = reference;
+        // encodeURIComponent keeps spaces as %20, which WhatsApp reads reliably.
+        if (wa) wa.href = `${wa.href.split('?')[0]}?text=${encodeURIComponent(summary)}`;
+        document.querySelector<HTMLElement>('[data-hero]')?.setAttribute('hidden', '');
+        document.querySelector<HTMLElement>('[data-quote-main]')?.setAttribute('hidden', '');
+        if (success) {
+          success.hidden = false;
+          window.scrollTo(0, 0);
+          success.querySelector<HTMLElement>('#success-title')?.focus();
+        }
+      } catch {
+        if (formError)
+          formError.textContent =
+            "We couldn't send your request. Check your connection and try again, or send it on WhatsApp.";
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send request';
+        }
+      }
+    });
+  }
+</script>

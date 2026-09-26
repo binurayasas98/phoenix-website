@@ -196,15 +196,28 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
                 </details>
               </li>
             ) : (
-              <li>
-                <a
-                  href={item.href}
-                  class="menu-link"
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
+              <>
+                <li>
+                  <a
+                    href={item.href}
+                    class="menu-link"
+                    aria-current={isActive(item.href) ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+                {item.href === '/about' && (
+                  <li>
+                    <a
+                      href="/safety-quality"
+                      class="menu-link"
+                      aria-current={isActive('/safety-quality') ? 'page' : undefined}
+                    >
+                      Safety and quality
+                    </a>
+                  </li>
+                )}
+              </>
             ),
           )
         }

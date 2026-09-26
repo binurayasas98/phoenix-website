@@ -1,6 +1,53 @@
 ---
+import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import TextLink from '../components/TextLink.astro';
+import teamImg from '../assets/images/team.jpg';
+import lotusImg from '../assets/images/brand-lotus-tower.jpg';
+import templeBefore from '../assets/images/community-temple-before.jpg';
+import templeWork from '../assets/images/community-temple-work.jpg';
+import templeAfter from '../assets/images/community-temple-after.jpg';
+import kandyCleanup from '../assets/images/community-kandy-cleanup.jpg';
+import waterDonation from '../assets/images/community-water-donation.jpg';
+import { site } from '../data/site';
+import { directors } from '../data/directors';
+
+const numbers = [
+  { value: String(site.since), label: 'Founded' },
+  { value: `${site.projectsCompleted}+`, label: 'Projects completed' },
+  { value: '2', label: 'Offices, Kochchikade and Colombo 10' },
+  { value: site.cidaGrade, label: 'CIDA grade' },
+];
+
+const values = [
+  { title: 'Right first time', text: 'Efficient procedures, so clients get the highest quality in the shortest possible time.' },
+  { title: 'Respect', text: 'We listen, meet expectations and build long-term relationships.' },
+  { title: 'Integrity', text: 'Honest, ethical business in everything we do.' },
+  { title: 'Innovation', text: 'We keep improving our methods and materials.' },
+  { title: 'Our people', text: 'Skills development and knowledge transfer for every team member.' },
+];
+
+const temple = [
+  { src: templeBefore, label: 'Before', alt: 'Mahawalawa Temple, Dadalla, before renovation' },
+  { src: templeWork, label: 'During', alt: 'Phoenix team painting the temple ceiling during the renovation' },
+  { src: templeAfter, label: 'After', alt: 'Mahawalawa Temple, Dadalla, after renovation by Phoenix Decorators' },
+];
+
+const tiles = [
+  {
+    src: kandyCleanup,
+    alt: 'Phoenix team members collecting waste at the Exhibition of the Sacred Tooth Relic in Kandy',
+    caption: 'Solid waste management at the Exhibition of the Sacred Tooth Relic, Kandy.',
+    position: 'center 40%',
+  },
+  {
+    src: waterDonation,
+    alt: 'Phoenix team members with drinking water donated to the Sri Dalada Maligawa',
+    caption: 'Drinking water donated to the Sri Dalada Maligawa.',
+    position: 'center',
+  },
+];
 ---
 
 <Base
@@ -11,4 +58,327 @@ import PageHero from '../components/PageHero.astro';
     title="Built on quality since 2011."
     lead="Phoenix Decorators (Pvt) Ltd is a Colombo-based specialist in waterproofing, painting, sealants, glass cleaning and building maintenance for commercial, industrial and residential clients."
   />
+
+  <!-- Team image, story and numbers -->
+  <section class="bg-paper pb-[var(--section-y)]" aria-labelledby="story-heading">
+    <div class="container-site">
+      <figure class="media-reveal relative overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:rounded-[var(--radius-card)]">
+        <Picture
+          src={teamImg}
+          alt="The Phoenix Decorators rope access team in safety harnesses"
+          formats={['avif', 'webp']}
+          widths={[640, 960, 1280, 1920]}
+          sizes="(min-width: 1376px) 1280px, calc(100vw - 48px)"
+          loading="lazy"
+          decoding="async"
+          class="aspect-[4/3] h-auto w-full object-cover md:aspect-[21/9]"
+        />
+        <div class="overlay-night absolute inset-0" aria-hidden="true"></div>
+        <figcaption class="t-h3 absolute bottom-0 left-0 p-6 text-white md:p-10">Our rope access team.</figcaption>
+      </figure>
+
+      <div class="mt-16 grid gap-10 md:mt-24 md:grid-cols-12">
+        <h2 id="story-heading" class="t-h2 md:col-span-4">Our story.</h2>
+        <div class="space-y-6 md:col-span-7 md:col-start-6">
+          <p class="t-lead text-ink">
+            Phoenix Decorators was founded by Christy Marcelline, who now runs the company with his co-owner, Ranga
+            Gamachchi. The directors stay hands-on in the daily running of the business, and together with a dedicated
+            supervisor they make sure every project gets the attention it needs.
+          </p>
+          <p class="t-lead text-graphite">
+            Since 2011 we have completed more than 350 projects, from private homes to landmark hotels, banks, hospitals
+            and Bandaranaike International Airport. Continuous research into the materials and methods we use lets us
+            stand behind our work with a written workmanship guarantee. Every project is fully insured, and we commit to
+            delivering it on time, on budget and to the highest standards.
+          </p>
+        </div>
+      </div>
+
+      <dl class="mt-16 grid grid-cols-2 border-t border-hairline md:mt-24 lg:grid-cols-4">
+        {
+          numbers.map((n) => (
+            <div class="number flex flex-col-reverse justify-end border-b border-hairline py-8 pr-4 lg:border-b-0 lg:pr-8">
+              <dt class="mt-2 max-w-[22ch] text-[15px] text-graphite md:text-[17px]">{n.label}</dt>
+              <dd class="tabular text-[clamp(44px,5vw,72px)] font-semibold leading-none tracking-[-0.035em] text-ink">
+                {n.value}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Statement band -->
+  <section class="section bg-mist text-center" aria-labelledby="statement-heading">
+    <div class="container-site">
+      <h2 id="statement-heading" class="t-display mx-auto max-w-[12ch] text-balance text-ink">Mastery in every measure.</h2>
+      <p class="t-lead mx-auto mt-8 max-w-[40ch] text-graphite">Fully insured. Fully committed. Fully professional.</p>
+    </div>
+  </section>
+
+  <!-- Leadership -->
+  <section id="leadership" class="section bg-paper" aria-labelledby="leadership-heading">
+    <div class="container-site">
+      <h2 id="leadership-heading" class="t-h2">Leadership.</h2>
+      <div class="mt-12 flex flex-col gap-20 md:mt-16 md:gap-32">
+        {
+          directors.map((d, i) => (
+            <article class="grid items-center gap-8 md:grid-cols-12 md:gap-10" aria-labelledby={`director-${d.slug}`}>
+              <div class:list={['md:col-span-5', i % 2 === 1 && 'md:order-2 md:col-start-8']}>
+                <div class="media-reveal overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]">
+                  <Picture
+                    src={d.photo}
+                    alt={d.alt}
+                    formats={['avif', 'webp']}
+                    widths={[400, 600, 768]}
+                    sizes="(min-width: 1376px) 520px, (min-width: 768px) 40vw, calc(100vw - 48px)"
+                    width={768}
+                    height={1024}
+                    loading="lazy"
+                    decoding="async"
+                    class="portrait aspect-[3/4] h-auto w-full object-cover object-top"
+                  />
+                </div>
+              </div>
+              <div class:list={['md:col-span-6', i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-7']}>
+                <blockquote>
+                  <p class="director-quote text-balance">“{d.pullQuote}”</p>
+                </blockquote>
+                <h3 id={`director-${d.slug}`} class="mt-8 text-[17px] font-semibold text-ink">{d.name}</h3>
+                <p class="text-[15px] text-graphite">{d.title}</p>
+                <p class="mt-6 text-[17px] text-graphite">{d.statement}</p>
+                {d.note && <p class="mt-6 border-t border-hairline pt-6 text-[17px] font-medium text-ink">{d.note}</p>}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision and mission -->
+  <section class="section bg-mist" aria-label="Vision and mission">
+    <div class="container-site grid gap-12 md:grid-cols-2 md:gap-10">
+      <div class="border-t border-hairline pt-8">
+        <h2 class="t-h2">Our vision</h2>
+        <p class="t-lead mt-6 text-graphite">
+          To be the preferred service provider in the commercial sector, consistently delivering high-quality products and
+          services that exceed client expectations while remaining competitively priced.
+        </p>
+      </div>
+      <div class="border-t border-hairline pt-8">
+        <h2 class="t-h2">Our mission</h2>
+        <p class="t-lead mt-6 text-graphite">
+          Strong leadership and exceptional customer service, continuous innovation, and support structures that help us
+          grow well. We uphold high standards and keep researching the best materials and methods, so we stay competitive
+          and responsive.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section bg-paper" aria-labelledby="values-heading">
+    <div class="container-site">
+      <h2 id="values-heading" class="t-h2">Our values.</h2>
+      <ul class="mt-12 grid gap-x-8 md:mt-16 md:grid-cols-2 lg:grid-cols-5 lg:gap-x-6">
+        {
+          values.map((v) => (
+            <li class="border-t border-hairline py-6 lg:pt-8">
+              <h3 class="text-[19px] font-semibold tracking-[-0.01em] text-ink">{v.title}</h3>
+              <p class="mt-2 text-[15px] text-graphite">{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Relationship line -->
+  <section class="section bg-mist" aria-label="Our approach">
+    <div class="container-site">
+      <p class="relationship mx-auto max-w-[24ch] text-balance text-center">
+        We don't just provide services. We build long-term relationships based on trust, quality and performance.
+      </p>
+    </div>
+  </section>
+
+  <!-- Safety teaser (night) -->
+  <section class="section on-night bg-night text-white" aria-labelledby="safety-heading">
+    <div class="container-site grid items-center gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-6">
+        <div class="media-reveal overflow-hidden rounded-[var(--radius-card-sm)] md:rounded-[var(--radius-card)]">
+          <Picture
+            src={lotusImg}
+            alt="Phoenix technician in a branded shirt with the Lotus Tower behind"
+            formats={['avif', 'webp']}
+            widths={[480, 720, 960, 1280]}
+            sizes="(min-width: 1376px) 630px, (min-width: 768px) 50vw, calc(100vw - 48px)"
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/5] h-auto w-full object-cover"
+          />
+        </div>
+      </div>
+      <div class="md:col-span-5 md:col-start-8">
+        <h2 id="safety-heading" class="t-h2 text-balance">No compromises on safety.</h2>
+        <p class="t-lead mt-6 text-white/70">
+          CIDA SP2 registered, fully insured and supervised by our directors on every project.
+        </p>
+        <div class="mt-8">
+          <TextLink href="/safety-quality" tone="night">Safety and quality</TextLink>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Materials -->
+  <section class="bg-paper pt-[var(--section-y)]" aria-label="Materials">
+    <div class="container-site">
+      <p class="t-h3 text-column text-balance text-ink">
+        We work with trusted brands including Dulux, Conmix and Delta Coatings.
+      </p>
+    </div>
+  </section>
+
+  <!-- Giving back -->
+  <section class="section bg-paper" aria-labelledby="giving-heading">
+    <div class="container-site">
+      <h2 id="giving-heading" class="t-h2">Giving back.</h2>
+      <p class="t-lead text-column mt-6 text-graphite">
+        We support young people from disadvantaged backgrounds through skills and employment, and we take part in
+        community work.
+      </p>
+    </div>
+
+    <figure class="mt-12 md:mt-16">
+      <ul class="temple-row no-scrollbar">
+        {
+          temple.map((t) => (
+            <li class="temple-item">
+              <div class="media-reveal relative overflow-hidden rounded-[var(--radius-card-sm)] bg-mist md:rounded-[var(--radius-card)]">
+                <Picture
+                  src={t.src}
+                  alt={t.alt}
+                  formats={['avif', 'webp']}
+                  widths={[400, 600, 900]}
+                  sizes="(min-width: 1024px) 413px, 80vw"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/3] h-auto w-full object-cover"
+                />
+                <span class="btn-frost absolute left-4 top-4 rounded-full px-3 py-1 text-[14px] font-medium">{t.label}</span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <figcaption class="container-site mt-4 text-[15px] text-graphite">Renovation of Mahawalawa Temple, Dadalla.</figcaption>
+    </figure>
+
+    <div class="container-site mt-12 grid gap-4 md:mt-16 md:grid-cols-2 md:gap-5">
+      {
+        tiles.map((t) => (
+          <figure class="media-reveal relative overflow-hidden rounded-[var(--radius-card-sm)] bg-night md:rounded-[var(--radius-card)]">
+            <Picture
+              src={t.src}
+              alt={t.alt}
+              formats={['avif', 'webp']}
+              widths={[400, 600, 900]}
+              sizes="(min-width: 1376px) 630px, (min-width: 768px) 50vw, calc(100vw - 48px)"
+              loading="lazy"
+              decoding="async"
+              class="aspect-[4/5] h-auto w-full object-cover"
+              style={`object-position: ${t.position};`}
+            />
+            <div class="overlay-night absolute inset-0" aria-hidden="true" />
+            <figcaption class="absolute inset-x-0 bottom-0 p-6 text-[17px] font-semibold leading-snug text-white md:p-8 md:text-[19px]">
+              {t.caption}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
 </Base>
+
+<style>
+  .director-quote {
+    font-size: clamp(24px, 2.4vw, 34px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  /* On mobile the portrait sits on top, no taller than 480px. */
+  @media (max-width: 767px) {
+    .portrait {
+      max-height: 480px;
+    }
+  }
+
+  .relationship {
+    font-size: clamp(30px, 4vw, 56px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+
+  .number:nth-child(odd) {
+    padding-right: 16px;
+  }
+
+  .number:nth-child(even) {
+    padding-left: 16px;
+    border-left: 1px solid var(--color-hairline);
+  }
+
+  @media (min-width: 1024px) {
+    .number:nth-child(n) {
+      padding-left: 32px;
+      border-left: 1px solid var(--color-hairline);
+    }
+
+    .number:nth-child(1) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+
+  .temple-row {
+    --gutter: max(var(--pad), calc((100% - var(--max)) / 2));
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+  }
+
+  .temple-item {
+    flex: none;
+    width: 80vw;
+    max-width: 420px;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 1024px) {
+    .temple-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      overflow: visible;
+      max-width: calc(var(--max) + var(--pad) * 2);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+
+    .temple-item {
+      width: auto;
+      max-width: none;
+    }
+  }
+</style>

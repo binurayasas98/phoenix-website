@@ -61,7 +61,20 @@ const { quoteHref = '/quote', whatsappMessage } = Astro.props;
       visibility 0s;
   }
 
+  .action-bar.is-visible.is-typing {
+    transform: translateY(110%);
+    visibility: hidden;
+    transition:
+      transform 300ms var(--ease),
+      visibility 0s linear 300ms;
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .action-bar.is-visible.is-typing {
+      transform: none;
+      opacity: 0;
+    }
+
     .action-bar {
       transform: none;
       opacity: 0;
@@ -84,6 +97,15 @@ const { quoteHref = '/quote', whatsappMessage } = Astro.props;
   const hero = document.querySelector('[data-hero]');
 
   if (bar) {
+    // While someone types in a form field, the keyboard is open: step the bar out of the way.
+    const isField = (el: EventTarget | null) => el instanceof HTMLElement && el.matches('input, textarea, select');
+    document.addEventListener('focusin', (e) => {
+      if (isField(e.target)) bar.classList.add('is-typing');
+    });
+    document.addEventListener('focusout', (e) => {
+      if (isField(e.target)) bar.classList.remove('is-typing');
+    });
+
     if (hero) {
       new IntersectionObserver(([entry]) => {
         bar.classList.toggle('is-visible', !entry.isIntersecting);

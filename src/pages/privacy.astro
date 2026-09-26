@@ -1,11 +1,58 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+
+const updated = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const sections = [
+  {
+    title: 'What we collect',
+    text: 'The details you send us through our forms or on WhatsApp, such as your name, phone number, email address and information about your building.',
+  },
+  {
+    title: 'Why we collect it',
+    text: 'To reply to you and to prepare your quotation.',
+  },
+  {
+    title: 'Who sees it',
+    text: `Only ${site.name} staff. We never sell your details.`,
+  },
+  {
+    title: 'How long we keep it',
+    text: 'Only as long as we need it for your enquiry and our records.',
+  },
+  {
+    title: 'Your choices',
+    text: 'You can ask us to update or delete your details at any time.',
+  },
+];
 ---
 
 <Base
   title="Privacy | Phoenix Decorators"
   description="How Phoenix Decorators uses the details you send through our forms or WhatsApp: only to reply and prepare quotations, never sold."
 >
-  <PageHero title="Privacy notice." />
+  <PageHero title="Privacy notice." lead={`Last updated ${updated}.`} />
+
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="Privacy notice">
+    <div class="container-site">
+      <div class="text-column">
+        {
+          sections.map((s) => (
+            <div class="border-t border-hairline py-8">
+              <h2 class="t-h3 text-ink">{s.title}</h2>
+              <p class="mt-3 text-graphite">{s.text}</p>
+            </div>
+          ))
+        }
+        <div class="border-t border-hairline py-8">
+          <h2 class="t-h3 text-ink">Contact</h2>
+          <p class="mt-3 text-graphite">
+            Questions about your details? Email <a href={`mailto:${site.email}`} class="text-brand underline underline-offset-4">{site.email}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>
