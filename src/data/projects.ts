@@ -23,7 +23,7 @@ export const projects: Project[] = [
     location: 'Katunayake',
     sector: 'public',
     services: ['waterproofing', 'painting'],
-    scope: 'Terminal 1 waterproofing and painting, supervised by director Ranga Gamachchi.',
+    scope: 'Terminal 1 waterproofing and painting, supervised by our director Ranga Gamachchi.',
     featured: true,
   },
   {
