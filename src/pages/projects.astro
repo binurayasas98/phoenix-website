@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<Base
+  title="Projects | Phoenix Decorators"
+  description="More than 350 projects since 2011, for hotels, hospitals, banks, offices, residences and public buildings across Sri Lanka."
+>
+  <PageHero
+    title="Our projects."
+    lead="More than 350 projects since 2011, for hotels, hospitals, banks, offices, residences and public buildings across Sri Lanka."
+  />
+  <section class="bg-paper pb-[var(--section-y)]" aria-label="All projects">
+    <ul class="container-site grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+      {
+        projects.map((p) => (
+          <li id={p.slug} class="scroll-mt-24">
+            <ProjectCard project={p} headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

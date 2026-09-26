@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import TextLink from '../components/TextLink.astro';
+import { whatsappUrl } from '../data/site';
+---
+
+<Base
+  title="Get a free quote | Phoenix Decorators"
+  description="Request a free, no-obligation quotation for waterproofing, painting, sealants, glass cleaning or building maintenance. It takes about a minute."
+  ctaBand={false}
+  actions={false}
+>
+  <PageHero title="Request a free quote." lead="Takes about a minute.">
+    <p class="mt-4">
+      <TextLink href={whatsappUrl()} external location="quote_page">Prefer to chat? Open WhatsApp</TextLink>
+    </p>
+  </PageHero>
+</Base>

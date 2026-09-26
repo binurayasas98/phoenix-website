@@ -1,0 +1,108 @@
+---
+import { processSteps } from '../../data/services';
+import TwoToneHeading from '../TwoToneHeading.astro';
+---
+
+<section class="section bg-paper" aria-labelledby="process-heading">
+  <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
+    <div class="md:col-span-5">
+      <div class="md:sticky md:top-[calc(var(--header-h)+48px)]">
+        <TwoToneHeading id="process-heading" first="How we work." second="A clear process, documented at every step." />
+      </div>
+    </div>
+
+    <div class="md:col-span-6 md:col-start-7">
+      <ol class="process relative" data-process>
+        <span class="process-track" aria-hidden="true"></span>
+        <span class="process-fill" aria-hidden="true" data-process-fill></span>
+        {
+          processSteps.map((step, i) => (
+            <li class="process-step relative pb-14 pl-12 last:pb-0 md:pb-20 md:pl-16" data-step>
+              <span class="process-dot" aria-hidden="true" />
+              <span class="tabular block text-[15px] font-medium text-brand" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="t-h3 mt-2">{step.title}</h3>
+              <p class="mt-3 max-w-[44ch] text-graphite">{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-track,
+  .process-fill {
+    position: absolute;
+    left: 3.5px;
+    top: 4px;
+    bottom: 0;
+    width: 1px;
+  }
+
+  .process-track {
+    background: var(--color-hairline);
+  }
+
+  .process-fill {
+    background: var(--color-brand);
+    transform-origin: top;
+  }
+
+  :global(html.js) .process-fill {
+    transform: scaleY(var(--fill, 0));
+  }
+
+  .process-dot {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 4px var(--color-paper);
+    transition: background-color 300ms var(--ease);
+  }
+
+  :global(html.js) .process-step:not(.is-reached) .process-dot {
+    background: var(--color-hairline);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .process-fill {
+      transform: none;
+    }
+
+    :global(html.js) .process-step:not(.is-reached) .process-dot {
+      background: var(--color-brand);
+    }
+  }
+</style>
+
+<script>
+  import { scroll } from 'motion';
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-process]').forEach((list) => {
+    if (reduce) return;
+    const fill = list.querySelector<HTMLElement>('[data-process-fill]');
+    const steps = [...list.querySelectorAll<HTMLElement>('[data-step]')];
+
+    scroll(
+      (progress: number) => {
+        fill?.style.setProperty('--fill', String(progress));
+        const listTop = list.getBoundingClientRect().top;
+        const filled = progress * list.offsetHeight;
+        steps.forEach((step) => {
+          const dotY = step.getBoundingClientRect().top - listTop + 6;
+          step.classList.toggle('is-reached', filled >= dotY);
+        });
+      },
+      { target: list, offset: ['start 0.7', 'end 0.6'] },
+    );
+  });
+</script>
