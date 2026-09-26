@@ -1,9 +1,19 @@
 ---
 import { processSteps } from '../../data/services';
 import TwoToneHeading from '../TwoToneHeading.astro';
+
+interface Props {
+  tone?: 'paper' | 'mist';
+}
+
+const { tone = 'paper' } = Astro.props;
 ---
 
-<section class="section bg-paper" aria-labelledby="process-heading">
+<section
+  class:list={['section', tone === 'mist' ? 'bg-mist' : 'bg-paper']}
+  style={tone === 'mist' ? '--process-bg: var(--color-mist)' : undefined}
+  aria-labelledby="process-heading"
+>
   <div class="container-site grid gap-12 md:grid-cols-12 md:gap-10">
     <div class="md:col-span-5">
       <div class="md:sticky md:top-[calc(var(--header-h)+48px)]">
@@ -63,7 +73,7 @@ import TwoToneHeading from '../TwoToneHeading.astro';
     height: 8px;
     border-radius: 50%;
     background: var(--color-brand);
-    box-shadow: 0 0 0 4px var(--color-paper);
+    box-shadow: 0 0 0 4px var(--process-bg, var(--color-paper));
     transition: background-color 300ms var(--ease);
   }
 

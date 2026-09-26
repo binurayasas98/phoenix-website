@@ -1,0 +1,66 @@
+---
+// Client names as a hairline list. On mobile, long lists show the first eight with a "Show all" button.
+interface Props {
+  names: string[];
+  label?: string;
+  columns?: 1 | 2;
+  class?: string;
+}
+
+const { names, label, columns = 1, class: className } = Astro.props;
+const limit = 8;
+const collapsible = names.length > limit;
+---
+
+<div class:list={['client-list', className]} data-client-list={collapsible ? '' : undefined}>
+  <ul class:list={['border-b border-hairline', columns === 2 && 'md:columns-2 md:gap-x-10']} aria-label={label}>
+    {
+      names.map((name, i) => (
+        <li class:list={['client-item', i >= limit && 'is-extra']}>{name}</li>
+      ))
+    }
+  </ul>
+  {
+    collapsible && (
+      <button type="button" class="link mt-2 md:!hidden" aria-expanded="false" data-client-toggle>
+        <span>Show all {names.length}</span>
+        <span aria-hidden="true">&nbsp;›</span>
+      </button>
+    )
+  }
+</div>
+
+<style>
+  .client-item {
+    break-inside: avoid;
+    padding-block: 14px;
+    border-top: 1px solid var(--color-hairline);
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--color-ink);
+  }
+
+  /* Hide the extras on mobile only when scripts run, so the full list is never lost. */
+  @media (max-width: 767px) {
+    :global(html.js) .client-list[data-client-list]:not(.is-expanded) .is-extra {
+      display: none;
+    }
+  }
+
+  :global(html:not(.js)) [data-client-toggle] {
+    display: none;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-client-list]').forEach((list) => {
+    const toggle = list.querySelector<HTMLButtonElement>('[data-client-toggle]');
+    toggle?.addEventListener('click', () => {
+      list.classList.add('is-expanded');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.hidden = true;
+      list.querySelector<HTMLElement>('.is-extra')?.setAttribute('tabindex', '-1');
+      list.querySelector<HTMLElement>('.is-extra')?.focus({ preventScroll: true });
+    });
+  });
+</script>
